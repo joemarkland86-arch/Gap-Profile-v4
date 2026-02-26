@@ -1,11 +1,5 @@
 <!DOCTYPE html>
-<html
-            React.createElement("div", { style: {
-                opacity: charCount >= 20 ? 1 : 0.35,
-                transform: charCount >= 20 ? "translateY(0)" : "translateY(10px)",
-                transition: "opacity 0.4s ease, transform 0.4s ease",
-                pointerEvents: charCount >= 20 ? "auto" : "none",
-            } }, lang="en">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,6 +14,8 @@
   <meta name="twitter:title" content="GAP Profile&#8482; by Joe Markland" />
   <meta name="twitter:description" content="You already know what you should do. So why aren&#39;t you doing it?" />
   <link rel="canonical" href="https://joemarkland86-arch.github.io/Gapprofile" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html,body,#root{min-height:100vh;background:#0D1B2A;}
@@ -389,7 +385,6 @@ const INITIAL = {
     resumeBannerVisible: false,
     toast: null,
     ctxErrors: {},
-    shakingFields: new Set(),
 };
 function reducer(state, action) {
     switch (action.type) {
@@ -656,7 +651,7 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
         dispatch({ type: "SET_CTX", patch: { c1: localC1 } });
         dispatch({ type: "SET_STEP", step: 2 });
     };
-    const isValid = charCount >= 8 && ctx.c2 && ctx.c3 && ctx.c4;
+    const isValid = charCount >= 20 && ctx.c2 && ctx.c3 && ctx.c4;
     return (React.createElement("div", { style: { maxWidth: 680, margin: "0 auto", padding: "40px 24px 80px" } },
         React.createElement("div", { className: "g-fu", style: { marginBottom: 32 } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
@@ -791,7 +786,7 @@ function ScreenSection({ section, stepIdx, responses, dispatch, isMobile }) {
                     allAnswered 
                         ? "\u2713 All answered" 
                         : `${answered} of ${section.questions.length}`),
-                React.createElement("button", { id: "section-next-btn", className: "g-btn-p", className: allAnswered ? "g-btn-p g-pg" : "g-btn-p", onClick: handleNext, style: allAnswered ? { transform: "none" } : {} }, stepIdx < 3 ? `Continue \u2192 ${nextSection ? nextSection.label : ""}` : "See my results \u2192")))));
+                React.createElement("button", { id: "section-next-btn", className: allAnswered ? "g-btn-p g-pg" : "g-btn-p", onClick: handleNext, style: allAnswered ? { transform: "none" } : {} }, stepIdx < 3 ? `Continue \u2192 ${nextSection ? nextSection.label : ""}` : "See my results \u2192")))));
 }
 // ─── SCREEN 6: EMAIL CAPTURE ────────────────────────────────────────────────────
 
@@ -984,7 +979,7 @@ function InlineEmailCapture({ dispatch }) {
             method: "POST",
             headers: { "Content-Type": "application/json", "Accept": "application/json" },
             body: JSON.stringify({ name: nm, email: em, _subject: "GAP Profile results copy: " + nm })
-        }).catch(() => {});
+        }).catch(() => {}).finally(() => setSending(false));
         dispatch({ type: "SUBMIT_EMAIL", email: em });
         dispatch({ type: "SET_FIRSTNAME", firstName: nm });
     };
@@ -1045,10 +1040,11 @@ function ScreenResults({ state, dispatch }) {
             `Action: ${ctx.c1}`,
             "Generated at gapprofile.co.uk",
         ].join("\n");
-        navigator.clipboard.writeText(text).catch(() => { });
-        dispatch({ type: "CLEAR_TOAST" });
-        setTimeout(() => dispatch({ type: "CLEAR_TOAST" }), 10);
-        // quick toast via temp state manipulation
+        navigator.clipboard.writeText(text).then(() => {
+            dispatch({ type: "SET_TOAST", message: "Profile summary copied to clipboard" });
+        }).catch(() => {
+            dispatch({ type: "SET_TOAST", message: "Copy failed — please select and copy manually" });
+        });
     };
     return (React.createElement("div", { className: "g-screen-enter", style: { maxWidth: 720, margin: "0 auto", padding: "40px 24px calc(120px + var(--safe-bottom))" } },
         React.createElement("div", { className: "g-fu", style: { textAlign: "center", marginBottom: 48 } },
@@ -1167,7 +1163,7 @@ function ScreenResults({ state, dispatch }) {
                         React.createElement("p", { style: { fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 2 } }, a.title),
                         React.createElement("p", { style: { fontSize: 12, color: C.dim, lineHeight: 1.5 } },
                             a.detail.length > 80 ? a.detail.slice(0, 80) + "\u2026" : a.detail)),
-                    React.createElement("span", { style: { fontSize: 16, color: C.dim, flexShrink: 0, marginLeft: 8 } }, "\uD83D\uDD12")))),
+                    React.createElement("span", { "aria-hidden": "true", style: { fontSize: 16, color: C.dim, flexShrink: 0, marginLeft: 8 } }, "\uD83D\uDD12")))),
                 React.createElement("p", { style: { fontSize: 13, color: C.muted, fontStyle: "italic", lineHeight: 1.7, textAlign: "center", marginTop: 16 } },
                     "Four evidence-based interventions, matched to your pattern. In a coaching session, we work through which one opens the door for you specifically."))),
         React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(46,196,182,0.06)", border: "1px solid rgba(46,196,182,0.3)", borderRadius: 16, padding: "32px 28px" } },
@@ -1231,7 +1227,6 @@ function ScreenResults({ state, dispatch }) {
 function GAPProfile() {
     const [state, dispatch] = useReducer(reducer, INITIAL);
     const isMobile = useIsMobile();
-    const styleInjected = useRef(false);
     // Inject CSS once
     useEffect(() => {
         if (document.getElementById("gap-profile-styles"))
@@ -1240,11 +1235,9 @@ function GAPProfile() {
         el.id = "gap-profile-styles";
         el.textContent = GLOBAL_CSS;
         document.head.appendChild(el);
-        styleInjected.current = true;
         return () => {
             const existing = document.getElementById("gap-profile-styles");
-            if (existing && styleInjected.current)
-                existing.remove();
+            if (existing) existing.remove();
         };
     }, []);
     // Check for saved session on mount
