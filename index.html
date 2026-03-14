@@ -8,12 +8,12 @@
   <meta property="og:title" content="GAP Profile&#8482; by Joe Markland" />
   <meta property="og:description" content="You've had the plan. Something keeps getting in the way. The GAP Profile diagnoses the exact psychological barrier stopping you." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://joemarkland86-arch.github.io/Gapprofile" />
+  <meta property="og:url" content="https://gapprofile.co.uk" />
   <meta property="og:image" content="https://joemarkland86-arch.github.io/Gapprofile/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GAP Profile&#8482; by Joe Markland" />
   <meta name="twitter:description" content="You already know what you should do. So why aren&#39;t you doing it?" />
-  <link rel="canonical" href="https://joemarkland86-arch.github.io/Gapprofile" />
+  <link rel="canonical" href="https://gapprofile.co.uk" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <style>
@@ -233,6 +233,51 @@ const ARCHETYPES = {
             { title: "Friction reduction", detail: "Make action easier than avoidance. Remove steps, reduce decisions, and lower the lift before the moment arrives." },
             { title: "Support activation", detail: "Work out who could make this lighter. The problem may not just be energy — it may be unsupported effort." },
         ]
+    },
+};
+// ─── CTA DATA ──────────────────────────────────────────────────────────────────
+const DEBRIEF_URL = "https://calendly.com/joemarkland/gap-debrief";
+const PROGRAMME_URL = "https://gapprofile.co.uk/programme";
+const CTA_DATA = {
+    ps: {
+        headline: "The move makes sense. Your threat system disagrees.",
+        reframe: "This isn\u2019t a confidence problem or a risk tolerance problem. Your brain is treating a career decision like a physical threat \u2014 and when that happens, logic doesn\u2019t get much of a vote. The hesitation you feel isn\u2019t cowardice. It\u2019s biology.",
+        cost: "But inaction has a cost too. Every time you default to the safer option, the window of opportunity gets a little narrower \u2014 and the part of you that knows what you should do gets a little quieter. At some point, someone else will ask you at Sunday lunch why you never made the move you always said you were going to make.",
+        nextStep: "The first move is to make the threat specific. Vague threat is amplified threat. When you name exactly what feels at risk \u2014 status, certainty, income, relationships \u2014 you can find a survivable first step that your threat system can accept.",
+        workbookAvailable: true,
+        workbookUrl: "https://buy.stripe.com/SAFETY_SEEKER_WORKBOOK",
+        workbookTitle: "The Safety Seeker Workbook",
+        workbookDesc: "A structured process for making your threat specific, weighing the real cost of inaction, and finding the first move your brain can actually accept.",
+    },
+    se: {
+        headline: "You have the capability. Your brain just keeps discounting it.",
+        reframe: "This isn\u2019t a confidence problem in the ordinary sense. You\u2019re not lacking evidence \u2014 you\u2019re discounting it. Every time you look at what you\u2019ve done and think \u2018that doesn\u2019t count\u2019 or \u2018anyone could have done that\u2019, you\u2019re running a pattern that keeps the doubt alive regardless of what the evidence actually shows.",
+        cost: "The risk is that doubt becomes self-fulfilling. If you keep waiting to feel ready before you act, you never generate the new evidence that would shift the feeling. The gap between capability and belief widens instead of closing.",
+        nextStep: "The move is to build an evidence case, not seek reassurance. Reassurance fades. Evidence compounds. Before you act, write down three specific things you\u2019ve done that show this step isn\u2019t beyond you. Then act before the doubt gets another vote.",
+        workbookAvailable: true,
+        workbookUrl: "https://buy.stripe.com/CAPABLE_DOUBTER_WORKBOOK",
+        workbookTitle: "The Capable Doubter Workbook",
+        workbookDesc: "A structured process for building your evidence case, breaking the discounting pattern, and taking the next step before doubt gets another vote.",
+    },
+    ia: {
+        headline: "You can see the next version. It just does not feel like yours yet.",
+        reframe: "This isn\u2019t really uncertainty about the direction. It\u2019s an identity gap. The future version of you makes sense on paper, but it doesn\u2019t feel fully inhabited yet \u2014 and until it does, hesitation will keep sounding sensible.",
+        cost: "The risk with identity gaps is permanent deferral. You keep waiting to feel like the person who belongs in that life before you try to live it. But identity follows action, not the other way around. The longer you wait, the more the future feels theoretical.",
+        nextStep: "Try one small version of the future self. Not a commitment to the full reinvention \u2014 just one move that lets that version of you show up briefly in real life. Identity catches up when it has something real to attach to.",
+        workbookAvailable: false,
+        workbookUrl: "",
+        workbookTitle: "The Unclaimed Self Workbook",
+        workbookDesc: "A structured process for closing the identity gap and making the future version of you feel real enough to step into.",
+    },
+    rr: {
+        headline: "You do care. Your capacity is properly stretched.",
+        reframe: "This isn\u2019t a motivation problem or a priorities problem. Your time, attention and energy are genuinely stretched \u2014 and career action needs exactly the kind of sustained focus that gets squeezed first when everything else is pressing. This is a resource problem, not a character flaw.",
+        cost: "The risk is that \u2018temporary\u2019 becomes permanent. Constraints that feel short-term have a way of extending indefinitely, and the career move keeps getting pushed to the next quieter month that never quite arrives.",
+        nextStep: "Find the real bottleneck. Is it time, energy, money, support, or attention? Then fit the next action to your actual capacity \u2014 not the capacity you wish you had. A minimum viable action taken now beats a perfect plan that waits for ideal conditions.",
+        workbookAvailable: false,
+        workbookUrl: "",
+        workbookTitle: "The Overdrawn Self Workbook",
+        workbookDesc: "A structured process for finding your real bottleneck, scaling action to actual capacity, and removing friction before it kills momentum.",
     },
 };
 // ─── QUESTIONS ─────────────────────────────────────────────────────────────────
@@ -996,13 +1041,124 @@ function InlineEmailCapture({ dispatch }) {
             style: { width: "100%", padding: "12px", fontSize: 14 } },
             sending ? "Sending..." : "Send me a copy \u2192")));
 }
+function NextSteps({ primary, archColor, scores }) {
+    const cta = CTA_DATA[primary];
+    if (!cta) return null;
+
+    const cardBase = {
+        borderRadius: 14,
+        padding: "24px 24px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        flex: "1 1 200px",
+        minWidth: 0,
+    };
+
+    const workbookCard = React.createElement("div", {
+        style: {
+            ...cardBase,
+            background: cta.workbookAvailable ? "rgba(19,32,49,0.9)" : "rgba(19,32,49,0.5)",
+            border: cta.workbookAvailable ? `1px solid ${archColor}50` : "1px solid #2A4060",
+            opacity: cta.workbookAvailable ? 1 : 0.6,
+        }
+    },
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: cta.workbookAvailable ? archColor : "#4A6580", letterSpacing: "0.1em", textTransform: "uppercase" } },
+            cta.workbookAvailable ? "Workbook · \u00A39.99" : "Workbook · Coming soon"),
+        React.createElement("p", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 17, color: "#E8EFF6", lineHeight: 1.3 } }, cta.workbookTitle),
+        React.createElement("p", { style: { fontSize: 13, color: "#8BA3BC", lineHeight: 1.6 } }, cta.workbookDesc),
+        cta.workbookAvailable
+            ? React.createElement("a", {
+                href: cta.workbookUrl,
+                target: "_blank",
+                rel: "noopener noreferrer",
+                style: {
+                    display: "block", textAlign: "center", padding: "11px 16px",
+                    background: archColor, color: "#0D1B2A", fontWeight: 700,
+                    fontSize: 14, borderRadius: 9, textDecoration: "none",
+                    marginTop: 4,
+                }
+              }, "Get the workbook \u2192")
+            : React.createElement("p", { style: { fontSize: 13, color: "#4A6580", fontStyle: "italic", marginTop: 4 } }, "In development \u2014 check back soon.")
+    );
+
+    const debriefCard = React.createElement("div", {
+        style: {
+            ...cardBase,
+            background: "rgba(19,32,49,0.95)",
+            border: `2px solid ${archColor}`,
+            position: "relative",
+        }
+    },
+        React.createElement("div", {
+            style: {
+                position: "absolute", top: -11, left: 20,
+                background: archColor, color: "#0D1B2A",
+                fontSize: 10, fontWeight: 800, letterSpacing: "0.12em",
+                textTransform: "uppercase", padding: "3px 10px", borderRadius: 20,
+            }
+        }, "Recommended"),
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archColor, letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 8 } }, "Results Debrief \u00B7 \u00A397"),
+        React.createElement("p", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 17, color: "#E8EFF6", lineHeight: 1.3 } }, "45 minutes. Your results reviewed in advance."),
+        React.createElement("p", { style: { fontSize: 13, color: "#8BA3BC", lineHeight: 1.6 } },
+            "We go through your profile together \u2014 what the pattern means for your specific situation, which intervention opens the door, and what the first real move looks like. Not coaching. A targeted debrief."),
+        React.createElement("a", {
+            href: DEBRIEF_URL,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            style: {
+                display: "block", textAlign: "center", padding: "12px 16px",
+                background: archColor, color: "#0D1B2A", fontWeight: 700,
+                fontSize: 14, borderRadius: 9, textDecoration: "none",
+                marginTop: 4,
+            }
+        }, "Book the debrief \u2192")
+    );
+
+    const programmeNote = React.createElement("p", {
+        style: { fontSize: 13, color: "#4A6580", textAlign: "center", lineHeight: 1.65, marginTop: 8 }
+    },
+        "If you\u2019re looking for sustained support beyond a single session, the GAP Programme offers six weeks of structured one-to-one coaching. ",
+        React.createElement("a", {
+            href: PROGRAMME_URL,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            style: { color: "#8BA3BC", textDecoration: "underline" }
+        }, "Find out more \u2192")
+    );
+
+    return React.createElement("div", {
+        className: "g-fu g-d4",
+        style: { marginBottom: 24, background: "rgba(13,27,42,0.8)", border: `1px solid ${archColor}30`, borderRadius: 18, padding: "36px 28px" }
+    },
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archColor, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 14 } }, "What happens next"),
+        React.createElement("h2", {
+            style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: "clamp(22px,4vw,30px)", color: "#E8EFF6", lineHeight: 1.2, marginBottom: 20 }
+        }, cta.headline),
+        React.createElement("p", { style: { fontSize: 15, color: "#8BA3BC", lineHeight: 1.8, marginBottom: 12 } }, cta.reframe),
+        React.createElement("p", { style: { fontSize: 15, color: "#8BA3BC", lineHeight: 1.8, marginBottom: 12 } }, cta.cost),
+        React.createElement("div", {
+            style: { borderLeft: `3px solid ${archColor}`, paddingLeft: 18, margin: "20px 0 28px" }
+        },
+            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archColor, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 } }, "The next step"),
+            React.createElement("p", { style: { fontSize: 15, color: "#E8EFF6", lineHeight: 1.7 } }, cta.nextStep)
+        ),
+        React.createElement("div", {
+            style: { display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }
+        },
+            workbookCard,
+            debriefCard
+        ),
+        programmeNote
+    );
+}
 function ScreenResults({ state, dispatch }) {
     const { scores, ctx, firstName, email } = state;
     const [archetypeVisible, setArchetypeVisible] = useState(false);
     const [barsVisible, setBarsVisible] = useState(false);
     const handleShare = () => {
         const archName = ARCHETYPES[scores.primary].label;
-        const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free diagnostic for why you know what career move to make but aren't making it.\n\nhttps://joemarkland86-arch.github.io/Gapprofile`;
+        const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free diagnostic for why you know what career move to make but aren't making it.\n\nhttps://gapprofile.co.uk`;
         if (navigator.share) {
             navigator.share({ title: `My GAP Profile: ${archName}`, text: shareText }).catch(() => {});
         } else {
@@ -1166,15 +1322,7 @@ function ScreenResults({ state, dispatch }) {
                     React.createElement("span", { "aria-hidden": "true", style: { fontSize: 16, color: C.dim, flexShrink: 0, marginLeft: 8 } }, "\uD83D\uDD12")))),
                 React.createElement("p", { style: { fontSize: 13, color: C.muted, fontStyle: "italic", lineHeight: 1.7, textAlign: "center", marginTop: 16 } },
                     "Evidence-based interventions, matched to your pattern. In a coaching session, we work through which one opens the door for you specifically."))),
-        React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(46,196,182,0.06)", border: "1px solid rgba(46,196,182,0.3)", borderRadius: 16, padding: "32px 28px" } },
-            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.teal, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 } }, "Ready to close the gap?"),
-            React.createElement("h2", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 28, color: C.text, lineHeight: 1.2, marginBottom: 20 } }, "A conversation about your results"),
-            React.createElement("p", { style: { fontSize: 15, color: C.muted, lineHeight: 1.75, marginBottom: 20 } },
-                "You\u2019ve named the pattern. Now let\u2019s find your first real move. Bring your results \u2014 we\u2019ll spend 30 minutes working through what\u2019s actually in the way, and what to do next. Free."),
-            React.createElement("button", { className: "g-btn-p", style: { width: "100%", marginTop: 24, padding: "16px", fontSize: 16 },
-                onClick: () => window.open("https://calendly.com/joemarkland", "_blank") }, "Book a free 30-minute conversation \u2192"),
-            React.createElement("p", { style: { fontSize: 12, color: C.dim, textAlign: "center", marginTop: 12 } },
-                "30 minutes \u00B7 Free \u00B7 Your results reviewed in advance \u00B7 No sales pitch")),
+        React.createElement(NextSteps, { primary: primary, archColor: arch.color, scores: scores }),
         (showLongFlag || showAttemptFlag) && (React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(245,158,11,0.07)",
                 border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 14, padding: "20px 24px" } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: "0.08em",
