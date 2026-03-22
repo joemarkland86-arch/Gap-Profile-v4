@@ -659,11 +659,11 @@ return (React.createElement("div", { className: "g-hero-glow", style: {
     } },
         React.createElement("p", { style: {
             fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
-        } }, "You\u2019ve probably thought about it a lot already. Maybe so much that the thinking itself has started to feel like progress. But the move still isn\u2019t happening."),
+        } }, "It\u2019s not that you haven\u2019t thought about it. You\u2019ve probably thought about it so much that the thinking itself has started to feel like progress. But nothing\u2019s moved."),
 
         React.createElement("p", { style: {
             fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
-        } }, "That usually doesn\u2019t mean you need more advice. It means there\u2019s a more specific gap in the way \u2014 and it\u2019s usually easier to work on once you can actually see it."),
+        } }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
 
         React.createElement("p", { style: {
             fontSize: 15, color: C.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
@@ -686,7 +686,7 @@ return (React.createElement("div", { className: "g-hero-glow", style: {
             ],
             [
                 "It shows the gap, not the answer.",
-                "It won\u2019t tell you what to do next. That part is yours. It shows the pattern behind what\u2019s holding the move up, so your next step is based on something clearer than guesswork."
+                "It won\u2019t tell you what to do next. That part is yours. It helps you see what kind of gap is in the way, so your next step is based on something clearer than guesswork."
             ],
             [
                 "It stays anchored to your situation.",
@@ -739,20 +739,14 @@ return (React.createElement("div", { className: "g-hero-glow", style: {
     React.createElement("div", { className: "g-fu g-d4" },
         React.createElement("button", {
             className: "g-btn-p",
-            style: { fontSize: 16, padding: "16px 44px", marginBottom: 20 },
+            style: { fontSize: 16, padding: "16px 44px", marginBottom: 14 },
             onClick: function() { dispatch({ type: "SET_STEP", step: 1 }); }
         }, "Find out what\u2019s in my way \u2192"),
-
-        // ── QUIET POSITIONING LINE ──
-        React.createElement("p", { style: {
-            fontSize: 13, color: C.dim, maxWidth: 480,
-            margin: "0 auto 16px", lineHeight: 1.7, fontStyle: "italic"
-        } }, "The point isn\u2019t that the careers advice was wrong. It\u2019s that it may not have been aimed at the bit that\u2019s stuck."),
 
         // ── SMALL PRINT ──
         React.createElement("p", { style: {
             fontSize: 10, color: C.dim, opacity: 0.7, maxWidth: 480,
-            margin: "0 auto", lineHeight: 1.65
+            margin: "12px auto 0", lineHeight: 1.65
         } }, "A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses \u2014 they change as your situation changes.")
     )
 ));
