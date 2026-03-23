@@ -155,6 +155,15 @@
 
 
 // ─── COLOUR TOKENS ─────────────────────────────────────────────────────────────
+const CW = {
+    bg: "#F5F0E8",
+    surface: "#FEFBF4",
+    border: "#E0D5C5",
+    text: "#1A1F3D",
+    body: "#3D3D3D",
+    muted: "#6B6358",
+    dim: "#9B9084",
+};
 const C = {
     ink: "#0D1B2A",
     surface: "#132031",
@@ -608,7 +617,7 @@ html,body{background:#0D1B2A;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:ro
 .g-btn-s{background:transparent;color:#8BA3BC;border:1px solid #2A4060;border-radius:8px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:border-color 0.15s,color 0.15s}
 .g-btn-s:hover{border-color:#2EC4B6;color:#2EC4B6}
 .g-eb-flag{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:16px 20px;margin-bottom:24px}
-.g-hero-glow{background:radial-gradient(ellipse 800px 400px at 50% -80px,rgba(46,196,182,0.06) 0%,transparent 70%)}.g-hero-glow::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;opacity:0.3;mix-blend-mode:overlay}.g-hero-glow{position:relative}
+.g-hero-glow{background:#F5F0E8}
 .g-btn-p{background:#2EC4B6;color:#0D1B2A;border:none;border-radius:10px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.18s,transform 0.12s,box-shadow 0.18s;letter-spacing:-0.01em;box-shadow:0 2px 12px rgba(46,196,182,0.18)}
 .g-btn-p:hover{background:#34D6C8;transform:translateY(-2px);box-shadow:0 6px 28px rgba(46,196,182,0.35)}
 .g-btn-p:active{transform:translateY(0);box-shadow:0 1px 6px rgba(46,196,182,0.15)}
@@ -710,16 +719,17 @@ function TopNav({ step, isMobile }) {
     const steps = ["Context", "Self-Efficacy", "Psych Safety", "Identity", "Resources"];
     const activeLabel = step >= 1 && step <= 5 ? steps[step - 1] : "";
     const pct = step === 0 ? 0 : step >= 7 ? 100 : Math.round((Math.min(step, 5) / 5) * 100);
+    var isWarm = step === 0 || (step === 7);
     return (React.createElement("div", { style: { position: "sticky", top: 0, zIndex: 100,
-            background: "rgba(13,27,42,0.96)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-            borderBottom: `1px solid ${C.border}`, padding: "0 24px", height: 56,
+            background: isWarm ? "rgba(245,240,232,0.96)" : "rgba(13,27,42,0.96)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            borderBottom: isWarm ? "1px solid #E0D5C5" : `1px solid ${C.border}`, padding: "0 24px", height: 56,
             display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 } },
         React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, flexShrink: 0 } },
             React.createElement("div", { style: { width: 30, height: 30, borderRadius: 8, background: C.teal,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: 16, color: C.ink, fontWeight: 700 } }, "\u25C8"),
             React.createElement("span", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 16,
-                    color: C.text, display: isMobile ? "none" : "block" } }, "GAP Profile\u2122")),
+                    color: isWarm ? CW.text : C.text, display: isMobile ? "none" : "block" } }, "GAP Profile\u2122")),
         step > 0 && step <= 5 && (React.createElement("div", { style: { flex: 1, maxWidth: 340, margin: "0 16px" } },
             React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 5 } },
                 activeLabel && React.createElement("span", { style: { fontSize: 11, color: C.dim, paddingRight: 6, borderRight: `1px solid ${C.border}`, marginRight: 6 } }, activeLabel),
@@ -728,7 +738,7 @@ function TopNav({ step, isMobile }) {
             React.createElement("div", { style: { height: 4, background: C.border, borderRadius: 2 } },
                 React.createElement("div", { style: { height: "100%", background: C.teal, borderRadius: 2,
                         width: `${pct}%`, transition: "width 0.4s ease" } })))),
-        React.createElement("span", { style: { fontSize: 12, color: C.dim, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "clamp(100px,30vw,200px)" } }, "Joe Markland Career Coaching")));
+        React.createElement("span", { style: { fontSize: 12, color: isWarm ? CW.dim : C.dim, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "clamp(100px,30vw,200px)" } }, "Joe Markland Career Coaching")));
 }
 // ─── ANCHOR BAR ────────────────────────────────────────────────────────────────
 function AnchorBar({ action }) {
@@ -778,28 +788,28 @@ function ScreenLanding({ dispatch }) {
     } },
         React.createElement("h1", { className: "g-fu g-d1", style: {
             fontFamily: "Instrument Serif, Georgia, serif",
-            fontSize: "clamp(36px,6vw,58px)", color: C.text, lineHeight: 1.1,
+            fontSize: "clamp(36px,6vw,58px)", color: CW.text, lineHeight: 1.1,
             marginBottom: 16
         } }, "You already know what you should be doing."),
         React.createElement("p", { className: "g-fu g-d2", style: {
             fontFamily: "Instrument Serif, Georgia, serif",
-            fontSize: "clamp(20px,3vw,28px)", color: C.muted, fontStyle: "italic",
+            fontSize: "clamp(20px,3vw,28px)", color: CW.muted, fontStyle: "italic",
             marginBottom: 40
         } }, "So what\u2019s actually stopping you?"),
         React.createElement("div", { className: "g-fu g-d2", style: {
             maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
         } },
             React.createElement("p", { style: {
-                fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
+                fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
             } }, "You\u2019ve thought about it. Probably a lot. So much that the thinking itself has started to feel like progress. But nothing\u2019s moved."),
             React.createElement("p", { style: {
-                fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
+                fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
             } }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
             React.createElement("p", { style: {
-                fontSize: 15, color: C.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
+                fontSize: 15, color: CW.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
             } }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers."),
             React.createElement("p", { style: {
-                fontSize: 15, color: C.muted, lineHeight: 1.8
+                fontSize: 15, color: CW.body, lineHeight: 1.8
             } }, "Free. No account. About seven minutes.")
         ),
         React.createElement("div", { className: "g-fu g-d3", style: {
@@ -813,11 +823,12 @@ function ScreenLanding({ dispatch }) {
             ].map(function(pair, i) {
                 return React.createElement("div", { key: i, style: {
                     display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left",
-                    background: C.surface, border: "1px solid " + C.border, borderRadius: 12, padding: "14px 18px",
+                    background: CW.surface, border: "1px solid " + CW.border, borderRadius: 12, padding: "14px 18px",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 } },
                     React.createElement("span", { style: { color: C.teal, fontSize: 16, lineHeight: "1.4", flexShrink: 0, marginTop: 2, fontWeight: 700 } }, "\u2192"),
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.6, margin: 0 } },
-                        React.createElement("strong", { style: { color: C.text, fontWeight: 600 } }, pair[0]),
+                    React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.6, margin: 0 } },
+                        React.createElement("strong", { style: { color: CW.text, fontWeight: 600 } }, pair[0]),
                         " " + pair[1]
                     )
                 );
@@ -828,7 +839,7 @@ function ScreenLanding({ dispatch }) {
         } },
             ["7 minutes", "Free, no account", "23 questions"].map(function(label) {
                 return React.createElement("span", { key: label, style: {
-                    padding: "8px 18px", border: "1px solid " + C.border, borderRadius: 20, fontSize: 13, color: C.muted, background: C.surface
+                    padding: "8px 18px", border: "1px solid " + CW.border, borderRadius: 20, fontSize: 13, color: CW.muted, background: CW.surface
                 } }, label);
             })
         ),
@@ -837,7 +848,7 @@ function ScreenLanding({ dispatch }) {
                 onClick: function() { dispatch({ type: "SET_STEP", step: 1 }); }
             }, "Find out what\u2019s in my way \u2192"),
             React.createElement("p", { style: {
-                fontSize: 10, color: C.dim, opacity: 0.7, maxWidth: 480, margin: "12px auto 0", lineHeight: 1.65
+                fontSize: 10, color: CW.dim, opacity: 0.7, maxWidth: 480, margin: "12px auto 0", lineHeight: 1.65
             } }, "A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses \u2014 they change as your situation changes.")
         )
     ));
@@ -1625,7 +1636,8 @@ function GAPProfile() {
         }
     }, []);
     const sectionIdx = state.step >= 2 && state.step <= 5 ? state.step - 2 : -1;
-    return (React.createElement("div", { style: { minHeight: "100vh", background: C.ink, fontFamily: "'DM Sans', sans-serif" } },
+    var rootWarm = state.step === 0;
+    return (React.createElement("div", { style: { minHeight: "100vh", background: rootWarm ? CW.bg : C.ink, fontFamily: "'DM Sans', sans-serif", transition: "background 0.3s ease" } },
         React.createElement(TopNav, { step: state.step, isMobile: isMobile }),
         state.resumeBannerVisible && (React.createElement("div", { style: { background: C.surf2, borderBottom: `1px solid ${C.border}`,
                 padding: "12px 24px", display: "flex", alignItems: "center",
