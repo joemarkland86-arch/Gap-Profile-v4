@@ -207,7 +207,7 @@ const ARCHETYPES = {
         label: "The Unclaimed Self", color: C.indigo,
         insight: "You can see the next version of your life. It just doesn't feel fully like yours yet.",
         focus: "The pattern: the future makes sense but doesn\u2019t feel like yours yet",
-        mechanism: "It makes sense on paper, but it doesn\u2019t feel like you yet. There\u2019s a gap between knowing this is the right direction and actually recognising yourself in it \u2014 and until that closes, hesitation keeps sounding like common sense.",
+        mechanism: "It makes sense on paper, but it doesn\u2019t feel like you yet. And until it does, hesitation isn\u2019t going to stop feeling like a reasonable position.",
         question: "What part of this next step still feels like a version of you you haven't fully claimed?",
         theory: "Ibarra's identity work (2003) · Markus & Nurius, possible selves (1986) · Strauss et al, future work self salience (2012)",
         secondaryLine: "can see the future, but doesn't fully recognise themselves in it yet",
@@ -1479,7 +1479,9 @@ function ScreenResults({ state, dispatch }) {
                 border: "1px solid " + C.border
             } },
             React.createElement("div", { style: {
-                    background: arch.color, padding: "20px 28px"
+                    borderLeft: "4px solid " + arch.color,
+                    background: arch.color + "16",
+                    padding: "20px 28px"
                 } },
                 React.createElement("p", { style: {
                         fontSize: 11, color: "rgba(0,0,0,0.5)", fontWeight: 700,
@@ -1517,6 +1519,9 @@ function ScreenResults({ state, dispatch }) {
                         fontSize: 13, color: C.muted, lineHeight: 1.7,
                         borderTop: "1px solid " + C.border, paddingTop: 14
                     } }, "This is the pattern. What to do about it depends on your specific situation \u2014 that\u2019s the conversation a coaching session is for."))),
+        React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, padding: "0 4px" } },
+            React.createElement("p", { style: { fontSize: 15, color: C.text, lineHeight: 1.75, letterSpacing: "-0.01em" } },
+                "You\u2019ve got a name for it now. Not a vague sense of being stuck \u2014 a specific pattern, with a specific explanation. What you do with that depends on your situation. The workbook takes you through it independently. The session works through what it means for you. Or you sit with the question for a bit. Any of those is a reasonable next move.")),
         React.createElement(NextSteps, { primary: primary, archColor: arch.color, scores: scores }),
         (showLongFlag || showAttemptFlag) && (React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(245,158,11,0.07)",
                 border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 14, padding: "20px 24px" } },
