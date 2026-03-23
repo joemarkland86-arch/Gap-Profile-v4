@@ -176,7 +176,7 @@ const ARCHETYPES = {
     se: {
         label: "The Capable Doubter", color: C.teal,
         insight: "Has the skills. Has the plan. Still asking: 'But am I actually good enough?'",
-        focus: "Recognising the evidence you already have · Building stronger proof through action",
+        focus: "The pattern: discounting evidence of your own capability",
         mechanism: "The block isn't capability. It's that your brain keeps discounting the evidence of your own capability — and it's done it so often that the doubt feels more real than the proof.",
         question: "Where are you demanding certainty from yourself that you wouldn't demand from anyone else?",
         theory: "Bandura's self-efficacy theory (1977, 1997)",
@@ -191,7 +191,7 @@ const ARCHETYPES = {
     ps: {
         label: "The Safety Seeker", color: C.blue,
         insight: "Can see the path. Still pulled toward the safer option.",
-        focus: "Naming what actually feels risky · Weighing the cost of staying stuck",
+        focus: "The pattern: treating a career decision like a physical threat",
         mechanism: "It's not that the risk isn't worth it. It's that your brain is treating a career decision like a physical danger — and when that happens, logic doesn't get much say.",
         question: "What would you do next if the downside felt half as significant as it does right now?",
         theory: "Rock's SCARF model (2008) · Kahneman's prospect theory (2011)",
@@ -206,8 +206,8 @@ const ARCHETYPES = {
     ia: {
         label: "The Unclaimed Self", color: C.indigo,
         insight: "You can see the next version of your life. It just doesn't feel fully like yours yet.",
-        focus: "Making the future self feel more real · Taking small identity-validating steps",
-        mechanism: "It makes sense on paper, but it doesn't feel like you yet. Until it does, hesitation will keep sounding sensible.",
+        focus: "The pattern: the future makes sense but doesn\u2019t feel like yours yet",
+        mechanism: "It makes sense on paper, but it doesn\u2019t feel like you yet. There\u2019s a gap between knowing this is the right direction and actually recognising yourself in it \u2014 and until that closes, hesitation keeps sounding like common sense.",
         question: "What part of this next step still feels like a version of you you haven't fully claimed?",
         theory: "Ibarra's identity work (2003) · Markus & Nurius, possible selves (1986) · Strauss et al, future work self salience (2012)",
         secondaryLine: "can see the future, but doesn't fully recognise themselves in it yet",
@@ -222,7 +222,7 @@ const ARCHETYPES = {
     rr: {
         label: "The Overdrawn Self", color: C.purple,
         insight: "You do care. But your time, attention and energy are already stretched past what this step needs.",
-        focus: "Reducing friction · Protecting energy · Getting support where it actually helps",
+        focus: "The pattern: genuine depletion, not a lack of motivation",
         mechanism: "You do care. The issue is that your time, attention and energy are already stretched, and career action needs exactly the kind of sustained focus that gets squeezed first.",
         question: "If the situation does not change by itself, what would make this feel even slightly easier to carry?",
         theory: "Hobfoll's Conservation of Resources theory (1989, 2018) · Baumeister's self-regulation research",
@@ -1474,26 +1474,49 @@ function ScreenResults({ state, dispatch }) {
                 secArch.insight.length > 90 ? secArch.insight.slice(0, 90) + "\u2026" : secArch.insight),
             React.createElement("p", { style: { fontSize: 13, color: C.muted, fontStyle: "italic", lineHeight: 1.7 } },
                 "The interaction between your primary and secondary patterns is often where the most important coaching work happens.")),
-        React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.border}` } },
-            React.createElement("div", { style: { background: arch.color, padding: "20px 28px" } },
-                React.createElement("p", { style: { fontSize: 11, color: "rgba(0,0,0,0.5)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 } }, "Your intervention map"),
-                React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 22, color: C.ink, marginBottom: 4 } }, arch.label),
-                React.createElement("p", { style: { fontSize: 13, color: "rgba(0,0,0,0.55)", fontWeight: 600 } }, arch.focus)),
-            React.createElement("div", { style: { background: C.surface, padding: "24px 28px", display: "flex", flexDirection: "column", gap: 12 } },
-                React.createElement("p", { style: { fontSize: 15, color: C.text, lineHeight: 1.7, marginBottom: 16, letterSpacing: "-0.01em" } }, arch.mechanism),
-                arch.question && React.createElement("div", { style: { borderLeft: `3px solid ${arch.color}`, paddingLeft: 16, margin: "16px 0" } },
-                    React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: arch.color, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 } }, "One question to sit with"),
-                    React.createElement("p", { style: { fontSize: 15, color: C.text, fontStyle: "italic", lineHeight: 1.65 } }, arch.question)),
-                arch.actions.map((a, i) => (React.createElement("div", { key: i, style: { display: "flex", gap: 14, alignItems: "center", background: "rgba(19,32,49,0.6)", border: "1px dashed #2A4060", borderRadius: 10, padding: "14px 16px" } },
-                    React.createElement("div", { style: { width: 28, height: 28, borderRadius: 7, background: arch.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 } },
-                        React.createElement("span", { style: { color: C.ink, fontWeight: 800, fontSize: 12 } }, i + 1)),
-                    React.createElement("div", { style: { flex: 1 } },
-                        React.createElement("p", { style: { fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 2 } }, a.title),
-                        React.createElement("p", { style: { fontSize: 12, color: C.dim, lineHeight: 1.5 } },
-                            a.detail.length > 80 ? a.detail.slice(0, 80) + "\u2026" : a.detail)),
-                    React.createElement("span", { "aria-hidden": "true", style: { fontSize: 16, color: C.dim, flexShrink: 0, marginLeft: 8 } }, "\uD83D\uDD12")))),
-                React.createElement("p", { style: { fontSize: 13, color: C.muted, fontStyle: "italic", lineHeight: 1.7, textAlign: "center", marginTop: 16 } },
-                    "Evidence-based interventions, matched to your pattern. In a coaching session, we work through which one opens the door for you specifically."))),
+        React.createElement("div", { className: "g-fu g-d4", style: {
+                marginBottom: 24, borderRadius: 16, overflow: "hidden",
+                border: "1px solid " + C.border
+            } },
+            React.createElement("div", { style: {
+                    background: arch.color, padding: "20px 28px"
+                } },
+                React.createElement("p", { style: {
+                        fontSize: 11, color: "rgba(0,0,0,0.5)", fontWeight: 700,
+                        letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4
+                    } }, "What\u2019s happening here"),
+                React.createElement("h3", { style: {
+                        fontFamily: "Instrument Serif, Georgia, serif", fontSize: 22,
+                        color: C.ink, marginBottom: 4
+                    } }, arch.label),
+                React.createElement("p", { style: {
+                        fontSize: 13, color: "rgba(0,0,0,0.55)", fontWeight: 600
+                    } }, arch.focus)),
+            React.createElement("div", { style: {
+                    background: C.surface, padding: "24px 28px",
+                    display: "flex", flexDirection: "column", gap: 16
+                } },
+                React.createElement("p", { style: {
+                        fontSize: 15, color: C.text, lineHeight: 1.75,
+                        letterSpacing: "-0.01em"
+                    } }, arch.mechanism),
+                arch.question && React.createElement("div", { style: {
+                        borderLeft: "3px solid " + arch.color, paddingLeft: 16,
+                        margin: "8px 0"
+                    } },
+                    React.createElement("p", { style: {
+                            fontSize: 11, fontWeight: 700, color: arch.color,
+                            textTransform: "uppercase", letterSpacing: "0.1em",
+                            marginBottom: 6
+                        } }, "One question to sit with"),
+                    React.createElement("p", { style: {
+                            fontSize: 15, color: C.text, fontStyle: "italic",
+                            lineHeight: 1.65
+                        } }, arch.question)),
+                React.createElement("p", { style: {
+                        fontSize: 13, color: C.muted, lineHeight: 1.7,
+                        borderTop: "1px solid " + C.border, paddingTop: 14
+                    } }, "This is the pattern. What to do about it depends on your specific situation \u2014 that\u2019s the conversation a coaching session is for."))),
         React.createElement(NextSteps, { primary: primary, archColor: arch.color, scores: scores }),
         (showLongFlag || showAttemptFlag) && (React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(245,158,11,0.07)",
                 border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 14, padding: "20px 24px" } },
