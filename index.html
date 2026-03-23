@@ -1415,7 +1415,7 @@ function ScreenResults({ state, dispatch }) {
                     React.createElement("strong", { style: { color: C.text } }, C3_LABEL[ctx.c3])))),
         React.createElement("p", { style: { fontSize: 12, color: C.dim, textAlign: "center",
                 marginBottom: 20, marginTop: -16, letterSpacing: "0.04em" } },
-                "Your primary gap is highlighted \u25cf Interventions unlock in a coaching conversation"),
+                "Your primary gap is highlighted below"),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "grid",
                 gridTemplateColumns: "1fr auto", gap: 24, marginBottom: 32, alignItems: "center" } },
             React.createElement("div", { className: "g-card", style: { padding: "20px 10px" } },
@@ -1485,54 +1485,6 @@ function ScreenResults({ state, dispatch }) {
                 secArch.insight.length > 90 ? secArch.insight.slice(0, 90) + "\u2026" : secArch.insight),
             React.createElement("p", { style: { fontSize: 13, color: C.muted, fontStyle: "italic", lineHeight: 1.7 } },
                 "The interaction between your primary and secondary patterns is often where the most important coaching work happens.")),
-        React.createElement("div", { className: "g-fu g-d4", style: {
-                marginBottom: 24, borderRadius: 16, overflow: "hidden",
-                border: "1px solid " + C.border
-            } },
-            React.createElement("div", { style: {
-                    borderLeft: "4px solid " + arch.color,
-                    background: arch.color + "16",
-                    padding: "20px 28px"
-                } },
-                React.createElement("p", { style: {
-                        fontSize: 11, color: "rgba(0,0,0,0.5)", fontWeight: 700,
-                        letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4
-                    } }, "What\u2019s happening here"),
-                React.createElement("h3", { style: {
-                        fontFamily: "Instrument Serif, Georgia, serif", fontSize: 22,
-                        color: C.ink, marginBottom: 4
-                    } }, arch.label),
-                React.createElement("p", { style: {
-                        fontSize: 13, color: "rgba(0,0,0,0.55)", fontWeight: 600
-                    } }, arch.focus)),
-            React.createElement("div", { style: {
-                    background: C.surface, padding: "24px 28px",
-                    display: "flex", flexDirection: "column", gap: 16
-                } },
-                React.createElement("p", { style: {
-                        fontSize: 15, color: C.text, lineHeight: 1.75,
-                        letterSpacing: "-0.01em"
-                    } }, arch.mechanism),
-                arch.question && React.createElement("div", { style: {
-                        borderLeft: "3px solid " + arch.color, paddingLeft: 16,
-                        margin: "8px 0"
-                    } },
-                    React.createElement("p", { style: {
-                            fontSize: 11, fontWeight: 700, color: arch.color,
-                            textTransform: "uppercase", letterSpacing: "0.1em",
-                            marginBottom: 6
-                        } }, "One question to sit with"),
-                    React.createElement("p", { style: {
-                            fontSize: 15, color: C.text, fontStyle: "italic",
-                            lineHeight: 1.65
-                        } }, arch.question)),
-                React.createElement("p", { style: {
-                        fontSize: 13, color: C.muted, lineHeight: 1.7,
-                        borderTop: "1px solid " + C.border, paddingTop: 14
-                    } }, "This is the pattern. What to do about it depends on your specific situation \u2014 that\u2019s the conversation a coaching session is for."))),
-        React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, padding: "0 4px" } },
-            React.createElement("p", { style: { fontSize: 15, color: C.text, lineHeight: 1.75, letterSpacing: "-0.01em" } },
-                "You\u2019ve got a name for it now. Not a vague sense of being stuck \u2014 a specific pattern, with a specific explanation. What you do with that depends on your situation. The workbook takes you through it independently. The session works through what it means for you. Or you sit with the question for a bit. Any of those is a reasonable next move.")),
         React.createElement(NextSteps, { primary: primary, archColor: arch.color, scores: scores }),
         (showLongFlag || showAttemptFlag) && (React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(245,158,11,0.07)",
                 border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 14, padding: "20px 24px" } },
