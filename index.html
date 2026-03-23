@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GAP Profile&#8482; by Joe Markland | Career Behaviour Diagnostic</title>
-  <meta name="description" content="Find out precisely why you&#39;re not acting on what you already know. Four dimensions. 7 minutes." />
+  <title>GAP Profile&#8482; by Joe Markland | Career Action Assessment</title>
+  <meta name="description" content="Find out what&#39;s actually stopping you from acting on what you already know. Four dimensions. 7 minutes." />
   <meta property="og:title" content="GAP Profile&#8482; by Joe Markland" />
-  <meta property="og:description" content="You've had the plan. Something keeps getting in the way. The GAP Profile diagnoses the exact psychological barrier stopping you." />
+  <meta property="og:description" content="You've had the plan. Something keeps getting in the way. The GAP Profile shows you what's actually in the way." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gapprofile.co.uk" />
   <meta property="og:image" content="https://joemarkland86-arch.github.io/Gapprofile/og-image.png" />
@@ -337,7 +337,7 @@ const PROGRAMME_URL = "https://gapprofile.co.uk/programme";
 const CTA_DATA = {
     ps: {
         headline: "The move makes sense. Your threat system disagrees.",
-        reframe: "This isn\u2019t a confidence problem or a risk tolerance problem. Your brain is treating a career decision like a physical threat \u2014 and when that happens, logic doesn\u2019t get much of a vote. The hesitation you feel isn\u2019t cowardice. It\u2019s biology.",
+        reframe: "This isn\u2019t a confidence problem or a risk tolerance problem. Your brain is treating a career decision like a physical threat \u2014 and when that happens, logic doesn\u2019t get much of a vote. The hesitation you feel isn\u2019t a character flaw. It\u2019s your threat system doing its job.",
         cost: "But inaction has a cost too. Every time you default to the safer option, the window of opportunity gets a little narrower \u2014 and the part of you that knows what you should do gets a little quieter. At some point, someone else will ask you at Sunday lunch why you never made the move you always said you were going to make.",
         nextStep: "The first move is to make the threat specific. Vague threat is amplified threat. When you name exactly what feels at risk \u2014 status, certainty, income, relationships \u2014 you can find a survivable first step that your threat system can accept.",
         workbookAvailable: true,
@@ -493,7 +493,7 @@ function getPatternInsight(c2, c3) {
     if (veryLong && sixPlus)
         return "This pattern is entrenched. Multiple failed attempts over a long period creates learned helplessness risk. The coaching approach needs to be highly structured with very small, success-guaranteed first steps.";
     if (veryLong && never)
-        return "Long awareness without any action usually indicates a deeper block than surface-level planning. The diagnostic points precisely to where to look.";
+        return "Long awareness without any action usually points to something deeper than surface-level planning. Your results show where to start looking.";
     if (long && few && !never)
         return "The gap between knowing and attempting suggests avoidance has become a habit. The intervention needs to address the habit before the action.";
     if (long && manyAttempts)
@@ -730,6 +730,47 @@ function TopNav({ step, isMobile }) {
                         width: `${pct}%`, transition: "width 0.4s ease" } })))),
         React.createElement("span", { style: { fontSize: 12, color: C.dim, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "clamp(100px,30vw,200px)" } }, "Joe Markland Career Coaching")));
 }
+// ─── ANCHOR BAR ────────────────────────────────────────────────────────────────
+function AnchorBar({ action }) {
+    if (!action) return null;
+    var display = action.length > 65 ? action.slice(0, 65).trimEnd() + "\u2026" : action;
+    return React.createElement("div", {
+        style: {
+            position: "sticky",
+            top: 56,
+            zIndex: 99,
+            background: "rgba(19,32,49,0.95)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            borderBottom: "1px solid " + C.border,
+            padding: "10px 24px",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+        }
+    },
+        React.createElement("span", {
+            style: {
+                fontSize: 11,
+                fontWeight: 700,
+                color: C.dim,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                flexShrink: 0,
+            }
+        }, "Answering about:"),
+        React.createElement("span", {
+            style: {
+                fontSize: 13,
+                color: C.text,
+                fontStyle: "italic",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+            }
+        }, "\u201C" + display + "\u201D")
+    );
+}
 // ─── SCREEN 0: LANDING ─────────────────────────────────────────────────────────
 function ScreenLanding({ dispatch }) {
 return (React.createElement("div", { className: "g-hero-glow", style: {
@@ -745,30 +786,29 @@ fontFamily: "Instrument Serif, Georgia, serif",
 fontSize: "clamp(20px,3vw,28px)", color: C.muted, fontStyle: "italic",
 marginBottom: 40
 } }, "So what\u2019s actually stopping you?"),
+
 React.createElement("div", { className: "g-fu g-d2", style: {
 maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
 } },
 React.createElement("p", { style: {
-fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
-} }, "It\u2019s not that you haven\u2019t thought about it. You\u2019ve probably thought about it so much that the thinking itself has started to feel like progress. But nothing\u2019s moved."),
-React.createElement("p", { style: {
-fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
-} }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
-React.createElement("p", { style: {
 fontSize: 15, color: C.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
-} }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers."),
+} }, "The GAP Profile is a free career assessment. You name the specific move you\u2019re stuck on, answer 23 questions about that step, and it shows you the pattern in your own answers \u2014 the thing that\u2019s actually in the way."),
+React.createElement("p", { style: {
+fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
+} }, "It\u2019s not a personality test. It doesn\u2019t tell you what to do. It measures four dimensions of career action readiness \u2014 confidence, safety, identity, and resources \u2014 and reflects back which one is blocking you on this particular step."),
 React.createElement("p", { style: {
 fontSize: 15, color: C.muted, lineHeight: 1.8
-} }, "Free. No account. About seven minutes.")
+} }, "Most people already know roughly what they should be doing. The problem is rarely a lack of advice. It\u2019s something more specific, and usually easier to work on once you can actually see it.")
 ),
+
 React.createElement("div", { className: "g-fu g-d3", style: {
 maxWidth: 560, margin: "0 auto 36px", display: "flex",
 flexDirection: "column", gap: 10
 } },
 ...[
-["It reflects, rather than labels.", "It\u2019s not a personality test. It helps you see what\u2019s already going on, organised in a way that makes the pattern harder to miss."],
-["It shows the gap, not the answer.", "It won\u2019t tell you what to do next. That part is yours. It helps you see what kind of gap is in the way, so your next step is based on something clearer than guesswork."],
-["It stays anchored to your situation.", "You name the specific move at the start, and every question after that is about that step \u2014 not careers in general."],
+["Anchored to your situation.", "You name the specific move at the start. Every question after that is about that step \u2014 not careers in general."],
+["Shows the gap, not the answer.", "It won\u2019t tell you what to do next. It helps you see what kind of friction is in the way, so your next step is based on something clearer than guesswork."],
+["Reflects, rather than labels.", "It\u2019s not a personality type. It helps you see what\u2019s already going on, organised in a way that makes the pattern harder to miss."],
 ].map(function(pair, i) {
 return React.createElement("div", { key: i, style: {
 display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left",
@@ -782,6 +822,7 @@ React.createElement("strong", { style: { color: C.text, fontWeight: 600 } }, pai
 );
 })
 ),
+
 React.createElement("div", { className: "g-fu g-d4", style: {
 display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 48
 } },
@@ -791,6 +832,7 @@ padding: "8px 18px", border: "1px solid " + C.border, borderRadius: 20, fontSize
 } }, label);
 })
 ),
+
 React.createElement("div", { className: "g-fu g-d4" },
 React.createElement("button", { className: "g-btn-p", style: { fontSize: 16, padding: "16px 44px", marginBottom: 14 },
 onClick: function() { dispatch({ type: "SET_STEP", step: 1 }); }
@@ -828,12 +870,12 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
                     color: C.teal, textTransform: "uppercase", marginBottom: 16 } }, "Context"),
             React.createElement("h2", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 28,
                     color: C.text, marginBottom: 8 } }, "Name the specific thing."),
-            React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 32 } }, "These questions root the diagnostic in your actual situation. Vague inputs produce vague results. Name the precise action you mean, not a category. A specific thing.")),
+            React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 32 } }, "The more specific you are here, the more useful your results will be. Not a category — the actual action you know you should be taking but aren't.")),
         React.createElement("div", { className: "g-card g-fu g-d1", style: { display: "flex", flexDirection: "column", gap: 28 } },
             React.createElement("div", null,
                 React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600,
                         color: C.muted, marginBottom: 8 } }, "The specific action I know I should be taking but am not is:"),
-                React.createElement("textarea", { className: `g-input${ctxErrors.c1 ? " g-err" : ""}`, style: { minHeight: 90 }, value: localC1, placeholder: "Be precise. 'Apply for jobs' is too broad. 'Send two speculative emails to companies in X sector this week' is specific enough to diagnose.", onChange: e => {
+                React.createElement("textarea", { className: `g-input${ctxErrors.c1 ? " g-err" : ""}`, style: { minHeight: 90 }, value: localC1, placeholder: "Be precise. 'Apply for jobs' is too broad. 'Send two speculative emails to companies in X sector this week' gives us something to work with.", onChange: e => {
                         setLocalC1(e.target.value);
                         dispatch({ type: "SET_CTX", patch: { c1: e.target.value } });
                     } }),
@@ -1283,7 +1325,7 @@ function ScreenResults({ state, dispatch }) {
     const [barsVisible, setBarsVisible] = useState(false);
     const handleShare = () => {
         const archName = ARCHETYPES[scores.primary].label;
-        const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free diagnostic for why you know what career move to make but aren't making it.\n\nhttps://gapprofile.co.uk`;
+        const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free assessment that shows what's actually stopping you from making the career move you already know you should make.\n\nhttps://gapprofile.co.uk`;
         if (navigator.share) {
             navigator.share({ title: `My GAP Profile: ${archName}`, text: shareText }).catch(() => {});
         } else {
@@ -1476,7 +1518,7 @@ function ScreenResults({ state, dispatch }) {
         React.createElement("div", { className: "g-fu g-d5", style: { marginBottom: 24 } },
             React.createElement(Accordion, { title: "About the GAP Profile\u2122 methodology" },
                 React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 16 } },
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career assessments tell you about personality or values, but don't explain why people who already know what they should do still don't do it. This diagnostic measures the four evidence-based constructs most predictive of that knowing-doing gap."),
+                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career tools tell you about personality or values, but don't explain why people who already know what they should do still aren't doing it. The GAP Profile measures four dimensions of career action readiness — the things that tend to block progress even when the direction is clear."),
                     Object.values(ARCHETYPES).map(a => (React.createElement("div", { key: a.label, style: { display: "flex", gap: 12, alignItems: "flex-start" } },
                         React.createElement("div", { style: { width: 8, height: 8, borderRadius: 2, background: a.color,
                                 flexShrink: 0, marginTop: 5 } }),
@@ -1486,7 +1528,7 @@ function ScreenResults({ state, dispatch }) {
                                 a.theory,
                                 ": ",
                                 a.mechanism))))),
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7, borderTop: `1px solid ${C.border}`, paddingTop: 14 } }, "Joe Markland is a career coach with over 300 hours of coaching practice, specialising in the knowing-doing gap in early-to-mid career professionals. The GAP Profile\u2122 is his proprietary diagnostic instrument, developed from direct work with individuals at this career transition point.")))),
+                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7, borderTop: `1px solid ${C.border}`, paddingTop: 14 } }, "Joe Markland is a career coach specialising in the knowing-doing gap — the pattern where capable people know what they should do but aren't doing it. The GAP Profile is his assessment tool, built from direct work with graduates and early-career professionals at exactly this point.")))),
         React.createElement("p", { style: { fontSize: 10, color: C.dim, opacity: 0.6, textAlign: "center",
                 maxWidth: 440, margin: "32px auto 4px", lineHeight: 1.65 } },
             "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and will shift as your situation changes. Best used as a starting point for a coaching conversation."),
@@ -1570,7 +1612,17 @@ function GAPProfile() {
                     cursor: "pointer", fontSize: 13 } }, "Dismiss"))),
         state.step === 0 && React.createElement(ScreenLanding, { dispatch: dispatch }),
         state.step === 1 && (React.createElement(ScreenContext, { ctx: state.ctx, ctxErrors: state.ctxErrors, dispatch: dispatch })),
-        sectionIdx >= 0 && (React.createElement(ScreenSection, { key: state.step, section: SECTIONS[sectionIdx], stepIdx: sectionIdx, responses: state.responses, dispatch: dispatch, isMobile: isMobile })),
+        sectionIdx >= 0 && React.createElement(React.Fragment, null,
+    React.createElement(AnchorBar, { action: state.ctx.c1 }),
+    React.createElement(ScreenSection, {
+        key: state.step,
+        section: SECTIONS[sectionIdx],
+        stepIdx: sectionIdx,
+        responses: state.responses,
+        dispatch: dispatch,
+        isMobile: isMobile
+    })
+),
         state.step === 7 && !state.processingComplete && (React.createElement(ScreenProcessing, { dispatch: dispatch })),
         state.step === 7 && state.processingComplete && state.scores && (React.createElement(ScreenResults, { state: state, dispatch: dispatch })),
         state.coachModalOpen && (React.createElement(CoachModal, { state: state, dispatch: dispatch })),
