@@ -730,6 +730,47 @@ function TopNav({ step, isMobile }) {
                         width: `${pct}%`, transition: "width 0.4s ease" } })))),
         React.createElement("span", { style: { fontSize: 12, color: C.dim, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "clamp(100px,30vw,200px)" } }, "Joe Markland Career Coaching")));
 }
+// ─── ANCHOR BAR ────────────────────────────────────────────────────────────────
+function AnchorBar({ action }) {
+    if (!action) return null;
+    var display = action.length > 65 ? action.slice(0, 65).trimEnd() + "\u2026" : action;
+    return React.createElement("div", {
+        style: {
+            position: "sticky",
+            top: 56,
+            zIndex: 99,
+            background: "rgba(19,32,49,0.95)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            borderBottom: "1px solid " + C.border,
+            padding: "10px 24px",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+        }
+    },
+        React.createElement("span", {
+            style: {
+                fontSize: 11,
+                fontWeight: 700,
+                color: C.dim,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                flexShrink: 0,
+            }
+        }, "Answering about:"),
+        React.createElement("span", {
+            style: {
+                fontSize: 13,
+                color: C.text,
+                fontStyle: "italic",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+            }
+        }, "\u201C" + display + "\u201D")
+    );
+}
 // ─── SCREEN 0: LANDING ─────────────────────────────────────────────────────────
 function ScreenLanding({ dispatch }) {
 return (React.createElement("div", { className: "g-hero-glow", style: {
@@ -745,30 +786,29 @@ fontFamily: "Instrument Serif, Georgia, serif",
 fontSize: "clamp(20px,3vw,28px)", color: C.muted, fontStyle: "italic",
 marginBottom: 40
 } }, "So what\u2019s actually stopping you?"),
+
 React.createElement("div", { className: "g-fu g-d2", style: {
 maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
 } },
 React.createElement("p", { style: {
-fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
-} }, "It\u2019s not that you haven\u2019t thought about it. You\u2019ve probably thought about it so much that the thinking itself has started to feel like progress. But nothing\u2019s moved."),
-React.createElement("p", { style: {
-fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
-} }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
-React.createElement("p", { style: {
 fontSize: 15, color: C.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
-} }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers."),
+} }, "The GAP Profile is a free career assessment. You name the specific move you\u2019re stuck on, answer 23 questions about that step, and it shows you the pattern in your own answers \u2014 the thing that\u2019s actually in the way."),
+React.createElement("p", { style: {
+fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 16
+} }, "It\u2019s not a personality test. It doesn\u2019t tell you what to do. It measures four dimensions of career action readiness \u2014 confidence, safety, identity, and resources \u2014 and reflects back which one is blocking you on this particular step."),
 React.createElement("p", { style: {
 fontSize: 15, color: C.muted, lineHeight: 1.8
-} }, "Free. No account. About seven minutes.")
+} }, "Most people already know roughly what they should be doing. The problem is rarely a lack of advice. It\u2019s something more specific, and usually easier to work on once you can actually see it.")
 ),
+
 React.createElement("div", { className: "g-fu g-d3", style: {
 maxWidth: 560, margin: "0 auto 36px", display: "flex",
 flexDirection: "column", gap: 10
 } },
 ...[
-["It reflects, rather than labels.", "It\u2019s not a personality test. It helps you see what\u2019s already going on, organised in a way that makes the pattern harder to miss."],
-["It shows the gap, not the answer.", "It won\u2019t tell you what to do next. That part is yours. It helps you see what kind of gap is in the way, so your next step is based on something clearer than guesswork."],
-["It stays anchored to your situation.", "You name the specific move at the start, and every question after that is about that step \u2014 not careers in general."],
+["Anchored to your situation.", "You name the specific move at the start. Every question after that is about that step \u2014 not careers in general."],
+["Shows the gap, not the answer.", "It won\u2019t tell you what to do next. It helps you see what kind of friction is in the way, so your next step is based on something clearer than guesswork."],
+["Reflects, rather than labels.", "It\u2019s not a personality type. It helps you see what\u2019s already going on, organised in a way that makes the pattern harder to miss."],
 ].map(function(pair, i) {
 return React.createElement("div", { key: i, style: {
 display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left",
@@ -782,6 +822,7 @@ React.createElement("strong", { style: { color: C.text, fontWeight: 600 } }, pai
 );
 })
 ),
+
 React.createElement("div", { className: "g-fu g-d4", style: {
 display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 48
 } },
@@ -791,6 +832,7 @@ padding: "8px 18px", border: "1px solid " + C.border, borderRadius: 20, fontSize
 } }, label);
 })
 ),
+
 React.createElement("div", { className: "g-fu g-d4" },
 React.createElement("button", { className: "g-btn-p", style: { fontSize: 16, padding: "16px 44px", marginBottom: 14 },
 onClick: function() { dispatch({ type: "SET_STEP", step: 1 }); }
@@ -1570,7 +1612,17 @@ function GAPProfile() {
                     cursor: "pointer", fontSize: 13 } }, "Dismiss"))),
         state.step === 0 && React.createElement(ScreenLanding, { dispatch: dispatch }),
         state.step === 1 && (React.createElement(ScreenContext, { ctx: state.ctx, ctxErrors: state.ctxErrors, dispatch: dispatch })),
-        sectionIdx >= 0 && (React.createElement(ScreenSection, { key: state.step, section: SECTIONS[sectionIdx], stepIdx: sectionIdx, responses: state.responses, dispatch: dispatch, isMobile: isMobile })),
+        sectionIdx >= 0 && React.createElement(React.Fragment, null,
+    React.createElement(AnchorBar, { action: state.ctx.c1 }),
+    React.createElement(ScreenSection, {
+        key: state.step,
+        section: SECTIONS[sectionIdx],
+        stepIdx: sectionIdx,
+        responses: state.responses,
+        dispatch: dispatch,
+        isMobile: isMobile
+    })
+),
         state.step === 7 && !state.processingComplete && (React.createElement(ScreenProcessing, { dispatch: dispatch })),
         state.step === 7 && state.processingComplete && state.scores && (React.createElement(ScreenResults, { state: state, dispatch: dispatch })),
         state.coachModalOpen && (React.createElement(CoachModal, { state: state, dispatch: dispatch })),
