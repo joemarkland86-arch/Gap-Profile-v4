@@ -40,7 +40,7 @@
 
   <script>
     (function() {
-      const { useState, useEffect, useReducer, useRef } = React;
+      const { useState, useEffect, useReducer, useRef, useCallback } = React;
 
 
     // Pure SVG Radar Chart - zero external dependencies
@@ -525,6 +525,7 @@ function buildInterpretation({ c1, c2, c3, primary, secondary }) {
 // ─── STATE / REDUCER ───────────────────────────────────────────────────────────
 const INITIAL = {
     step: 0,
+    transitioning: false,
     ctx: { c1: "", c2: "", c3: "", c4: "" },
     responses: {},
     email: "", firstName: "", emailSkipped: false,
@@ -539,6 +540,7 @@ const INITIAL = {
 function reducer(state, action) {
     switch (action.type) {
         case "SET_STEP": return { ...state, step: action.step };
+        case "SET_TRANSITIONING": return { ...state, transitioning: action.val };
         case "SET_COACH_MODE": return { ...state, coachMode: true };
         case "PROCESSING_DONE": return { ...state, processingComplete: true };
         case "SET_TOAST": return { ...state, toast: action.message };
@@ -782,6 +784,53 @@ function AnchorBar({ action }) {
     );
 }
 // ─── SCREEN 0: LANDING ─────────────────────────────────────────────────────────
+// ─── TRANSITION BRIDGE ─────────────────────────────────────────────────────────
+function TransitionBridge({ onComplete }) {
+    const [phase, setPhase] = useState("warm");
+    const reducedMotion = useRef(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const done = useCallback(onComplete, []);
+    useEffect(() => {
+        if (reducedMotion.current) {
+            setPhase("text");
+            document.body.style.backgroundColor = C.ink;
+            const t = setTimeout(done, 1200);
+            return () => clearTimeout(t);
+        }
+        const t1 = setTimeout(() => setPhase("fading"), 100);
+        const t2 = setTimeout(() => setPhase("text"), 900);
+        const t3 = setTimeout(() => { document.body.style.backgroundColor = C.ink; }, 300);
+        const t4 = setTimeout(done, 3400);
+        return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    }, [done]);
+    return React.createElement("div", {
+        style: {
+            position: "fixed", inset: 0, zIndex: 9999,
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center",
+            backgroundColor: phase === "warm" ? CW.bg : C.ink,
+            transition: reducedMotion.current ? "none" : "background-color 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            fontFamily: "'DM Sans', sans-serif",
+        }
+    },
+        React.createElement("p", {
+            style: {
+                fontSize: 18, fontWeight: 400, color: C.text,
+                opacity: phase === "text" ? 1 : 0,
+                transition: reducedMotion.current ? "none" : "opacity 0.9s ease-in",
+                letterSpacing: "0.02em", margin: 0, padding: "0 32px",
+                textAlign: "center", lineHeight: 1.6,
+            }
+        }, "Don\u2019t overthink it. Just answer."),
+        React.createElement("div", {
+            style: {
+                width: 4, height: 4, borderRadius: "50%",
+                backgroundColor: C.teal, marginTop: 24,
+                opacity: phase === "text" ? 1 : 0,
+                transition: reducedMotion.current ? "none" : "opacity 0.8s ease-in 0.25s",
+            }
+        })
+    );
+}
 function ScreenLanding({ dispatch }) {
     return (React.createElement("div", { className: "g-hero-glow", style: {
         maxWidth: 720, margin: "0 auto", padding: "80px 24px 100px", textAlign: "center"
@@ -845,7 +894,7 @@ function ScreenLanding({ dispatch }) {
         ),
         React.createElement("div", { className: "g-fu g-d4" },
             React.createElement("button", { className: "g-btn-p", style: { fontSize: 16, padding: "16px 44px", marginBottom: 14 },
-                onClick: function() { dispatch({ type: "SET_STEP", step: 1 }); }
+                onClick: function() { dispatch({ type: "SET_TRANSITIONING", val: true }); }
             }, "Find out what\u2019s in my way \u2192"),
             React.createElement("p", { style: {
                 fontSize: 10, color: CW.dim, opacity: 0.7, maxWidth: 480, margin: "12px auto 0", lineHeight: 1.65
@@ -1605,7 +1654,8 @@ function GAPProfile() {
                 } }, "Resume \u2192"),
             React.createElement("button", { onClick: () => dispatch({ type: "SET_RESUME", val: false }), style: { background: "none", border: "none", color: C.dim,
                     cursor: "pointer", fontSize: 13 } }, "Dismiss"))),
-        state.step === 0 && React.createElement(ScreenLanding, { dispatch: dispatch }),
+        state.transitioning && React.createElement(TransitionBridge, { onComplete: function() { dispatch({ type: "SET_TRANSITIONING", val: false }); dispatch({ type: "SET_STEP", step: 1 }); } }),
+        state.step === 0 && !state.transitioning && React.createElement(ScreenLanding, { dispatch: dispatch }),
         state.step === 1 && (React.createElement(ScreenContext, { ctx: state.ctx, ctxErrors: state.ctxErrors, dispatch: dispatch })),
         sectionIdx >= 0 && React.createElement(React.Fragment, null,
     React.createElement(AnchorBar, { action: state.ctx.c1 }),
