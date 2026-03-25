@@ -929,13 +929,11 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
                     color: C.teal, textTransform: "uppercase", marginBottom: 16 } }, "Context"),
             React.createElement("h2", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 28,
-                    color: C.text, marginBottom: 8 } }, "Name the specific thing."),
-            React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 32 } }, "The more specific you are here, the more useful your results will be. Not a category — the actual action you know you should be taking but aren't.")),
+                    color: C.text, marginBottom: 8 } }, "What\u2019s the career move you feel stuck on?"),
+            React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 32 } }, "Think bigger than one task, smaller than a life plan. Name the actual step you know you should be taking but aren\u2019t.")),
         React.createElement("div", { className: "g-card g-fu g-d1", style: { display: "flex", flexDirection: "column", gap: 28 } },
             React.createElement("div", null,
-                React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600,
-                        color: C.muted, marginBottom: 8 } }, "The specific action I know I should be taking but am not is:"),
-                React.createElement("textarea", { className: `g-input${ctxErrors.c1 ? " g-err" : ""}`, style: { minHeight: 90 }, value: localC1, placeholder: "Be precise. 'Apply for jobs' is too broad. 'Send two speculative emails to companies in X sector this week' gives us something to work with.", onChange: e => {
+                React.createElement("textarea", { className: `g-input${ctxErrors.c1 ? " g-err" : ""}`, style: { minHeight: 90 }, value: localC1, placeholder: "In your own words\u2026", onChange: e => {
                         setLocalC1(e.target.value);
                         dispatch({ type: "SET_CTX", patch: { c1: e.target.value } });
                     } }),
