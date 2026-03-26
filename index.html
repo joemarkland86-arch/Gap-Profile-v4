@@ -180,6 +180,7 @@ const C = {
     green: "#10B981",
     red: "#EF4444",
 };
+const TEAL_TEXT = "#1A7A6F"; // accessible teal for text on cream/sand — replaces #2EC4B6 where contrast fails
 // ─── ARCHETYPES ────────────────────────────────────────────────────────────────
 const ARCHETYPES = {
     se: {
@@ -297,9 +298,9 @@ function PatternSection({ scores, primary, ctx }) {
 if (!scores || !ctx) return null;
 var arch = ARCHETYPES[primary];
 var archColor = arch.color;
+var labelColor = archColor === C.teal ? TEAL_TEXT : archColor;
 var patternKey = selectPattern(scores);
 var patternText = PATTERNS[patternKey];
-var question = PATTERN_QUESTIONS[primary] || PATTERN_QUESTIONS.rr;
 var actionShort = ctx.c1.length > 70 ? ctx.c1.slice(0, 70).trim() + "\u2026" : ctx.c1;
 var durationNatural = DURATION_NATURAL[ctx.c2];
 var contextLine;
@@ -313,7 +314,7 @@ return React.createElement("div", {
     style: { borderLeft: "4px solid " + archColor, marginBottom: 24, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }
 },
     React.createElement("p", { style: {
-        fontSize: 11, fontWeight: 700, color: archColor,
+        fontSize: 11, fontWeight: 700, color: labelColor,
         letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 14
     } }, "The pattern in your answers"),
     React.createElement("p", { style: {
@@ -322,17 +323,6 @@ return React.createElement("div", {
     React.createElement("p", { style: {
         fontSize: 15, color: CW.text, lineHeight: 1.75, marginBottom: 20, fontWeight: 500
     } }, patternText),
-    React.createElement("div", { style: {
-        borderLeft: "3px solid " + archColor, paddingLeft: 16, marginBottom: 20
-    } },
-        React.createElement("p", { style: {
-            fontSize: 11, fontWeight: 700, color: archColor,
-            textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6
-        } }, "One question to sit with"),
-        React.createElement("p", { style: {
-            fontSize: 15, color: CW.text, fontStyle: "italic", lineHeight: 1.65
-        } }, question)
-    ),
     React.createElement("p", { style: {
         fontSize: 14, color: CW.muted, lineHeight: 1.7,
         borderTop: "1px solid " + CW.border, paddingTop: 16
@@ -1269,6 +1259,7 @@ function InlineEmailCapture({ dispatch }) {
 function NextSteps({ primary, archColor, scores }) {
     const cta = CTA_DATA[primary];
     if (!cta) return null;
+    const archLabelColor = archColor === C.teal ? TEAL_TEXT : archColor;
 
     const cardBase = {
         borderRadius: 14,
@@ -1289,7 +1280,7 @@ function NextSteps({ primary, archColor, scores }) {
             boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }
     },
-        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: cta.workbookAvailable ? archColor : CW.dim, letterSpacing: "0.1em", textTransform: "uppercase" } },
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: cta.workbookAvailable ? archLabelColor : CW.dim, letterSpacing: "0.1em", textTransform: "uppercase" } },
             cta.workbookAvailable ? "Workbook · \u00A39.99" : "Workbook · Coming soon"),
         React.createElement("p", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 17, color: CW.text, lineHeight: 1.3 } }, cta.workbookTitle),
         React.createElement("p", { style: { fontSize: 13, color: CW.body, lineHeight: 1.6 } }, cta.workbookDesc),
@@ -1407,11 +1398,12 @@ function ScreenResults({ state, dispatch }) {
     const interp = buildInterpretation({ c1: ctx.c1, c2: ctx.c2, c3: ctx.c3, primary, secondary });
     const showLongFlag = ctx.c2 === "1yr+";
     const showAttemptFlag = ctx.c3 === "6+";
+    const archLabelColor = arch.color === C.teal ? TEAL_TEXT : arch.color;
     const dimRows = [
-        { key: "se", label: "Self-Efficacy", score: se, color: C.teal },
-        { key: "ps", label: "Psychological Safety", score: ps, color: C.blue },
-        { key: "ia", label: "Identity Alignment", score: ia, color: C.indigo },
-        { key: "rr", label: "Resource Readiness", score: rr, color: C.purple },
+        { key: "se", label: "Self-Efficacy", score: se, color: C.teal, textColor: TEAL_TEXT },
+        { key: "ps", label: "Psychological Safety", score: ps, color: C.blue, textColor: C.blue },
+        { key: "ia", label: "Identity Alignment", score: ia, color: C.indigo, textColor: C.indigo },
+        { key: "rr", label: "Resource Readiness", score: rr, color: C.purple, textColor: C.purple },
     ];
     const copyProfile = () => {
         const text = [
@@ -1432,7 +1424,7 @@ function ScreenResults({ state, dispatch }) {
     return (React.createElement("div", { className: "g-screen-enter", style: { maxWidth: 720, margin: "0 auto", padding: "40px 24px calc(120px + var(--safe-bottom))", color: CW.body } },
         React.createElement("div", { className: "g-fu", style: { textAlign: "center", marginBottom: 48 } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.14em",
-                    color: arch.color, textTransform: "uppercase", marginBottom: 12 } }, "Your archetype"),
+                    color: archLabelColor, textTransform: "uppercase", marginBottom: 12 } }, "Your archetype"),
             React.createElement("h1", { style: { fontFamily: "Instrument Serif, Georgia, serif",
                     fontSize: "clamp(44px,8vw,72px)", color: CW.text, lineHeight: 1.05,
                     marginBottom: 20, opacity: archetypeVisible ? 1 : 0,
@@ -1487,14 +1479,14 @@ function ScreenResults({ state, dispatch }) {
                     React.createElement("div", { style: { flex: 1, minWidth: 0 } },
                         React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 8 } },
                             React.createElement("span", { style: { fontSize: 14, fontWeight: 600, color: isPrimary ? CW.text : CW.muted } }, d.label),
-                            isPrimary && React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: d.color, letterSpacing: "0.08em", textTransform: "uppercase" } }, "\u25cf primary gap")),
+                            isPrimary && React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: d.textColor, letterSpacing: "0.08em", textTransform: "uppercase" } }, "\u25cf primary gap")),
                         React.createElement(StatusBadge, { status: status[d.key] })),
-                    React.createElement("span", { style: { fontSize: 22, fontWeight: 800, color: isPrimary ? d.color : C.muted, fontFamily: "Instrument Serif, Georgia, serif", flexShrink: 0 } }, d.score.toFixed(1))),
+                    React.createElement("span", { style: { fontSize: 22, fontWeight: 800, color: isPrimary ? d.textColor : C.muted, fontFamily: "Instrument Serif, Georgia, serif", flexShrink: 0 } }, d.score.toFixed(1))),
                 React.createElement("div", { style: { height: 6, background: CW.border, borderRadius: 3 } },
                     React.createElement("div", { className: "g-bar-fill", style: { width: barsVisible ? `${d.score * 10}%` : "0%",
                             background: d.color, transitionDelay: `${i * 0.15}s`,
                             boxShadow: isPrimary ? `0 0 10px ${d.color}50` : "none" } })),
-                isPrimary && (React.createElement("p", { style: { fontSize: 11, color: d.color, marginTop: 6, fontWeight: 600 } }, "\u25B2 Primary focus · This is where coaching begins"))));
+                isPrimary && (React.createElement("p", { style: { fontSize: 11, color: d.textColor, marginTop: 6, fontWeight: 600 } }, "\u25B2 Primary focus · This is where coaching begins"))));
         })),
         React.createElement(PatternSection, {
             scores: scores,
@@ -1503,7 +1495,7 @@ function ScreenResults({ state, dispatch }) {
         }),
         React.createElement("div", { className: "g-fu g-d3", style: { borderLeft: `4px solid ${arch.color}`,
                 marginBottom: 24, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
-            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: arch.color, letterSpacing: "0.08em",
+            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archLabelColor, letterSpacing: "0.08em",
                     textTransform: "uppercase", marginBottom: 10 } }, "What this means for you"),
             React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20,
                     color: C.text, marginBottom: 14 } },
@@ -1551,7 +1543,7 @@ function ScreenResults({ state, dispatch }) {
                     textTransform: "uppercase", marginBottom: 10 } }, "Save a copy of your results"),
             React.createElement("p", { style: { fontSize: 14, color: C.muted, marginBottom: 18, lineHeight: 1.6 } },
                 "We\u2019ll email you your archetype + dimension scores. One email, no newsletter."),
-            email ? (React.createElement("p", { style: { fontSize: 14, color: C.teal } },
+            email ? (React.createElement("p", { style: { fontSize: 14, color: TEAL_TEXT } },
                 "\u2713 Sent to ",
                 email)) : (React.createElement(InlineEmailCapture, { dispatch: dispatch }))),
         React.createElement("div", { className: "g-fu g-d5", style: { textAlign: "center", paddingTop: 8 } },
@@ -1575,6 +1567,25 @@ function ScreenResults({ state, dispatch }) {
             "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and will shift as your situation changes. Best used as a starting point for a coaching conversation."),
         React.createElement("div", { style: { textAlign: "center" } },
             React.createElement("button", { onClick: () => { clearSession(); dispatch({ type: "RETAKE" }); }, style: { background: "none", border: "none", fontSize: 13, color: C.dim, cursor: "pointer", textDecoration: "none", letterSpacing: "0.02em" } }, "\u2190 Retake from the start")),
+        React.createElement("div", { className: "g-fu", style: {
+            borderTop: "3px solid " + arch.color,
+            background: CW.surface,
+            borderRadius: 16,
+            padding: "48px 32px 56px",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+            marginTop: 48,
+        } },
+            React.createElement("p", { style: {
+                fontSize: 11, fontWeight: 700, color: archLabelColor,
+                textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 20,
+            } }, "One question to sit with"),
+            React.createElement("p", { style: {
+                fontFamily: "Instrument Serif, Georgia, serif",
+                fontSize: "clamp(18px,3.5vw,22px)",
+                color: CW.text,
+                fontStyle: "italic",
+                lineHeight: 1.7,
+            } }, PATTERN_QUESTIONS[primary] || PATTERN_QUESTIONS.rr)),
         state.coachMode && React.createElement("button", { onClick: () => dispatch({ type: "OPEN_COACH" }), style: { position: "fixed", bottom: 24, right: 24, background: C.surf2,
                 border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 16px",
                 display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
