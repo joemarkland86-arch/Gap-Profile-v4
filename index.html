@@ -44,13 +44,16 @@
 
 
     // Pure SVG Radar Chart - zero external dependencies
-    function SVGRadar({ data }) {
-      var size = 280;
+    function SVGRadar({ data, color }) {
+      var size = 320;
       var cx = size / 2, cy = size / 2;
       var r = 100;
       var n = data.length;
-      var labels = ["Self-Efficacy", "Psych Safety", "Identity", "Resources"];
+      var labelRadius = 145;
+      var labels = ["Self-Efficacy", "Psychological Safety", "Identity Alignment", "Resource Readiness"];
       var scores = data.map(function(d) { return d.score; });
+      var fontSize = (typeof window !== "undefined" && window.innerWidth < 480) ? 11 : 12;
+      var radarColor = color || C.teal;
       
       // Calculate points for each axis (start from top, go clockwise)
       function getPoint(i, radius) {
@@ -73,16 +76,47 @@
       // Axis lines and labels
       var axes = labels.map(function(label, i) {
         var outer = getPoint(i, r + 2);
-        var labelPt = getPoint(i, r + 28);
+        var labelPt = getPoint(i, labelRadius);
         var center = { x: cx, y: cy };
         return { label: label, outer: outer, labelPt: labelPt, center: center, score: scores[i] };
       });
 
+      function renderLabel(ax, i) {
+        var config = [
+          { anchor: "middle", dx: 0, dominantBaseline: "auto", lines: ["Self-Efficacy"] },
+          { anchor: "start", dx: 6, dominantBaseline: "central", lines: ["Psychological", "Safety"] },
+          { anchor: "middle", dx: 0, dominantBaseline: "hanging", lines: ["Identity", "Alignment"] },
+          { anchor: "end", dx: -6, dominantBaseline: "central", lines: ["Resource", "Readiness"] }
+        ][i];
+        var x = ax.labelPt.x + config.dx;
+        var y = ax.labelPt.y;
+        return React.createElement("text", {
+          key: "label" + i,
+          x: x,
+          y: y,
+          textAnchor: config.anchor,
+          fill: "#1A1F3DB3",
+          fontSize: fontSize,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: "500",
+          dominantBaseline: config.dominantBaseline
+        },
+          config.lines.length === 1
+            ? config.lines[0]
+            : React.createElement(React.Fragment, null,
+                React.createElement("tspan", { x: x }, config.lines[0]),
+                React.createElement("tspan", { x: x, dy: "1.2em" }, config.lines[1])
+              )
+        );
+      }
+
       return React.createElement("svg", {
-        viewBox: "0 0 " + size + " " + size,
+        viewBox: "0 0 320 320",
         width: "100%",
-        height: "100%",
-        style: { maxWidth: "300px", display: "block", margin: "0 auto" }
+        height: "auto",
+        role: "img",
+        "aria-label": "Radar chart showing your scores across all four dimensions: Self-Efficacy " + scores[0].toFixed(1) + ", Psychological Safety " + scores[1].toFixed(1) + ", Identity Alignment " + scores[2].toFixed(1) + ", Resource Readiness " + scores[3].toFixed(1),
+        style: { width: "100%", height: "auto", display: "block", margin: "0 auto" }
       },
         // Grid circles
         gridLevels.map(function(level) {
@@ -95,8 +129,8 @@
             key: "grid" + level,
             points: pts,
             fill: "none",
-            stroke: "#D4C9B8",
-            strokeWidth: "1"
+            stroke: "#1A1F3D14",
+            strokeWidth: level === 10 ? "1.5" : "1"
           });
         }),
         // Axis lines
@@ -105,16 +139,15 @@
             key: "axis" + i,
             x1: cx, y1: cy,
             x2: ax.outer.x, y2: ax.outer.y,
-            stroke: "#D4C9B8",
+            stroke: "#1A1F3D14",
             strokeWidth: "1"
           });
         }),
         // Score polygon (filled)
         React.createElement("polygon", {
           points: scorePoints,
-          fill: "#2EC4B6",
-          fillOpacity: "0.2",
-          stroke: "#2EC4B6",
+          fill: radarColor + "2E",
+          stroke: radarColor,
           strokeWidth: "2",
           strokeLinejoin: "round"
         }),
@@ -124,32 +157,11 @@
           return React.createElement("circle", {
             key: "dot" + i,
             cx: pt.x, cy: pt.y, r: 4,
-            fill: "#2EC4B6"
+            fill: radarColor
           });
         }),
         // Labels
-        axes.map(function(ax, i) {
-          var words = ax.label.split(" ");
-          var anchor = ax.labelPt.x < cx - 5 ? "end" : ax.labelPt.x > cx + 5 ? "start" : "middle";
-          return React.createElement("text", {
-            key: "label" + i,
-            x: ax.labelPt.x,
-            y: ax.labelPt.y,
-            textAnchor: anchor,
-            fill: "#6B6358",
-            fontSize: "11",
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: "500",
-            dominantBaseline: "middle"
-          },
-            words.length === 1 
-              ? words[0]
-              : React.createElement(React.Fragment, null,
-                  React.createElement("tspan", { x: ax.labelPt.x, dy: "-7" }, words[0]),
-                  React.createElement("tspan", { x: ax.labelPt.x, dy: "14" }, words[1])
-                )
-          );
-        })
+        axes.map(renderLabel)
       );
     }
 
@@ -1492,11 +1504,12 @@ function ScreenResults({ state, dispatch }) {
                 marginBottom: 20, marginTop: -16, letterSpacing: "0.04em" } },
                 "Your primary gap is highlighted below"),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "grid",
-                gridTemplateColumns: "1fr auto", gap: 24, marginBottom: 32, alignItems: "center" } },
-            React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: "20px 10px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
-                React.createElement(SVGRadar, { data: radarData }),
-                React.createElement("p", { style: { textAlign: "center", fontSize: 12, color: CW.dim, marginTop: 4 } }, "The closer to centre, the more that dimension blocks progress")),
-            React.createElement("div", { style: { display: "flex", justifyContent: "center" } },
+                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24, marginBottom: 32, alignItems: "center" } },
+            React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
+                React.createElement("div", { style: { width: "100%", maxWidth: (typeof window !== "undefined" && window.innerWidth < 600) ? 320 : 360, padding: 8, margin: "0 auto" } },
+                    React.createElement(SVGRadar, { data: radarData, color: arch.color })),
+                React.createElement("p", { style: { textAlign: "center", fontSize: 12, color: CW.dim, marginTop: 4 } }, "The further from centre, the stronger that dimension")),
+            React.createElement("div", { style: { display: "flex", justifyContent: "center", width: "100%" } },
                 React.createElement(CGIRing, { cgi: cgi, color: arch.color }))),
         React.createElement("div", { ref: dimensionSectionRef, className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
                 gap: 14, marginBottom: 32, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } }, dimRows.map((d, i) => {
