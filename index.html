@@ -735,7 +735,6 @@ function TopNav({ step, isMobile }) {
 // ─── ANCHOR BAR ────────────────────────────────────────────────────────────────
 function AnchorBar({ action }) {
     if (!action) return null;
-    var display = action.length > 65 ? action.slice(0, 65).trimEnd() + "\u2026" : action;
     return React.createElement("div", {
         style: {
             position: "sticky",
@@ -745,10 +744,12 @@ function AnchorBar({ action }) {
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
             borderBottom: "1px solid " + C.border,
-            padding: "10px 24px",
+            padding: "8px 24px",
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             gap: 8,
+            maxHeight: "clamp(50px, 16vw, 60px)",
+            overflow: "hidden",
         }
     },
         React.createElement("span", {
@@ -763,14 +764,14 @@ function AnchorBar({ action }) {
         }, "Answering about:"),
         React.createElement("span", {
             style: {
-                fontSize: 13,
+                fontSize: "clamp(14px, 3.7vw, 15px)",
                 color: C.text,
                 fontStyle: "italic",
+                lineHeight: 1.4,
+                maxHeight: "2.8em",
                 overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
             }
-        }, "\u201C" + display + "\u201D")
+        }, "\u201C" + action + "\u201D")
     );
 }
 // ─── SCREEN 0: LANDING ─────────────────────────────────────────────────────────
@@ -1055,15 +1056,14 @@ function RadarTick({ x, y, payload }) {
     return (React.createElement("g", { transform: `translate(${x},${y})` }, words.map((w, i) => (React.createElement("text", { key: i, x: 0, y: (i - (words.length - 1) / 2) * 14, textAnchor: "middle", fill: C.muted, fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }, w)))));
 }
 // ─── CGI RING ──────────────────────────────────────────────────────────────────
-function CGIRing({ cgi }) {
+function CGIRing({ cgi, color }) {
     const displayed = useCGICountUp(cgi);
     const r = 62;
     const circ = 2 * Math.PI * r;
-    const color = cgi >= 7 ? C.green : cgi >= 5 ? C.amber : C.red;
     return (React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 10 } },
         React.createElement("div", { style: { position: "relative", width: 150, height: 150 } },
             React.createElement("svg", { width: "150", height: "150", viewBox: "0 0 150 150", style: { transform: "rotate(-90deg)" } },
-                React.createElement("circle", { cx: "75", cy: "75", r: r, fill: "none", stroke: C.border, strokeWidth: "10" }),
+                React.createElement("circle", { cx: "75", cy: "75", r: r, fill: "none", stroke: "#E5DDD0", strokeWidth: "10" }),
                 React.createElement("circle", { cx: "75", cy: "75", r: r, fill: "none", stroke: color, strokeWidth: "10", strokeDasharray: `${circ}`, strokeDashoffset: circ * (1 - cgi / 10), strokeLinecap: "round", style: { transition: "stroke-dashoffset 1.2s cubic-bezier(0.25,0.46,0.45,0.94)" } })),
             React.createElement("div", { style: { position: "absolute", inset: 0, display: "flex",
                     flexDirection: "column", alignItems: "center", justifyContent: "center" } },
@@ -1071,8 +1071,39 @@ function CGIRing({ cgi }) {
                         fontSize: 34, color: C.text, lineHeight: 1, fontWeight: 600 } }, displayed.toFixed(1)),
                 React.createElement("span", { style: { fontSize: 10, color: C.muted, marginTop: 3 } }, "/ 10"))),
         React.createElement("div", { style: { textAlign: "center" } },
-            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase" } }, "Composite Gap Index"),
-            React.createElement("p", { style: { fontSize: 11, color: C.dim } }, "Your overall action potential score"))));
+            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase" } }, "GAP SCORE"),
+            React.createElement("p", { style: { fontSize: 11, color: C.dim } }, "How much is in the way right now"))));
+}
+function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        const node = triggerRef && triggerRef.current;
+        if (!node) return;
+        const observer = new IntersectionObserver(([entry]) => {
+            setVisible(!entry.isIntersecting);
+        }, { threshold: 0.15 });
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, [triggerRef]);
+    const labelMap = { se: "Self-Efficacy", ps: "Psychological Safety", ia: "Identity Alignment", rr: "Resource Readiness" };
+    const scrollToBooking = () => {
+        if (targetRef && targetRef.current) targetRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    return React.createElement("div", { style: {
+            position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 110,
+            display: "flex", justifyContent: "center",
+            padding: "0 12px calc(10px + var(--safe-bottom))",
+            pointerEvents: visible ? "auto" : "none",
+            opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(4px)",
+            transition: "opacity 300ms ease, transform 300ms ease",
+            boxShadow: "0 -4px 16px rgba(26, 31, 61, 0.12)",
+            borderTop: `2px solid ${primaryColor}4D`,
+        } },
+        React.createElement("button", { onClick: scrollToBooking, "aria-label": "Book a coaching session about your primary gap", style: {
+                width: "100%", maxWidth: 480, border: "none", borderRadius: 12,
+                padding: "14px 20px", background: primaryColor, color: "#FFFFFF",
+                fontSize: 15, fontWeight: 700, cursor: "pointer",
+            } }, `Book a session about ${labelMap[primary] || "your primary gap"} →`));
 }
 // ─── ACCORDION ─────────────────────────────────────────────────────────────────
 function Accordion({ title, children }) {
@@ -1374,6 +1405,8 @@ function ScreenResults({ state, dispatch }) {
     const { scores, ctx, firstName, email } = state;
     const [archetypeVisible, setArchetypeVisible] = useState(false);
     const [barsVisible, setBarsVisible] = useState(false);
+    const dimensionSectionRef = useRef(null);
+    const bookingSectionRef = useRef(null);
     const handleShare = () => {
         const archName = ARCHETYPES[scores.primary].label;
         const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free assessment that shows what's actually stopping you from making the career move you already know you should make.\n\nhttps://gapprofile.co.uk`;
@@ -1424,7 +1457,7 @@ function ScreenResults({ state, dispatch }) {
     return (React.createElement("div", { className: "g-screen-enter", style: { maxWidth: 720, margin: "0 auto", padding: "40px 24px calc(120px + var(--safe-bottom))", color: CW.body } },
         React.createElement("div", { className: "g-fu", style: { textAlign: "center", marginBottom: 48 } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.14em",
-                    color: archLabelColor, textTransform: "uppercase", marginBottom: 12 } }, "Your archetype"),
+                    color: archLabelColor, textTransform: "uppercase", marginBottom: 12 } }, "THE PATTERN RIGHT NOW"),
             React.createElement("h1", { style: { fontFamily: "Instrument Serif, Georgia, serif",
                     fontSize: "clamp(44px,8vw,72px)", color: CW.text, lineHeight: 1.05,
                     marginBottom: 20, opacity: archetypeVisible ? 1 : 0,
@@ -1464,8 +1497,8 @@ function ScreenResults({ state, dispatch }) {
                 React.createElement(SVGRadar, { data: radarData }),
                 React.createElement("p", { style: { textAlign: "center", fontSize: 12, color: CW.dim, marginTop: 4 } }, "The closer to centre, the more that dimension blocks progress")),
             React.createElement("div", { style: { display: "flex", justifyContent: "center" } },
-                React.createElement(CGIRing, { cgi: cgi }))),
-        React.createElement("div", { className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
+                React.createElement(CGIRing, { cgi: cgi, color: arch.color }))),
+        React.createElement("div", { ref: dimensionSectionRef, className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
                 gap: 14, marginBottom: 32, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } }, dimRows.map((d, i) => {
             const isPrimary = d.key === primary;
             return (React.createElement("div", { key: d.key, className: isPrimary ? "g-pg" : "", style: { borderRadius: 10, padding: "12px 16px",
@@ -1527,7 +1560,8 @@ function ScreenResults({ state, dispatch }) {
                 secArch.insight.length > 90 ? secArch.insight.slice(0, 90) + "\u2026" : secArch.insight),
             React.createElement("p", { style: { fontSize: 13, color: C.muted, fontStyle: "italic", lineHeight: 1.7 } },
                 "The interaction between your primary and secondary patterns is often where the most important coaching work happens.")),
-        React.createElement(NextSteps, { primary: primary, archColor: arch.color, scores: scores }),
+        React.createElement("div", { ref: bookingSectionRef },
+            React.createElement(NextSteps, { primary: primary, archColor: arch.color, scores: scores })),
         (showLongFlag || showAttemptFlag) && (React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(245,158,11,0.07)",
                 border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 14, padding: "20px 24px" } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: "0.08em",
@@ -1593,7 +1627,8 @@ function ScreenResults({ state, dispatch }) {
                 boxShadow: "0 4px 20px rgba(0,0,0,0.4)", transition: "border-color 0.15s, color 0.15s",
                 zIndex: 50 }, onMouseEnter: e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.color = C.teal; }, onMouseLeave: e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; } },
             React.createElement("span", { style: { color: C.teal } }, "\u25C8"),
-            " Coach")));
+            " Coach")),
+        React.createElement(StickyBookingCTA, { primary: primary, primaryColor: arch.color, triggerRef: dimensionSectionRef, targetRef: bookingSectionRef })));
 }
 // ─── ROOT ──────────────────────────────────────────────────────────────────────
 function GAPProfile() {
