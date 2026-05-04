@@ -49,7 +49,7 @@
       var cx = size / 2, cy = size / 2;
       var r = 100;
       var n = data.length;
-      var labelRadius = 145;
+      var labelRadius = 132;
       var labels = ["Self-Efficacy", "Psychological Safety", "Identity Alignment", "Resource Readiness"];
       var scores = data.map(function(d) { return d.score; });
       var fontSize = (typeof window !== "undefined" && window.innerWidth < 480) ? 11 : 12;
@@ -84,7 +84,7 @@
       function renderLabel(ax, i) {
         var config = [
           { anchor: "middle", dx: 0, dominantBaseline: "auto", lines: ["Self-Efficacy"] },
-          { anchor: "start", dx: 6, dominantBaseline: "central", lines: ["Psychological", "Safety"] },
+          { anchor: "start", dx: 6, dominantBaseline: "central", lines: ["Psych.", "Safety"] },
           { anchor: "middle", dx: 0, dominantBaseline: "hanging", lines: ["Identity", "Alignment"] },
           { anchor: "end", dx: -6, dominantBaseline: "central", lines: ["Resource", "Readiness"] }
         ][i];
@@ -116,7 +116,7 @@
         height: "auto",
         role: "img",
         "aria-label": "Radar chart showing your scores across all four dimensions: Self-Efficacy " + scores[0].toFixed(1) + ", Psychological Safety " + scores[1].toFixed(1) + ", Identity Alignment " + scores[2].toFixed(1) + ", Resource Readiness " + scores[3].toFixed(1),
-        style: { width: "100%", height: "auto", display: "block", margin: "0 auto" }
+        style: { width: "100%", height: "auto", display: "block", margin: "0 auto", overflow: "visible" }
       },
         // Grid circles
         gridLevels.map(function(level) {
@@ -1094,11 +1094,11 @@ function CGIRing({ cgi, color }) {
             React.createElement("div", { style: { position: "absolute", inset: 0, display: "flex",
                     flexDirection: "column", alignItems: "center", justifyContent: "center" } },
                 React.createElement("span", { style: { fontFamily: "Instrument Serif, Georgia, serif",
-                        fontSize: 34, color: C.text, lineHeight: 1, fontWeight: 600 } }, displayed.toFixed(1)),
-                React.createElement("span", { style: { fontSize: 10, color: C.muted, marginTop: 3 } }, "/ 10"))),
+                        fontSize: 34, color: CW.text, lineHeight: 1, fontWeight: 600 } }, displayed.toFixed(1)),
+                React.createElement("span", { style: { fontSize: 10, color: CW.muted, marginTop: 3 } }, "/ 10"))),
         React.createElement("div", { style: { textAlign: "center" } },
-            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase" } }, "GAP SCORE"),
-            React.createElement("p", { style: { fontSize: 11, color: C.dim } }, "How much is in the way right now"))));
+            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: CW.muted, letterSpacing: "0.08em", textTransform: "uppercase" } }, "GAP SCORE"),
+            React.createElement("p", { style: { fontSize: 11, color: CW.dim } }, "How much is in the way right now"))));
 }
 function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
     const [visible, setVisible] = useState(false);
