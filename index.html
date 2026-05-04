@@ -805,6 +805,8 @@ function TransitionBridge({ onComplete }) {
         const t4 = setTimeout(done, 3400);
         return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
     }, [done]);
+    const show = phase === "text";
+    const tr = (delay) => reducedMotion.current ? "none" : `opacity 0.7s ease-in ${delay}`;
     return React.createElement("div", {
         style: {
             position: "fixed", inset: 0, zIndex: 9999,
@@ -813,25 +815,37 @@ function TransitionBridge({ onComplete }) {
             backgroundColor: phase === "warm" ? CW.bg : C.ink,
             transition: reducedMotion.current ? "none" : "background-color 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
             fontFamily: "'DM Sans', sans-serif",
+            gap: 0,
         }
     },
-        React.createElement("p", {
-            style: {
-                fontSize: 18, fontWeight: 400, color: C.text,
-                opacity: phase === "text" ? 1 : 0,
-                transition: reducedMotion.current ? "none" : "opacity 0.9s ease-in",
-                letterSpacing: "0.02em", margin: 0, padding: "0 32px",
-                textAlign: "center", lineHeight: 1.6,
-            }
-        }, "Take your time. Answer honestly."),
         React.createElement("div", {
             style: {
-                width: 4, height: 4, borderRadius: "50%",
-                backgroundColor: C.teal, marginTop: 24,
-                opacity: phase === "text" ? 1 : 0,
-                transition: reducedMotion.current ? "none" : "opacity 0.8s ease-in 0.25s",
+                width: 52, height: 52, borderRadius: "50%",
+                border: "3px solid #2A4060", borderTopColor: C.teal,
+                animation: show ? "spin 0.9s linear infinite" : "none",
+                marginBottom: 20,
+                opacity: show ? 1 : 0,
+                transition: tr("0s"),
             }
-        })
+        }),
+        React.createElement("p", {
+            style: {
+                fontFamily: "Instrument Serif, Georgia, serif",
+                fontSize: 18, color: "#8BA3BC",
+                opacity: show ? 1 : 0,
+                transition: tr("0.1s"),
+                margin: 0,
+            }
+        }, "GAP Profile™"),
+        React.createElement("p", {
+            style: {
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12, color: "#4A6580",
+                marginTop: 10,
+                opacity: show ? 1 : 0,
+                transition: tr("0.25s"),
+            }
+        }, "Take your time. Answer honestly.")
     );
 }
 function ScreenLanding({ dispatch }) {
