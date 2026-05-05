@@ -742,7 +742,7 @@ function TopNav({ step, isMobile }) {
             React.createElement("div", { style: { height: 4, background: C.border, borderRadius: 2 } },
                 React.createElement("div", { style: { height: "100%", background: C.teal, borderRadius: 2,
                         width: `${pct}%`, transition: "width 0.4s ease" } })))),
-        React.createElement("span", { style: { fontSize: 12, color: isWarm ? CW.dim : C.dim, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "clamp(100px,30vw,200px)" } }, "Joe Markland Career Coaching")));
+        React.createElement("span", { style: { fontSize: 12, color: isWarm ? CW.dim : C.dim, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "clamp(100px,30vw,200px)" } }, "Joe Markland")));
 }
 // ─── ANCHOR BAR ────────────────────────────────────────────────────────────────
 function AnchorBar({ action }) {
@@ -850,7 +850,7 @@ function TransitionBridge({ onComplete }) {
 }
 function ScreenLanding({ dispatch }) {
     return (React.createElement("div", { className: "g-hero-glow", style: {
-        maxWidth: 720, margin: "0 auto", padding: "80px 24px 100px", textAlign: "center"
+        maxWidth: 720, margin: "0 auto", padding: "32px 24px 100px", textAlign: "center"
     } },
         React.createElement("h1", { className: "g-fu g-d1", style: {
             fontFamily: "Instrument Serif, Georgia, serif",
@@ -860,32 +860,31 @@ function ScreenLanding({ dispatch }) {
         React.createElement("p", { className: "g-fu g-d2", style: {
             fontFamily: "Instrument Serif, Georgia, serif",
             fontSize: "clamp(20px,3vw,28px)", color: CW.muted, fontStyle: "italic",
-            marginBottom: 40
+            marginBottom: 24
         } }, "So what\u2019s actually stopping you?"),
         React.createElement("div", { className: "g-fu g-d2", style: {
-            maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
+            maxWidth: 560, margin: "0 auto 28px", textAlign: "left"
         } },
             React.createElement("p", { style: {
-                fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
-            } }, "You\u2019ve thought about it. Probably a lot. So much that the thinking itself has started to feel like progress. But nothing\u2019s moved."),
-            React.createElement("p", { style: {
-                fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
-            } }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
-            React.createElement("p", { style: {
-                fontSize: 15, color: CW.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
-            } }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers."),
-            React.createElement("p", { style: {
                 fontSize: 15, color: CW.body, lineHeight: 1.8
-            } }, "Free. No account. About five minutes.")
+            } }, "You\u2019ve thought about it. Probably a lot. So much that the thinking itself has started to feel like progress. But nothing\u2019s moved.")
         ),
+        React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 10 } },
+            React.createElement("button", { className: "g-btn-p", style: { fontSize: 16, padding: "16px 44px" },
+                onClick: function() { dispatch({ type: "SET_TRANSITIONING", val: true }); }
+            }, "Take the GAP Profile \u2192")
+        ),
+        React.createElement("p", { className: "g-fu g-d3", style: {
+            fontSize: 13, color: CW.muted, marginBottom: 36
+        } }, "Free. No account. About five minutes."),
         React.createElement("div", { className: "g-fu g-d3", style: {
             maxWidth: 560, margin: "0 auto 36px", display: "flex",
             flexDirection: "column", gap: 10
         } },
             ...[
-                ["It reflects, rather than labels.", "It\u2019s not a personality test. It helps you see what\u2019s already going on, organised in a way that makes the pattern harder to miss."],
-                ["It shows the gap, not the answer.", "It won\u2019t tell you what to do next. That part is yours. It helps you see what kind of gap is in the way, so your next step is based on something clearer than guesswork."],
-                ["It stays anchored to your situation.", "You name the specific move at the start, and every question after that is about that step \u2014 not careers in general."],
+                ["It reflects, rather than labels.", "It\u2019s not a personality test. It helps you see what\u2019s actually getting in the way."],
+                ["It\u2019s specific to your situation.", "You name the career move you\u2019re stuck on, and the questions are about that specific step."],
+                ["It takes about five minutes.", "Free. No account. No newsletter."],
             ].map(function(pair, i) {
                 return React.createElement("div", { key: i, style: {
                     display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left",
@@ -899,6 +898,19 @@ function ScreenLanding({ dispatch }) {
                     )
                 );
             })
+        ),
+        React.createElement("div", { className: "g-fu g-d4", style: {
+            maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
+        } },
+            React.createElement("p", { style: {
+                fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
+            } }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
+            React.createElement("p", { style: {
+                fontSize: 15, color: CW.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
+            } }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers."),
+            React.createElement("p", { style: {
+                fontSize: 15, color: CW.body, lineHeight: 1.8
+            } }, "Free. No account. About five minutes.")
         ),
         React.createElement("div", { className: "g-fu g-d4", style: {
             display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 48
