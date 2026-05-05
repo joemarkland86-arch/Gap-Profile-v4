@@ -1118,7 +1118,7 @@ function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
     return React.createElement("div", { style: {
             position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 110,
             display: "flex", justifyContent: "center",
-            padding: "0 12px calc(10px + var(--safe-bottom))",
+            padding: "0 12px calc(16px + var(--safe-bottom))",
             pointerEvents: visible ? "auto" : "none",
             opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(4px)",
             transition: "opacity 300ms ease, transform 300ms ease",
@@ -1480,7 +1480,7 @@ function ScreenResults({ state, dispatch }) {
             dispatch({ type: "SET_TOAST", message: "Copy failed — please select and copy manually" });
         });
     };
-    return (React.createElement("div", { className: "g-screen-enter", style: { maxWidth: 720, margin: "0 auto", padding: "40px 24px calc(120px + var(--safe-bottom))", color: CW.body } },
+    return (React.createElement("div", { className: "g-screen-enter", style: { maxWidth: 720, margin: "0 auto", padding: "40px 24px calc(96px + var(--safe-bottom))", color: CW.body } },
         React.createElement("div", { className: "g-fu", style: { textAlign: "center", marginBottom: 48 } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.14em",
                     color: archLabelColor, textTransform: "uppercase", marginBottom: 12 } }, "THE PATTERN RIGHT NOW"),
