@@ -49,7 +49,7 @@
       var cx = size / 2, cy = size / 2;
       var r = 100;
       var n = data.length;
-      var labelRadius = 132;
+      var labelRadius = 136;
       var labels = ["Self-Efficacy", "Psychological Safety", "Identity Alignment", "Resource Readiness"];
       var scores = data.map(function(d) { return d.score; });
       var fontSize = (typeof window !== "undefined" && window.innerWidth < 480) ? 11 : 12;
@@ -84,7 +84,7 @@
       function renderLabel(ax, i) {
         var config = [
           { anchor: "middle", dx: 0, dominantBaseline: "auto", lines: ["Self-Efficacy"] },
-          { anchor: "start", dx: 6, dominantBaseline: "central", lines: ["Psych.", "Safety"] },
+          { anchor: "start", dx: 6, dominantBaseline: "central", lines: ["Psychological", "Safety"] },
           { anchor: "middle", dx: 0, dominantBaseline: "hanging", lines: ["Identity", "Alignment"] },
           { anchor: "end", dx: -6, dominantBaseline: "central", lines: ["Resource", "Readiness"] }
         ][i];
@@ -104,14 +104,14 @@
           config.lines.length === 1
             ? config.lines[0]
             : React.createElement(React.Fragment, null,
-                React.createElement("tspan", { x: x }, config.lines[0]),
-                React.createElement("tspan", { x: x, dy: "1.2em" }, config.lines[1])
+                React.createElement("tspan", { x: x, dy: i === 2 ? "0" : "-7" }, config.lines[0]),
+                React.createElement("tspan", { x: x, dy: "14" }, config.lines[1])
               )
         );
       }
 
       return React.createElement("svg", {
-        viewBox: "0 0 320 320",
+        viewBox: "-30 -20 380 360",
         width: "100%",
         height: "auto",
         role: "img",
@@ -1547,6 +1547,25 @@ function ScreenResults({ state, dispatch }) {
         React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
                 marginBottom: 20, marginTop: -16, letterSpacing: "0.04em" } },
                 "Your primary gap is highlighted below"),
+        React.createElement("div", { style: {
+                background: "#FEFBF4", borderRadius: 12,
+                padding: "clamp(20px, 3vw, 24px)",
+                maxWidth: 640, margin: "0 auto 32px"
+            } },
+            React.createElement("h3", { style: {
+                fontFamily: "Instrument Serif, Georgia, serif",
+                fontSize: "clamp(20px, 3vw, 22px)",
+                color: "#1A1F3D", marginBottom: 12
+            } }, "A quick note on what you’re about to see"),
+            React.createElement("p", { style: {
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9", marginBottom: 10
+            } }, "You’ll get a Gap Score out of 10, and a breakdown across four areas."),
+            React.createElement("p", { style: {
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9"
+            } }, "The score is useful, but it’s the four bars that tell you most. Lower scores aren’t a verdict — they’re a clue about where the friction probably is right now.")
+        ),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "grid",
                 gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24, marginBottom: 32, alignItems: "center" } },
             React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
