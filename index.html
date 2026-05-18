@@ -929,8 +929,8 @@ function ScreenLanding({ dispatch }) {
             flexDirection: "column", gap: 10
         } },
             ...[
-                ["It reflects, rather than labels.", "It\u2019s not a personality test. It helps you see what\u2019s actually getting in the way."],
-                ["It\u2019s specific to your situation.", "You name the career move you\u2019re stuck on, and the questions are about that specific step."],
+                ["It reflects, rather than labels.", "It’s not a personality test. It helps you see what’s actually getting in the way."],
+                ["It’s specific to your situation.", "You name the career move you’re stuck on, and the questions are about that specific step."],
                 ["It takes about five minutes.", "Free. No account. No newsletter."],
             ].map(function(pair, i) {
                 return React.createElement("div", { key: i, style: {
@@ -938,7 +938,7 @@ function ScreenLanding({ dispatch }) {
                     background: CW.surface, border: "1px solid " + CW.border, borderRadius: 12, padding: "14px 18px",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 } },
-                    React.createElement("span", { style: { color: C.teal, fontSize: 16, lineHeight: "1.4", flexShrink: 0, marginTop: 2, fontWeight: 700 } }, "\u2192"),
+                    React.createElement("span", { style: { color: C.teal, fontSize: 16, lineHeight: "1.4", flexShrink: 0, marginTop: 2, fontWeight: 700 } }, "→"),
                     React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.6, margin: 0 } },
                         React.createElement("strong", { style: { color: CW.text, fontWeight: 600 } }, pair[0]),
                         " " + pair[1]
@@ -953,11 +953,8 @@ function ScreenLanding({ dispatch }) {
                 fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
             } }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
             React.createElement("p", { style: {
-                fontSize: 15, color: CW.text, lineHeight: 1.8, marginBottom: 16, fontWeight: 500
-            } }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers."),
-            React.createElement("p", { style: {
-                fontSize: 15, color: CW.body, lineHeight: 1.8
-            } }, "Free. No account. About five minutes.")
+                fontSize: 15, color: CW.text, lineHeight: 1.8, fontWeight: 500
+            } }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers.")
         ),
         React.createElement("div", { className: "g-fu g-d4", style: {
             display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 48
