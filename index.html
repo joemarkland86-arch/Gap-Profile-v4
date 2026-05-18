@@ -921,6 +921,9 @@ function ScreenLanding({ dispatch }) {
                 onClick: function() { dispatch({ type: "SET_TRANSITIONING", val: true }); }
             }, "Take the GAP Profile \u2192")
         ),
+        React.createElement("p", { className: "g-fu g-d3", style: {
+            fontSize: 13, color: CW.muted, marginBottom: 36
+        } }, "Free. No account. About five minutes."),
         React.createElement("div", { className: "g-fu g-d3", style: {
             maxWidth: 560, margin: "0 auto 36px", display: "flex",
             flexDirection: "column", gap: 10
