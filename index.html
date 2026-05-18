@@ -921,28 +921,6 @@ function ScreenLanding({ dispatch }) {
                 onClick: function() { dispatch({ type: "SET_TRANSITIONING", val: true }); }
             }, "Take the GAP Profile \u2192")
         ),
-        React.createElement("div", { className: "g-fu g-d3", style: {
-            maxWidth: 560, margin: "0 auto 36px", display: "flex",
-            flexDirection: "column", gap: 10
-        } },
-            ...[
-                ["It reflects, rather than labels.", "It\u2019s not a personality test. It helps you see what\u2019s actually getting in the way."],
-                ["It\u2019s specific to your situation.", "You name the career move you\u2019re stuck on, and the questions are about that specific step."],
-                ["It takes about five minutes.", "Free. No account. No newsletter."],
-            ].map(function(pair, i) {
-                return React.createElement("div", { key: i, style: {
-                    display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left",
-                    background: CW.surface, border: "1px solid " + CW.border, borderRadius: 12, padding: "14px 18px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                } },
-                    React.createElement("span", { style: { color: C.teal, fontSize: 16, lineHeight: "1.4", flexShrink: 0, marginTop: 2, fontWeight: 700 } }, "\u2192"),
-                    React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.6, margin: 0 } },
-                        React.createElement("strong", { style: { color: CW.text, fontWeight: 600 } }, pair[0]),
-                        " " + pair[1]
-                    )
-                );
-            })
-        ),
         React.createElement("div", { className: "g-fu g-d4", style: {
             maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
         } },
