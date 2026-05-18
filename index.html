@@ -49,12 +49,15 @@
       var cx = size / 2, cy = size / 2;
       var r = 100;
       var n = data.length;
-      var labelRadius = 136;
+      var labelRadius = 128;
       var labels = ["Self-Efficacy", "Psychological Safety", "Identity Alignment", "Resource Readiness"];
       var scores = data.map(function(d) { return d.score; });
       var fontSize = (typeof window !== "undefined" && window.innerWidth < 480) ? 11 : 12;
       var radarColor = color || C.teal;
-      
+      var DIM_COLORS = [C.teal, C.blue, C.indigo, C.purple];
+      var primaryIdx = DIM_COLORS.indexOf(radarColor);
+      // Falls back to -1 if no match — handle that case safely below.
+
       // Calculate points for each axis (start from top, go clockwise)
       function getPoint(i, radius) {
         var angle = (i / n) * 2 * Math.PI - Math.PI / 2;
@@ -95,10 +98,10 @@
           x: x,
           y: y,
           textAnchor: config.anchor,
-          fill: "#1A1F3DB3",
+          fill: [TEAL_TEXT, C.blue, C.indigo, C.purple][i],
           fontSize: fontSize,
           fontFamily: "'DM Sans', sans-serif",
-          fontWeight: "500",
+          fontWeight: "600",
           dominantBaseline: config.dominantBaseline
         },
           config.lines.length === 1
@@ -111,7 +114,7 @@
       }
 
       return React.createElement("svg", {
-        viewBox: "-30 -20 380 360",
+        viewBox: "-60 -30 440 380",
         width: "100%",
         height: "auto",
         role: "img",
@@ -133,6 +136,22 @@
             strokeWidth: level === 10 ? "1.5" : "1"
           });
         }),
+        // Axis tick numbers along the top axis (quiet reference scale)
+        [2, 4, 6, 8, 10].map(function(level) {
+          var y = cy - (level / 10) * r;
+          return React.createElement("text", {
+            key: "tick" + level,
+            x: cx - 4,
+            y: y,
+            textAnchor: "end",
+            dominantBaseline: "central",
+            fontSize: 8.5,
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: "500",
+            fill: "#1A1F3D",
+            fillOpacity: "0.35"
+          }, level);
+        }),
         // Axis lines
         axes.map(function(ax, i) {
           return React.createElement("line", {
@@ -146,19 +165,47 @@
         // Score polygon (filled)
         React.createElement("polygon", {
           points: scorePoints,
-          fill: radarColor + "2E",
+          fill: radarColor + "47",
           stroke: radarColor,
           strokeWidth: "2",
           strokeLinejoin: "round"
         }),
-        // Score dots
+        // Score dots with primary-gap vertex emphasis
         scores.map(function(s, i) {
           var pt = getPoint(i, (s / 10) * r);
-          return React.createElement("circle", {
-            key: "dot" + i,
-            cx: pt.x, cy: pt.y, r: 4,
-            fill: radarColor
-          });
+          var isPrimary = i === primaryIdx;
+          return React.createElement(React.Fragment, { key: "dot" + i },
+            isPrimary && React.createElement("circle", {
+              cx: pt.x, cy: pt.y, r: 9,
+              fill: "none",
+              stroke: radarColor,
+              strokeWidth: "1.5",
+              strokeOpacity: "0.35"
+            }),
+            React.createElement("circle", {
+              cx: pt.x, cy: pt.y,
+              r: isPrimary ? 5.5 : 4,
+              fill: radarColor,
+              stroke: isPrimary ? "#FEFBF4" : "none",
+              strokeWidth: isPrimary ? "1.5" : "0"
+            })
+          );
+        }),
+        // Vertex score numbers
+        scores.map(function(s, i) {
+          var scoreOffset = ((s / 10) * r) + 12;
+          var scorePt = getPoint(i, scoreOffset);
+          return React.createElement("text", {
+            key: "score" + i,
+            x: scorePt.x,
+            y: scorePt.y,
+            textAnchor: "middle",
+            dominantBaseline: "central",
+            fontSize: 10,
+            fontWeight: "700",
+            fontFamily: "'DM Sans', sans-serif",
+            fill: [TEAL_TEXT, C.blue, C.indigo, C.purple][i],
+          }, s.toFixed(1));
         }),
         // Labels
         axes.map(renderLabel)
@@ -1569,7 +1616,7 @@ function ScreenResults({ state, dispatch }) {
         React.createElement("div", { className: "g-fu g-d2", style: { display: "grid",
                 gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24, marginBottom: 32, alignItems: "center" } },
             React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
-                React.createElement("div", { style: { width: "100%", maxWidth: (typeof window !== "undefined" && window.innerWidth < 600) ? 320 : 360, padding: 8, margin: "0 auto" } },
+                React.createElement("div", { style: { width: "100%", maxWidth: (typeof window !== "undefined" && window.innerWidth < 600) ? 340 : 380, padding: 8, margin: "0 auto" } },
                     React.createElement(SVGRadar, { data: radarData, color: arch.color })),
                 React.createElement("p", { style: { textAlign: "center", fontSize: 12, color: CW.dim, marginTop: 4 } }, "The further from centre, the stronger that dimension")),
             React.createElement("div", { style: { display: "flex", justifyContent: "center", width: "100%" } },
