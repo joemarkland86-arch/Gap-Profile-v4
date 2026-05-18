@@ -1591,9 +1591,6 @@ function ScreenResults({ state, dispatch }) {
                     " · ",
                     "Attempts: ",
                     React.createElement("strong", { style: { color: CW.text } }, C3_LABEL[ctx.c3])))),
-        React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
-                marginBottom: 20, marginTop: -16, letterSpacing: "0.04em" } },
-                "Your primary gap is highlighted below"),
         React.createElement("div", { style: {
                 background: "#FEFBF4", borderRadius: 12,
                 padding: "clamp(20px, 3vw, 24px)",
@@ -1605,14 +1602,17 @@ function ScreenResults({ state, dispatch }) {
                 color: "#1A1F3D", marginBottom: 12
             } }, "A quick note on what you’re about to see"),
             React.createElement("p", { style: {
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "’DM Sans’, sans-serif",
                 fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9", marginBottom: 10
             } }, "You’ll get a Gap Score out of 10, and a breakdown across four areas."),
             React.createElement("p", { style: {
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "’DM Sans’, sans-serif",
                 fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9"
             } }, "The score is useful, but it’s the four bars that tell you most. Lower scores aren’t a verdict — they’re a clue about where the friction probably is right now.")
         ),
+        React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
+                marginBottom: 20, letterSpacing: "0.04em" } },
+                "Your primary gap is highlighted below"),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "grid",
                 gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24, marginBottom: 32, alignItems: "center" } },
             React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
