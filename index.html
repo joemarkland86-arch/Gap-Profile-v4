@@ -956,15 +956,6 @@ function ScreenLanding({ dispatch }) {
                 fontSize: 15, color: CW.text, lineHeight: 1.8, fontWeight: 500
             } }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers.")
         ),
-        React.createElement("div", { className: "g-fu g-d4", style: {
-            display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 48
-        } },
-            ["5 minutes", "Free, no account", "23 questions"].map(function(label) {
-                return React.createElement("span", { key: label, style: {
-                    padding: "8px 18px", border: "1px solid " + CW.border, borderRadius: 20, fontSize: 13, color: CW.muted, background: CW.surface
-                } }, label);
-            })
-        ),
         React.createElement("div", { className: "g-fu g-d4" },
             React.createElement("button", { className: "g-btn-p", style: { fontSize: 16, padding: "16px 44px", marginBottom: 14 },
                 onClick: function() { dispatch({ type: "SET_TRANSITIONING", val: true }); }
