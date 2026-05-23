@@ -667,7 +667,7 @@ html,body{background:#0D1B2A;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:ro
 .g-spinner{width:48px;height:48px;border-radius:50%;border:3px solid rgba(46,196,182,0.15);border-top:3px solid #2EC4B6;animation:spin 1.2s linear infinite;margin:0 auto 28px}
 .g-btn-s{background:transparent;color:#8BA3BC;border:1px solid #2A4060;border-radius:8px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:border-color 0.15s,color 0.15s}
 .g-btn-s:hover{border-color:#2EC4B6;color:#2EC4B6}
-.g-eb-flag{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:16px 20px;margin-bottom:24px}
+.g-eb-flag{background:#FBF3E0;border:1px solid #E9C97A;border-radius:10px;padding:16px 20px;margin-bottom:24px}
 .g-hero-glow{background:#F5F0E8}
 .g-btn-p{background:#2EC4B6;color:#0D1B2A;border:none;border-radius:10px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.18s,transform 0.12s,box-shadow 0.18s;letter-spacing:-0.01em;box-shadow:0 2px 12px rgba(46,196,182,0.18)}
 .g-btn-p:hover{background:#34D6C8;transform:translateY(-2px);box-shadow:0 6px 28px rgba(46,196,182,0.35)}
@@ -970,10 +970,11 @@ function ScreenLanding({ dispatch }) {
 function ScreenContext({ ctx, ctxErrors, dispatch }) {
     const [localC1, setLocalC1] = useState(ctx.c1);
     const charCount = localC1.trim().length;
+    const wordCount = localC1.trim().split(/\s+/).filter(Boolean).length;
     const handleNext = () => {
         const errors = {};
-        if (charCount < 20)
-            errors.c1 = "Be more specific - what exactly would you do?";
+        if (charCount < 20 || wordCount < 4)
+            errors.c1 = "Try a short phrase that names the actual step — e.g. “move into a product role at a smaller company.”";
         if (!ctx.c2)
             errors.c2 = true;
         if (!ctx.c3)
@@ -987,7 +988,7 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
         dispatch({ type: "SET_CTX", patch: { c1: localC1 } });
         dispatch({ type: "SET_STEP", step: 2 });
     };
-    const isValid = charCount >= 20 && ctx.c2 && ctx.c3 && ctx.c4;
+    const isValid = charCount >= 20 && wordCount >= 4 && ctx.c2 && ctx.c3 && ctx.c4;
     return (React.createElement("div", { style: { maxWidth: 680, margin: "0 auto", padding: "40px 24px 80px" } },
         React.createElement("div", { className: "g-fu", style: { marginBottom: 32 } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
@@ -1008,19 +1009,19 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
                     React.createElement("span", { style: { fontSize: 12, color: charCount >= 8 ? C.teal : C.dim } },
                         charCount,
                         " characters",
-                        charCount < 20 ? ` (${20 - charCount} more needed)` : ""))),
+                        (charCount < 20 || wordCount < 4) ? " — add a little more detail" : ""))),
             React.createElement("div", { style: {
-                opacity: charCount >= 20 ? 1 : 0.3,
-                transform: charCount >= 20 ? "translateY(0)" : "translateY(8px)",
+                opacity: charCount >= 20 && wordCount >= 4 ? 1 : 0.3,
+                transform: charCount >= 20 && wordCount >= 4 ? "translateY(0)" : "translateY(8px)",
                 transition: "opacity 0.4s ease, transform 0.4s ease",
-                pointerEvents: charCount >= 20 ? "auto" : "none",
+                pointerEvents: charCount >= 20 && wordCount >= 4 ? "auto" : "none",
             } },
-            React.createElement("div", { className: charCount >= 20 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
+            React.createElement("div", { className: charCount >= 20 && wordCount >= 4 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
                 React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600,
                         color: C.muted, marginBottom: 12 } }, "I have been aware of this gap for approximately:"),
                 React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["<1mo", "Less than 1 month"], ["1-6mo", "1–6 months"], ["6-12mo", "6–12 months"], ["1yr+", "Over a year"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c2 === v ? " sel" : ""}`, onClick: () => dispatch({ type: "SET_CTX", patch: { c2: v } }) }, l)))),
                 ctxErrors.c2 && React.createElement("p", { style: { fontSize: 12, color: C.red, marginTop: 6 } }, "Please select one")),
-            React.createElement("div", { className: charCount >= 20 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
+            React.createElement("div", { className: charCount >= 20 && wordCount >= 4 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
                 React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600,
                         color: C.muted, marginBottom: 12 } }, "I have attempted to close this gap how many times?"),
                 React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["never", "Never"], ["1-2", "Once or twice"], ["3-5", "Three to five times"], ["6+", "Six or more times"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c3 === v ? " sel" : ""}`, onClick: () => dispatch({ type: "SET_CTX", patch: { c3: v } }) }, l)))),
@@ -1486,7 +1487,7 @@ function NextSteps({ primary, archColor, scores, question }) {
         React.createElement("div", {
             style: { display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }
         },
-            workbookCard,
+            cta.workbookAvailable ? workbookCard : null,
             debriefCard
         ),
         programmeNote
@@ -1611,7 +1612,7 @@ function ScreenResults({ state, dispatch }) {
                 React.createElement(CGIRing, { cgi: cgi, color: arch.color }))),
         React.createElement("div", { ref: dimensionSectionRef, className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
                 gap: 14, marginBottom: 32, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } }, dimRows.map((d, i) => {
-            const isPrimary = d.key === primary;
+            const isPrimary = d.key === primary && scores[d.key] < 5;
             return (React.createElement("div", { key: d.key, className: isPrimary ? "g-pg" : "", style: { borderRadius: 10, padding: "12px 16px",
                     background: isPrimary ? (d.color + "08") : "transparent",
                     border: isPrimary ? `1px solid ${d.color}30` : "1px solid transparent",
@@ -1657,9 +1658,9 @@ function ScreenResults({ state, dispatch }) {
                 ctx.c4 === "reinvention" ? "complete reinvention" : "significant transition",
                 ". The scores above should be read in that context. Thresholds that would be fine for a small adjustment carry more weight at this scale of change.")),
         scores.eb !== undefined && scores.eb < 3 && React.createElement("div", { className: "g-fu g-d3 g-eb-flag", style: { marginBottom: 24 } },
-            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", color: "#F59E0B",
+            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", color: "#B97400",
                     textTransform: "uppercase", marginBottom: 8 } }, "Something worth naming first"),
-            React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.65 } },
+            React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.65 } },
                 "Your responses suggest the primary barriers you\u2019re facing may be structural: things outside your direct control, like access, opportunity, or systemic factors. The GAP Profile measures psychological and resource barriers. Where structural barriers are the dominant factor, the interventions below need to be read differently. This is worth exploring directly in a conversation.")),
         oe < 5 && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: 10, padding: "16px 20px" } },
             React.createElement("p", { style: { fontSize: 14, color: C.muted, fontStyle: "italic", lineHeight: 1.7 } },
