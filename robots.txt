@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /docs/
+Disallow: /agency-agents/
+Disallow: /Offers/
+Disallow: /diagnostic/
+Disallow: /site/
+Disallow: /workbooks/
+
+Sitemap: https://gapprofile.co.uk/sitemap.xml
