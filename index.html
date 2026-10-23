@@ -604,9 +604,7 @@ const INITIAL = {
     responses: {},
     email: "", firstName: "", emailSkipped: false,
     scores: null,
-    coachMode: false,
     processingComplete: false,
-    coachModalOpen: false, coachUnlocked: false, coachPinEntry: "",
     resumeBannerVisible: false,
     toast: null,
     ctxErrors: {},
@@ -615,7 +613,6 @@ function reducer(state, action) {
     switch (action.type) {
         case "SET_STEP": return { ...state, step: action.step };
         case "SET_TRANSITIONING": return { ...state, transitioning: action.val };
-        case "SET_COACH_MODE": return { ...state, coachMode: true };
         case "PROCESSING_DONE": return { ...state, processingComplete: true };
         case "SET_TOAST": return { ...state, toast: action.message };
         case "SET_CTX": return { ...state, ctx: { ...state.ctx, ...action.patch }, ctxErrors: {} };
@@ -625,12 +622,6 @@ function reducer(state, action) {
         case "SKIP_EMAIL": return { ...state, emailSkipped: true, step: 7 };
         case "SUBMIT_EMAIL": return { ...state, email: action.email, toast: "\u2713 Thanks. I\u2019ll be in touch." };
         case "COMPUTE_SCORES": return { ...state, scores: computeScores(state.responses), step: 7 };
-        case "OPEN_COACH": return { ...state, coachModalOpen: true, coachUnlocked: false, coachPinEntry: "" };
-        case "CLOSE_COACH": return { ...state, coachModalOpen: false, coachUnlocked: false, coachPinEntry: "" };
-        case "PIN_CHANGE": return { ...state, coachPinEntry: action.val };
-        case "PIN_SUBMIT": return action.val === "2025"
-            ? { ...state, coachUnlocked: true }
-            : { ...state, toast: "Incorrect PIN", coachPinEntry: "" };
         case "CLEAR_TOAST": return { ...state, toast: null };
         case "SET_RESUME": return { ...state, resumeBannerVisible: action.val };
         case "RESUME_SESSION": return { ...state, ...action.saved, resumeBannerVisible: false };
@@ -1230,92 +1221,6 @@ function Accordion({ title, children }) {
         React.createElement("div", { className: "g-acc", style: { maxHeight: open ? 2000 : 0, opacity: open ? 1 : 0 } },
             React.createElement("div", { style: { padding: "0 24px 24px" } }, children))));
 }
-// ─── COACH MODAL ───────────────────────────────────────────────────────────────
-function CoachModal({ state, dispatch }) {
-    const { scores, ctx, coachUnlocked, coachPinEntry } = state;
-    const [pinError, setPinError] = useState(false);
-    const handlePin = () => {
-        if (coachPinEntry === "2025") {
-            dispatch({ type: "PIN_SUBMIT", val: coachPinEntry });
-            setPinError(false);
-        }
-        else {
-            setPinError(true);
-            setTimeout(() => setPinError(false), 1200);
-            dispatch({ type: "PIN_CHANGE", val: "" });
-        }
-    };
-    const arch = scores ? ARCHETYPES[scores.primary] : null;
-    const patternNote = scores ? getPatternInsight(ctx.c2, ctx.c3) : "";
-    return (React.createElement("div", { className: "g-modal-overlay", onClick: () => dispatch({ type: "CLOSE_COACH" }) },
-        React.createElement("div", { className: "g-modal", onClick: e => e.stopPropagation() },
-            React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 } },
-                React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } },
-                    React.createElement("span", { style: { color: C.teal, fontSize: 18 } }, "\u25C8"),
-                    React.createElement("span", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 18, color: C.text } }, "Coach View")),
-                React.createElement("button", { onClick: () => dispatch({ type: "CLOSE_COACH" }), style: { background: "none", border: "none", color: C.muted,
-                        fontSize: 20, cursor: "pointer", lineHeight: 1 } }, "\u00D7")),
-            !coachUnlocked ? (React.createElement("div", { style: { textAlign: "center" } },
-                React.createElement("p", { style: { fontSize: 14, color: C.muted, marginBottom: 24 } }, "Enter your 4-digit PIN to access coaching notes."),
-                React.createElement("div", { className: pinError ? "g-shake" : "", style: { maxWidth: 200, margin: "0 auto 16px" } },
-                    React.createElement("input", { className: "g-input", type: "password", maxLength: 4, value: coachPinEntry, placeholder: "\u2022 \u2022 \u2022 \u2022", style: { textAlign: "center", fontSize: 24, letterSpacing: "0.4em" }, onChange: e => dispatch({ type: "PIN_CHANGE", val: e.target.value }), onKeyDown: e => e.key === "Enter" && handlePin() })),
-                pinError && React.createElement("p", { style: { fontSize: 12, color: C.red, marginBottom: 12 } }, "Incorrect PIN"),
-                React.createElement("button", { className: "g-btn-p", onClick: handlePin }, "Unlock"))) : arch && scores ? (React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 20 } },
-                React.createElement("div", { style: { background: C.ink, borderRadius: 10, padding: "16px 20px" } },
-                    React.createElement("p", { style: { fontSize: 11, color: C.teal, fontWeight: 700, letterSpacing: "0.08em",
-                            textTransform: "uppercase", marginBottom: 10 } }, "Pre-session protocol"),
-                    [
-                        `Primary: ${arch.label} - lead with ${arch.focus.split("·")[0].trim()}`,
-                        `Lowest dimension: ${scores.sorted[0][0].toUpperCase()} (${scores.sorted[0][1].toFixed(1)}/10) - this is your session anchor`,
-                        `Duration: ${C2_LABEL[ctx.c2] || ctx.c2}${ctx.c2 === "1yr+" ? " - explore secondary gain" : ""}`,
-                        `Attempts: ${C3_LABEL[ctx.c3] || ctx.c3}${ctx.c3 === "6+" ? " - high learned helplessness risk" : ctx.c3 === "never" ? " - explore what has stopped starting" : ""}`,
-                        `Pattern: ${patternNote}`,
-                        `Evidence confidence: SE and PS interventions have the strongest empirical support. IA and RR are robust but more context-dependent - tailor interventions accordingly.`,
-                        scores.oe < 5 ? `Outcome Expectations flag (⚠): client may doubt the action will produce results regardless of capability. Explore outcome expectations before efficacy interventions. OE score: ${scores.oe.toFixed(1)}/10` : null,
-                        scores.eb !== undefined && scores.eb < 3 ? `⚠ Environmental Barriers flag (EB score: ${scores.eb}/5): client may face structural or systemic barriers as primary issue. Do not lead with psychological interventions — explore external barriers first.` : null,
-                        `Scale of step: ${{"adjust":"Small adjustment","shift":"Moderate shift","transition":"Significant transition","reinvention":"Complete reinvention"}[ctx.c4] || "Not specified"} — calibrate score thresholds accordingly`,
-                    ].filter(Boolean).map((item, i) => (React.createElement("div", { key: i, style: { display: "flex", gap: 10, marginBottom: 8 } },
-                        React.createElement("span", { style: { color: C.teal, fontWeight: 700, fontSize: 12, flexShrink: 0, marginTop: 2 } },
-                            i + 1,
-                            "."),
-                        React.createElement("p", { style: { fontSize: 13, color: C.text, lineHeight: 1.5 } }, item))))),
-                React.createElement("div", { style: { background: "rgba(245,158,11,0.08)", border: `1px solid rgba(245,158,11,0.25)`,
-                        borderRadius: 10, padding: "16px 20px" } },
-                    React.createElement("p", { style: { fontSize: 11, color: C.amber, fontWeight: 700, letterSpacing: "0.08em",
-                            textTransform: "uppercase", marginBottom: 8 } }, "Debrief opening"),
-                    React.createElement("p", { style: { fontSize: 14, color: C.text, fontStyle: "italic", lineHeight: 1.7 } },
-                        "\"Take a moment with this. What do you notice?\" Then silence. Don't interpret first. Let them name it. Once they engage: \"This dimension ",
-                        scores.sorted[0][0].toUpperCase(),
-                        " seems to be the loudest thing in your profile. Tell me more about what it's like in that space.\"")),
-                (ctx.c2 === "1yr+" || ctx.c3 === "6+") && (React.createElement("div", { style: { background: "rgba(239,68,68,0.08)", border: `1px solid rgba(239,68,68,0.25)`,
-                        borderRadius: 10, padding: "16px 20px" } },
-                    React.createElement("p", { style: { fontSize: 11, color: C.red, fontWeight: 700, letterSpacing: "0.08em",
-                            textTransform: "uppercase", marginBottom: 8 } }, "\u26A0 Flags"),
-                    ctx.c2 === "1yr+" && React.createElement("p", { style: { fontSize: 13, color: C.text, marginBottom: 4, lineHeight: 1.5 } },
-                        React.createElement("strong", null, "Long duration:"),
-                        " Entrenched pattern. Explore secondary gain before interventions."),
-                    ctx.c3 === "6+" && React.createElement("p", { style: { fontSize: 13, color: C.text, lineHeight: 1.5 } },
-                        React.createElement("strong", null, "High attempts:"),
-                        " Learned helplessness risk. Very small, success-guaranteed first action is critical."))),
-                React.createElement("div", null,
-                    React.createElement("p", { style: { fontSize: 11, color: C.dim, fontWeight: 700, letterSpacing: "0.08em",
-                            textTransform: "uppercase", marginBottom: 10 } }, "Record for client file"),
-                    React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 } }, [
-                        ["Intake CGI", `${scores.cgi.toFixed(1)} / 10`],
-                        ["SE", `${scores.se.toFixed(1)} / 10`],
-                        ["PS", `${scores.ps.toFixed(1)} / 10`],
-                        ["IA", `${scores.ia.toFixed(1)} / 10`],
-                        ["RR", `${scores.rr.toFixed(1)} / 10`],
-                        ["OE flag", scores.oe < 5 ? "⚠ Outcome pessimism (" + scores.oe.toFixed(1) + "/10)" : "✓ Clear (" + scores.oe.toFixed(1) + "/10)"],
-                        ["EB flag", scores.eb !== undefined && scores.eb < 3 ? "⚠ Structural barriers (" + scores.eb + "/5)" : "✓ Clear (" + (scores.eb || "n/a") + ")"],
-                        ["Step scale", {"adjust":"Small adjustment","shift":"Moderate shift","transition":"Significant transition","reinvention":"Complete reinvention"}[ctx.c4] || "Not specified"],
-                        ["Close CGI", "__ / 10"],
-                    ].map(([k, v]) => (React.createElement("div", { key: k, style: { background: C.ink, borderRadius: 8, padding: "10px 14px",
-                            display: "flex", justifyContent: "space-between" } },
-                        React.createElement("span", { style: { fontSize: 12, color: C.muted, fontWeight: 600 } }, k),
-                        React.createElement("span", { style: { fontSize: 13, color: C.text, fontWeight: 700 } }, v)))))),
-                React.createElement("p", { style: { fontSize: 11, color: C.dim, textAlign: "center" } }, "Print or screenshot for the client file"))) : null)));
-}
 // ─── SCREEN 7: RESULTS ─────────────────────────────────────────────────────────
 function ScreenProcessing({ dispatch }) {
     const steps = [
@@ -1760,14 +1665,6 @@ function ScreenResults({ state, dispatch }) {
             "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and will shift as your situation changes. Best used as a starting point for a coaching conversation."),
         React.createElement("div", { style: { textAlign: "center" } },
             React.createElement("button", { onClick: () => { clearSession(); dispatch({ type: "RETAKE" }); }, style: { background: "none", border: "none", fontSize: 13, color: C.dim, cursor: "pointer", textDecoration: "none", letterSpacing: "0.02em" } }, "\u2190 Retake from the start")),
-        state.coachMode && React.createElement("button", { onClick: () => dispatch({ type: "OPEN_COACH" }), style: { position: "fixed", bottom: 24, right: 24, background: C.surf2,
-                border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 16px",
-                display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: C.muted,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.4)", transition: "border-color 0.15s, color 0.15s",
-                zIndex: 50 }, onMouseEnter: e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.color = C.teal; }, onMouseLeave: e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; } },
-            React.createElement("span", { style: { color: C.teal } }, "\u25C8"),
-            " Coach"),
         React.createElement(StickyBookingCTA, { primary: primary, primaryColor: arch.color, triggerRef: dimensionSectionRef, targetRef: bookingSectionRef })));
 }
 // ─── ROOT ──────────────────────────────────────────────────────────────────────
@@ -1816,13 +1713,6 @@ function GAPProfile() {
             dispatch({ type: "COMPUTE_SCORES" });
         }
     }, [state.step, state.scores]);
-    // Gate coach mode via URL param
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("coach") === "true") {
-            dispatch({ type: "SET_COACH_MODE" });
-        }
-    }, []);
     const sectionIdx = state.step >= 2 && state.step <= 5 ? state.step - 2 : -1;
     var rootWarm = state.step === 0 || (state.step === 7 && state.processingComplete);
     return (React.createElement("div", { style: { minHeight: "100vh", background: rootWarm ? CW.bg : C.ink, fontFamily: "'DM Sans', sans-serif", transition: "background 0.3s ease" } },
@@ -1854,7 +1744,6 @@ function GAPProfile() {
 ),
         state.step === 7 && !state.processingComplete && (React.createElement(ScreenProcessing, { dispatch: dispatch })),
         state.step === 7 && state.processingComplete && state.scores && (React.createElement(ScreenResults, { state: state, dispatch: dispatch })),
-        state.coachModalOpen && (React.createElement(CoachModal, { state: state, dispatch: dispatch })),
         state.toast && (React.createElement(Toast, { message: state.toast, onDone: () => dispatch({ type: "CLEAR_TOAST" }) }))));
 }
 
