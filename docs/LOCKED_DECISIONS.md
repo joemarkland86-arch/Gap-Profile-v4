@@ -19,16 +19,25 @@
 - Tone:
   clear, grounded, structured, psychologically sharp, warm, direct
 
-- Diagnostic:
+- Assessment:
   23 questions, radar chart, archetype result, email capture via Formspree
   Current version: V7 (forward-scored items, time anchors, updated band labels)
 
 - Safety Seeker workbook:
   complete (24-page PDF, £9.99)
 
-- Programme pricing:
-  6-session programme at £597
-  No 10-session option
+- Coaching offer and pricing (locked 23 Oct 2026):
+  Coaching is client-led. The client brings the agenda; there is no curriculum
+  and no advice-giving. Never call the session a "debrief".
+  Optional workbook: £9.99, available independently, never a prerequisite.
+  GAP Profile Session: £125, one 60-minute coaching conversation.
+  Six coaching sessions: £600 total, focus and spacing agreed with the client,
+  focus revisited as the work develops, reflection in every session.
+  A £125 session counts as the first of six, leaving £475. No credit deadline.
+  Two payments of £300 may be offered.
+  The package does not appear on the assessment results page; its price can
+  appear on a coaching information page.
+  Review pricing after the first ten paying clients.
 
 - Results page structure:
   Archetype name → mechanism (short) → reflective question → locked interventions → CTA
