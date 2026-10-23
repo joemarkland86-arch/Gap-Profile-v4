@@ -56,7 +56,7 @@
       <h2>Informed by research. Designed for action.</h2>
       <p>Most career tools map who you are: your personality, values or strengths. The GAP Profile looks at something else: the gap between knowing your next move and actually making it.</p>
       <p>It draws on established psychological research into some of the reasons capable people can struggle to act, alongside direct coaching practice. It doesn’t assume every barrier is in your head. What it surfaces is a current pattern in your responses, not a fixed type. And patterns can change.</p>
-      <p><small>A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses — they change as your situation changes.</small></p>
+      <p><small>A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses, and they can change as your situation changes.</small></p>
     </main>
   </div>
 
@@ -269,12 +269,12 @@ const TEAL_TEXT = "#1A7A6F"; // accessible teal for text on cream/sand — repla
 const ARCHETYPES = {
     se: {
         label: "The Capable Doubter", color: C.teal,
-        insight: "Has the skills. Has the plan. Still asking: 'But am I actually good enough?'",
+        insight: "Looking at the next step and wondering: ‘Am I good enough for this?’",
         focus: "The pattern: discounting evidence of your own capability",
         mechanism: "Your answers show doubt about whether you can do this. Worth checking whether that doubt is pointing at a real gap or at evidence you're discounting.",
         question: "Where are you demanding certainty from yourself that you wouldn't demand from anyone else?",
         theory: "Bandura's self-efficacy theory (1977, 1997)",
-        secondaryLine: "has skills but struggles to act on self-belief",
+        secondaryLine: "doubt about whether you can do this",
         actions: [
             { title: "Evidence audit", detail: "Build proof, not reassurance. What have you already done that shows this step is not beyond you?" },
             { title: "Behavioural experiments", detail: "Create fresh evidence through action. One specific move, one clear outcome, one defined time frame." },
@@ -284,12 +284,12 @@ const ARCHETYPES = {
     },
     ps: {
         label: "The Safety Seeker", color: C.blue,
-        insight: "Can see the path. Still pulled toward the safer option.",
+        insight: "Weighing up what could happen if you take this step.",
         focus: "The pattern: treating a career decision like a physical threat",
-        mechanism: "It's not that the risk isn't worth it. It's that your brain is treating a career decision like a physical danger — and when that happens, logic doesn't get much say.",
+        mechanism: "What could happen if you take this step is making it hard to take. Worth working out what\u2019s at stake, what\u2019s still uncertain, and what would help you judge the risk.",
         question: "What would you do next if the downside felt half as significant as it does right now?",
-        theory: "Rock's SCARF model (2008) · Kahneman's prospect theory (2011)",
-        secondaryLine: "keeps defaulting to the safer option even when the next step is clear",
+        theory: "Lazarus & Folkman, stress and coping appraisal (1984) · Krypotos et al., avoidance research (2015)",
+        secondaryLine: "concern about what could happen if you take this step",
         actions: [
             { title: "Worst-case analysis", detail: "Make the threat specific. What actually happens if this goes wrong, and what would recovery look like?" },
             { title: "Cost of staying stuck", detail: "Put a number on what inaction is costing. The threat response sees the risk of moving, not the cost of standing still." },
@@ -299,12 +299,12 @@ const ARCHETYPES = {
     },
     ia: {
         label: "The Unclaimed Self", color: C.indigo,
-        insight: "You can see the next version of your life. It just doesn't feel fully like yours yet.",
+        insight: "Not sure this next step fits who you are, or who you want to become.",
         focus: "The pattern: the future makes sense but doesn\u2019t feel like yours yet",
-        mechanism: "It makes sense on paper, but it doesn\u2019t feel like you yet. And until it does, hesitation isn\u2019t going to stop feeling like a reasonable position.",
+        mechanism: "It might make sense on paper without feeling like you. Worth working out whether that\u2019s because it\u2019s new, or because it doesn\u2019t suit you.",
         question: "What part of this next step still feels like a version of you you haven't fully claimed?",
-        theory: "Ibarra's identity work (2003) · Markus & Nurius, possible selves (1986) · Strauss et al, future work self salience (2012)",
-        secondaryLine: "can see the future, but doesn't fully recognise themselves in it yet",
+        theory: "Ibarra, provisional selves (1999, 2003) · Markus & Nurius, possible selves (1986) · Oyserman, identity-based motivation (2015) · Strauss et al., future work self (2012)",
+        secondaryLine: "uncertainty about whether this step fits who you are or want to become",
         actions: [
             { title: "Act first, reflect later", detail: "Stop waiting to feel ready first. Identity often catches up after action, not before it." },
             { title: "Identity experiments", detail: "Try one low-risk move that lets the future version of you show up briefly in real life." },
@@ -315,12 +315,12 @@ const ARCHETYPES = {
     },
     rr: {
         label: "The Overdrawn Self", color: C.purple,
-        insight: "You do care. But your time, attention and energy are already stretched past what this step needs.",
+        insight: "Time, attention, energy or support may be stretched too thin for this step right now.",
         focus: "The pattern: genuine depletion, not a lack of motivation",
-        mechanism: "You do care. The issue is that your time, attention and energy are already stretched, and career action needs exactly the kind of sustained focus that gets squeezed first.",
+        mechanism: "Your time, attention or energy may already be stretched, and career action needs the kind of focus that gets squeezed first.",
         question: "If the situation does not change by itself, what would make this feel even slightly easier to carry?",
-        theory: "Hobfoll's Conservation of Resources theory (1989, 2018) · Baumeister's self-regulation research",
-        secondaryLine: "is dealing with genuine depletion — the issue is capacity, not character",
+        theory: "Hobfoll\u2019s Conservation of Resources theory (1989, 2018)",
+        secondaryLine: "time, energy or support stretched too thin",
         actions: [
             { title: "Resource audit", detail: "Find the real bottleneck. Is it time, energy, money, support, or attention?" },
             { title: "Minimum viable action", detail: "Scale the next move to your actual capacity. Start with the tank you have, not the tank you wish you had." },
@@ -331,21 +331,21 @@ const ARCHETYPES = {
 };
 // ─── PATTERN ENGINE ────────────────────────────────────────────────────────────
 var PATTERNS = {
-P1: "This looks less about motivation and more about whether you feel ready enough. When that doubt is there, it\u2019s easy to keep preparing without actually moving.",
-P2: "This looks less about ability and more about how risky it feels. Even when you could do it, the downside still feels big enough to hold you back.",
-P3: "This looks less about whether it makes sense and more about whether it feels like you. When it doesn\u2019t quite fit, it\u2019s hard to fully commit.",
-P4: "This looks less about mindset and more about capacity. When there isn\u2019t enough time or headspace, even good intentions don\u2019t turn into action.",
-P5: "Two things are pulling in the same direction. You\u2019re not fully convinced you can do it, and it also feels risky enough to avoid. That combination makes starting much harder.",
-P6: "You seem to believe you could do this. The friction shows up in how risky it feels, which keeps you holding back even when you\u2019re capable.",
-P7: "This doesn\u2019t fully feel like your direction, and you don\u2019t have the space to figure it out properly. That tends to keep things on hold longer than you want.",
+P1: "Doubt about whether you can do this shows up in your answers. What backs that doubt up, and what pushes against it?",
+P2: "What might happen if you take this step is weighing on you. What worries you most, and what would help you weigh it up properly?",
+P3: "How well this step fits you is in question. What feels right about it, and what feels unfamiliar or just wrong?",
+P4: "Time, energy or support looks thin for this step right now. What\u2019s in shortest supply, and what would help?",
+P5: "Two things show up together: doubt about whether you can do this, and concern about what could happen if you try. Which one feels bigger right now?",
+P6: "You rated your ability to do this fairly well. The lower scores are around risk. What feels at stake if you go for it?",
+P7: "Two things show up together: uncertainty about whether this fits you, and not much time or energy to work it out. Which would be easier to start on?",
 P8: "No single area stands out strongly. That can happen when a few different factors are all slightly in play, which makes it harder to see a clear next move.",
 };
 
 var PATTERN_QUESTIONS = {
-se: "Where are you demanding certainty from yourself that you wouldn\u2019t demand from anyone else?",
-ps: "What would you do next if the downside felt half as significant as it does right now?",
-ia: "What part of this next step still feels like a version of you you haven\u2019t fully claimed?",
-rr: "If the situation does not change by itself, what would make this feel even slightly easier to carry?",
+se: "What would you need to see to feel you could do this, and do you already have any of it?",
+ps: "What would you need to know to judge this risk properly?",
+ia: "What part of this step feels like you, and what part doesn\u2019t?",
+rr: "If the situation doesn\u2019t change by itself, what would make this feel even slightly easier to carry?",
 };
 
 var DURATION_NATURAL = {
@@ -428,46 +428,46 @@ const NO_PATTERN_COPY = {
 };
 const WORKBOOK_CHOOSER = {
     se: "For when doubt about your capability is the thing holding you back.",
-    ps: "For when the downside feels too big to risk. Helps you make the risk specific enough to weigh properly.",
-    ia: "For when the next step makes sense but doesn’t feel like you yet.",
+    ps: "For when what could go wrong is weighing on you. Helps you make the risk specific enough to judge.",
+    ia: "For when you\u2019re not sure this step fits who you are.",
     rr: "For when time, energy or support is stretched too thin to act.",
 };
 const CTA_DATA = {
     ps: {
-        headline: "The move makes sense. Your threat system disagrees.",
-        reframe: "This isn\u2019t a confidence problem or a risk tolerance problem. Your brain is treating a career decision like a physical threat \u2014 and when that happens, logic doesn\u2019t get much of a vote. The hesitation you feel isn\u2019t a character flaw. It\u2019s your threat system doing its job.",
-        cost: "But inaction has a cost too. Every time you default to the safer option, the window of opportunity gets a little narrower \u2014 and the part of you that knows what you should do gets a little quieter. At some point, someone else will ask you at Sunday lunch why you never made the move you always said you were going to make.",
-        nextStep: "A few questions to sit with:\n\nWhat exactly feels at risk? Status, certainty, income, relationships.\nWhat\u2019s the worst realistic outcome, not the worst imagined one?\nWhat would make this feel even slightly safer to try?\n\nVague threat is amplified threat. Naming what\u2019s actually at risk is usually where the first move starts to look survivable.",
+        headline: "What would make this risk manageable?",
+        reframe: "Career decisions can have real consequences for money, relationships or security. Your answers can\u2019t tell how likely those are, or whether this move is worth it. Getting specific about the worry can show you what information, support or safeguards you\u2019d need.",
+        cost: "Waiting has costs and benefits too. It\u2019s worth being honest about what staying put gives you, and what it might cost you.",
+        nextStep: "A few questions to sit with:\n\nWhat exactly feels at risk? Status, certainty, income, relationships.\nWhat\u2019s the worst realistic outcome, and what would you do if it happened?\n\nIf a small test makes sense, write down what you think will happen, try it with sensible safeguards, then compare what happened with what you expected.",
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/Amq9b",
         workbookTitle: "The Safety Seeker Workbook",
-        workbookDesc: "A structured process for making your threat specific, weighing the real cost of inaction, and finding the first move your brain can actually accept.",
+        workbookDesc: "A structured process for looking hard at the risk, weighing up the costs and benefits of staying put, and planning a next step you can manage.",
     },
     se: {
         headline: "Doubt about your capability is the loudest thing in your answers.",
         reframe: "That doubt can mean two different things. Sometimes a real skill or bit of experience is missing, and the move is to go and get it. Sometimes the evidence is already there and you keep finding reasons it doesn\u2019t count. Your answers can\u2019t tell those apart. You can.",
-        cost: "The risk is that doubt becomes self-fulfilling. If you keep waiting to feel ready before you act, you never generate the new evidence that would shift the feeling. The gap between capability and belief widens instead of closing.",
+        cost: "Waiting to feel certain can leave you with very little new evidence to go on, either way.",
         nextStep: "Before anything else, write down three things you\u2019ve done that are relevant to this step. Then write down anything that\u2019s genuinely missing. If the second list is short, the next move is to act. If it\u2019s long, close the biggest gap first.",
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/ivd6J",
         workbookTitle: "The Capable Doubter Workbook",
-        workbookDesc: "A structured process for building your evidence case, breaking the discounting pattern, and taking the next step before doubt gets another vote.",
+        workbookDesc: "A structured process for looking fairly at your evidence, spotting anything you still need to develop, and planning a practical next step.",
     },
     ia: {
-        headline: "You can see the next version. It just does not feel like yours yet.",
-        reframe: "This isn\u2019t really uncertainty about the direction. It\u2019s an identity gap. The future version of you makes sense on paper, but it doesn\u2019t feel fully inhabited yet \u2014 and until it does, hesitation will keep sounding sensible.",
-        cost: "The risk with identity gaps is permanent deferral. You keep waiting to feel like the person who belongs in that life before you try to live it. But identity follows action, not the other way around. The longer you wait, the more the future feels theoretical.",
-        nextStep: "Try one small version of the future self. Not a commitment to the full reinvention \u2014 just one move that lets that version of you show up briefly in real life. Identity catches up when it has something real to attach to.",
+        headline: "Does this step fit who you are?",
+        reframe: "Your answers suggest this direction may not fully fit how you see yourself. That might be because it\u2019s unfamiliar, or because something about it genuinely doesn\u2019t suit you. Both are worth exploring.",
+        cost: "Thinking it through on its own can only take you so far. Trying a small part of it can help you decide whether it fits.",
+        nextStep: "Try a small, manageable part of the role or activity. Notice what fits, what feels unfamiliar, and what you wouldn\u2019t want more of. Then use what you\u2019ve learned to decide what\u2019s next.",
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/mMu9d",
         workbookTitle: "The Unclaimed Self Workbook",
-        workbookDesc: "A structured process for closing the identity gap and making the future version of you feel real enough to step into.",
+        workbookDesc: "A structured process for exploring how well this direction fits you and planning a small step to test it.",
     },
     rr: {
-        headline: "You do care. Your capacity is properly stretched.",
-        reframe: "This isn\u2019t a motivation problem or a priorities problem. Your time, attention and energy are genuinely stretched \u2014 and career action needs exactly the kind of sustained focus that gets squeezed first when everything else is pressing. This is a resource problem, not a character flaw.",
-        cost: "The risk is that \u2018temporary\u2019 becomes permanent. Constraints that feel short-term have a way of extending indefinitely, and the career move keeps getting pushed to the next quieter month that never quite arrives.",
-        nextStep: "Find the real bottleneck. Is it time, energy, money, support, or attention? Then fit the next action to your actual capacity \u2014 not the capacity you wish you had. A minimum viable action taken now beats a perfect plan that waits for ideal conditions.",
+        headline: "Your capacity is stretched right now.",
+        reframe: "Your answers suggest time, attention, energy or support may be stretched. Your next step needs to allow for that, whether that\u2019s making the task smaller, getting some support, or giving it more time.",
+        cost: "If nothing changes, the move can keep getting pushed back to a quieter month. Planning around the capacity you actually have gives it a fairer chance.",
+        nextStep: "Find the real bottleneck. Is it time, energy, money, support, or attention? Then fit the next action to your actual capacity, not the capacity you wish you had. A small step you can manage now is worth more than a perfect plan waiting for ideal conditions.",
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/eIOkf",
         workbookTitle: "The Overdrawn Self Workbook",
@@ -490,8 +490,8 @@ const SECTIONS = [
     },
     {
         key: "ps", label: "Risk Tolerance", abbr: "RT", color: C.blue,
-        theory: "Rock SCARF, 2008 \u00B7 Kahneman, 2011",
-        desc: "Whether your threat response is overriding rational calculation",
+        theory: "Lazarus & Folkman, 1984 \u00B7 Krypotos et al., 2015",
+        desc: "How risky this feels, and whether that\u2019s holding you back",
         questions: [
             { id: 6, text: "The worry about this doesn\u2019t stop me thinking straight." },
             { id: 7, text: "If this goes wrong, I could recover from it." },
@@ -502,7 +502,7 @@ const SECTIONS = [
     },
     {
         key: "ia", label: "Identity Fit", abbr: "IF", color: C.indigo,
-        theory: "Ibarra, 2003 \u00B7 Markus & Nurius, 1986",
+        theory: "Ibarra, 1999 \u00B7 2003 \u00B7 Markus & Nurius, 1986 \u00B7 Oyserman, 2015",
         desc: "How far the person you are becoming feels like you",
         questions: [
             { id: 11, text: "This feels like me, not like I\u2019m pretending." },
@@ -515,7 +515,7 @@ const SECTIONS = [
     {
         key: "rr", label: "Capacity", abbr: "CA", color: C.purple,
         theory: "Hobfoll, 1989 \u00B7 2018",
-        desc: "Whether real-world constraints \u2014 not psychology \u2014 are actually in the way",
+        desc: "Whether time, energy, support or know-how are in short supply right now",
         questions: [
             { id: 16, text: "Right now, I\u2019ve got the energy and headspace to properly focus on this." },
             { id: 17, text: "There\u2019s enough room in my life for me to deal with this properly." },
@@ -585,18 +585,18 @@ function getPatternInsight(c2, c3) {
     const never = c3 === "never";
     const few = c3 === "1-2" || never;
     if (!long && never)
-        return "This is fresh awareness - the pattern isn't yet entrenched. The intervention window is open.";
+        return "You\u2019ve only recently noticed this and haven\u2019t tried yet. What would help you decide what to try first?";
     if (!long && manyAttempts)
-        return "You've moved quickly to action - which means the barrier isn't motivation or intention. It's something more structural.";
+        return "You\u2019ve already had a few goes in a short space of time. What have you learned, and what might you change?";
     if (veryLong && sixPlus)
-        return "This pattern is entrenched. Multiple failed attempts over a long period creates learned helplessness risk. The coaching approach needs to be highly structured with very small, success-guaranteed first steps.";
+        return "You\u2019ve been aware of this for over a year and have had several goes at it. What\u2019s helped, what\u2019s still unresolved, and what support might make a difference?";
     if (veryLong && never)
-        return "Long awareness without any action usually points to something deeper than surface-level planning. Your results show where to start looking.";
+        return "You\u2019ve been aware of this for over a year and haven\u2019t tried yet. What\u2019s made it hard to act, and does the move still matter to you?";
     if (long && few && !never)
-        return "When the gap between knowing and attempting widens, avoidance can quietly become the default. The intervention often needs to address the habit before the action.";
+        return "Looking at what you have and haven\u2019t tried so far, what would make a next step more workable?";
     if (long && manyAttempts)
-        return "A sustained pattern with multiple failed attempts. The primary intervention target isn't motivation - it's learned helplessness. Very small, success-guaranteed steps must come before anything else.";
-    return "When the gap between knowing and attempting widens, avoidance can quietly become the default. The intervention often needs to address the habit before the action.";
+        return "You\u2019ve been aware of this for a while and have had several goes at it. What would you keep, change or get help with next time?";
+    return "Looking at what you have and haven\u2019t tried so far, what would make a next step more workable?";
 }
 function buildInterpretation({ c1, c2, c3, primary, secondary }) {
     const arch = ARCHETYPES[primary];
@@ -606,9 +606,9 @@ function buildInterpretation({ c1, c2, c3, primary, secondary }) {
     const pattern = getPatternInsight(c2, c3);
     const secArch = secondary ? ARCHETYPES[secondary] : null;
     return {
-        s1: `When you think about "${c1short}", the data points to ${arch.label} as the primary pattern.`,
-        s2: arch.insight + (secArch ? ` Your data also shows a secondary pattern - ${secArch.label}: ${secArch.secondaryLine}.` : ""),
-        s3: `After ${c2n} of awareness ${c3n}: ${pattern}`,
+        s1: `When you think about "${c1short}", your answers point most towards ${arch.label}.`,
+        s2: arch.insight + (secArch ? ` Your answers also suggest a second pattern, ${secArch.label}: ${secArch.secondaryLine}.` : ""),
+        s3: pattern,
     };
 }
 // ─── STATE / REDUCER ───────────────────────────────────────────────────────────
@@ -1006,7 +1006,7 @@ function ScreenLanding({ dispatch }) {
             }, "Find out what\u2019s in my way \u2192"),
             React.createElement("p", { style: {
                 fontSize: 10, color: CW.dim, opacity: 0.7, maxWidth: 480, margin: "12px auto 0", lineHeight: 1.65
-            } }, "A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses \u2014 they change as your situation changes.")
+            } }, "A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses, and they can change as your situation changes.")
         )
     ));
 }
@@ -1596,7 +1596,7 @@ function ScreenResults({ state, dispatch }) {
         ),
         !noPattern && React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
                 marginBottom: 20, letterSpacing: "0.04em" } },
-                "Your primary gap is highlighted below"),
+                "Your lowest score is highlighted below"),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "grid",
                 gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24, marginBottom: 32, alignItems: "center" } },
             React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
@@ -1619,14 +1619,14 @@ function ScreenResults({ state, dispatch }) {
                     React.createElement("div", { style: { flex: 1, minWidth: 0 } },
                         React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 8 } },
                             React.createElement("span", { style: { fontSize: 14, fontWeight: 600, color: isPrimary ? CW.text : CW.muted } }, d.label),
-                            isPrimary && React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: d.textColor, letterSpacing: "0.08em", textTransform: "uppercase" } }, "\u25cf primary gap")),
+                            isPrimary && React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: d.textColor, letterSpacing: "0.08em", textTransform: "uppercase" } }, "\u25cf lowest score")),
                         React.createElement(StatusBadge, { status: status[d.key] })),
                     React.createElement("span", { style: { fontSize: 22, fontWeight: 800, color: isPrimary ? d.textColor : CW.muted, fontFamily: "Instrument Serif, Georgia, serif", flexShrink: 0 } }, d.score.toFixed(1))),
                 React.createElement("div", { style: { height: 6, background: CW.border, borderRadius: 3 } },
                     React.createElement("div", { className: "g-bar-fill", style: { width: barsVisible ? `${d.score * 10}%` : "0%",
                             background: d.color, transitionDelay: `${i * 0.15}s`,
                             boxShadow: isPrimary ? `0 0 10px ${d.color}50` : "none" } })),
-                isPrimary && (React.createElement("p", { style: { fontSize: 11, color: d.textColor, marginTop: 6, fontWeight: 600 } }, "\u25B2 Primary focus · This is where coaching begins"))));
+                isPrimary && (React.createElement("p", { style: { fontSize: 11, color: d.textColor, marginTop: 6, fontWeight: 600 } }, "\u25B2 Your lowest score right now"))));
         })),
         !noPattern && React.createElement(PatternSection, {
             scores: scores,
@@ -1656,10 +1656,10 @@ function ScreenResults({ state, dispatch }) {
             React.createElement("p", { style: { fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", color: "#B97400",
                     textTransform: "uppercase", marginBottom: 8 } }, "Something worth naming first"),
             React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.65 } },
-                "Your responses suggest the primary barriers you\u2019re facing may be structural: things outside your direct control, like access, opportunity, or systemic factors. The GAP Profile measures psychological and resource barriers. Where structural barriers are the dominant factor, the interventions below need to be read differently. This is worth exploring directly in a conversation.")),
+                "Some of your answers suggest access, opportunity or other circumstances may be making this harder. These questions focus on what\u2019s going on for you personally, so they can\u2019t fully capture that. Read the suggestions below with that in mind.")),
         oe < 5 && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: 10, padding: "16px 20px" } },
             React.createElement("p", { style: { fontSize: 14, color: C.muted, fontStyle: "italic", lineHeight: 1.7 } },
-                "One pattern in your data worth noting: part of what\u2019s holding you back may be uncertainty about whether this action will actually produce the result you\u2019re hoping for, not just whether you can do it. We\u2019d explore this directly in session.")),
+                "One thing in your answers worth noting: part of what\u2019s holding you back may be uncertainty about whether this action will actually get you the result you want, not just whether you can do it.")),
         secArch && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: "rgba(19,32,49,0.8)", border: "1px solid rgba(245,158,11,0.25)", borderRadius: 14, padding: "24px 28px" } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 } }, "A secondary pattern"),
             React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20, color: C.text, marginBottom: 10 } }, secArch.label),
@@ -1674,13 +1674,13 @@ function ScreenResults({ state, dispatch }) {
         (showLongFlag || showAttemptFlag) && (React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(245,158,11,0.07)",
                 border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 14, padding: "20px 24px" } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: "0.08em",
-                    textTransform: "uppercase", marginBottom: 10 } }, "Worth exploring in your conversation"),
+                    textTransform: "uppercase", marginBottom: 10 } }, "A few questions worth asking yourself"),
             showLongFlag && (React.createElement("p", { style: { fontSize: 14, color: C.text, lineHeight: 1.65, marginBottom: 8 } },
                 React.createElement("strong", null, "Awareness duration:"),
-                " Over a year of knowing and not acting can indicate an entrenched pattern. It is worth exploring secondary gain in staying stuck. This warrants careful exploration before moving to action planning.")),
+                " You\u2019ve been aware of this for over a year. What\u2019s kept it unresolved? Think about practical constraints, other priorities, and whether the move still matters to you.")),
             showAttemptFlag && (React.createElement("p", { style: { fontSize: 14, color: C.text, lineHeight: 1.65 } },
                 React.createElement("strong", null, "Multiple attempts:"),
-                " Six or more attempts that haven't landed creates real risk of learned helplessness, the belief that the action is simply impossible for you. The coaching approach here needs to engineer a guaranteed small win before anything else.")))),
+                " You\u2019ve had six or more goes at this. What happened, what helped, and what would need to change before you try again?")))),
         React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, textAlign: "center", background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
             React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: CW.dim, letterSpacing: "0.09em",
                     textTransform: "uppercase", marginBottom: 10 } }, "Keep a copy of your results"),
@@ -1695,7 +1695,7 @@ function ScreenResults({ state, dispatch }) {
         React.createElement("div", { className: "g-fu g-d5", style: { marginBottom: 24 } },
             React.createElement(Accordion, { title: "About the GAP Profile\u2122 methodology" },
                 React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 16 } },
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career tools tell you about personality or values, but don't explain why people who already know what they should do still aren't doing it. The GAP Profile measures four dimensions of career action readiness — the things that tend to block progress even when the direction is clear."),
+                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career tools tell you about personality or values, but don't explain why people who already know what they should do still aren't doing it. The GAP Profile explores four areas that may affect a career step, drawing on ideas from published research. Use your results as a starting point for reflection, not a verdict."),
                     Object.values(ARCHETYPES).map(a => (React.createElement("div", { key: a.label, style: { display: "flex", gap: 12, alignItems: "flex-start" } },
                         React.createElement("div", { style: { width: 8, height: 8, borderRadius: 2, background: a.color,
                                 flexShrink: 0, marginTop: 5 } }),
@@ -1708,7 +1708,7 @@ function ScreenResults({ state, dispatch }) {
                     React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7, borderTop: `1px solid ${C.border}`, paddingTop: 14 } }, "Joe Markland is a career coach specialising in the knowing-doing gap — the pattern where capable people know what they should do but aren't doing it. The GAP Profile is his assessment tool, built from direct work with graduates and early-career professionals at exactly this point.")))),
         React.createElement("p", { style: { fontSize: 10, color: CW.dim, opacity: 0.6, textAlign: "center",
                 maxWidth: 440, margin: "32px auto 4px", lineHeight: 1.65 } },
-            "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and will shift as your situation changes. Best used as a starting point for a coaching conversation."),
+            "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and will shift as your situation changes. Best used as a starting point for reflection."),
         React.createElement("div", { style: { textAlign: "center" } },
             React.createElement("button", { onClick: () => { clearSession(); dispatch({ type: "RETAKE" }); }, style: { background: "none", border: "none", fontSize: 13, color: C.dim, cursor: "pointer", textDecoration: "none", letterSpacing: "0.02em" } }, "\u2190 Retake from the start")),
         !noPattern && React.createElement(StickyBookingCTA, { primary: primary, primaryColor: arch.color, triggerRef: dimensionSectionRef, targetRef: bookingSectionRef })));
