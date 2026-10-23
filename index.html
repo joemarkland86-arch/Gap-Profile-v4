@@ -1372,7 +1372,7 @@ function InlineEmailCapture({ dispatch }) {
     const handleSend = () => {
         if (!valid) return;
         setSending(true);
-        fetch("https://formspree.io/f/YOUR_FORM_ID" /* ← REPLACE with your Formspree form ID */, {
+        fetch("https://formspree.io/f/mljjerde", {
             method: "POST",
             headers: { "Content-Type": "application/json", "Accept": "application/json" },
             body: JSON.stringify({ name: nm, email: em, _subject: "GAP Profile results copy: " + nm })
