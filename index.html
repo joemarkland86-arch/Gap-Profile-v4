@@ -1364,7 +1364,7 @@ function ScreenProcessing({ dispatch }) {
             React.createElement("p", { style: { fontSize: 11, color: C.dim, marginTop: 12, letterSpacing: "0.06em",
                 opacity: ready ? 0.7 : 0, transition: "opacity 0.4s ease 0.2s" } }, "GAP Profile\u2122"))));
 }
-function InlineEmailCapture({ dispatch }) {
+function InlineEmailCapture({ dispatch, scores, primary }) {
     const [em, setEm] = useState("");
     const [nm, setNm] = useState("");
     const [sending, setSending] = useState(false);
@@ -1375,7 +1375,15 @@ function InlineEmailCapture({ dispatch }) {
         fetch("https://formspree.io/f/mljjerde", {
             method: "POST",
             headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            body: JSON.stringify({ name: nm, email: em, _subject: "GAP Profile results copy: " + nm })
+            body: JSON.stringify({
+                name: nm,
+                email: em,
+                _subject: "GAP Profile results: " + nm,
+                archetype: primary && ARCHETYPES[primary] ? ARCHETYPES[primary].label : "",
+                workbook: primary && CTA_DATA[primary] ? CTA_DATA[primary].workbookTitle : "",
+                gap_score: scores ? scores.cgi.toFixed(1) + " / 10" : "",
+                scores: scores ? "Self-Efficacy " + scores.se.toFixed(1) + " | Psychological Safety " + scores.ps.toFixed(1) + " | Identity Alignment " + scores.ia.toFixed(1) + " | Resource Readiness " + scores.rr.toFixed(1) : ""
+            })
         }).catch(() => {}).finally(() => setSending(false));
         dispatch({ type: "SUBMIT_EMAIL", email: em });
         dispatch({ type: "SET_FIRSTNAME", firstName: nm });
@@ -1723,7 +1731,7 @@ function ScreenResults({ state, dispatch }) {
                 "We\u2019ll email you your archetype + dimension scores. One email, no newsletter."),
             email ? (React.createElement("p", { style: { fontSize: 14, color: TEAL_TEXT } },
                 "\u2713 Sent to ",
-                email)) : (React.createElement(InlineEmailCapture, { dispatch: dispatch }))),
+                email)) : (React.createElement(InlineEmailCapture, { dispatch: dispatch, scores: scores, primary: primary }))),
         React.createElement("div", { className: "g-fu g-d5", style: { textAlign: "center", paddingTop: 8 } },
             React.createElement("button", { onClick: handleShare, className: "g-btn-s", style: { width: "100%", maxWidth: 400 } }, "Share my GAP Profile result")),
         React.createElement("div", { className: "g-fu g-d5", style: { marginBottom: 24 } },
