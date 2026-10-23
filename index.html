@@ -25,6 +25,12 @@
     @keyframes ldspin{to{transform:rotate(360deg);}}
     .ld-txt{font-family:Georgia,serif;font-size:18px;color:#8BA3BC;}
     .ld-sub{font-family:sans-serif;font-size:12px;color:#4A6580;margin-top:8px;}
+    @media print{
+      #loading,button,input,div[style*="position: fixed"],div[style*="position: sticky"]{display:none!important;}
+      html,body,#root{background:#F5F0E8!important;min-height:0!important;}
+      *{-webkit-print-color-adjust:exact;print-color-adjust:exact;animation:none!important;transition:none!important;}
+      .g-fu,.g-sr,.g-si{opacity:1!important;transform:none!important;}
+    }
   </style>
 </head>
 <body>
@@ -69,7 +75,7 @@
       var r = 100;
       var n = data.length;
       var labelRadius = 128;
-      var labels = ["Self-Efficacy", "Psychological Safety", "Identity Alignment", "Resource Readiness"];
+      var labels = ["Capability Belief", "Risk Tolerance", "Identity Fit", "Capacity"];
       var scores = data.map(function(d) { return d.score; });
       var fontSize = (typeof window !== "undefined" && window.innerWidth < 480) ? 11 : 12;
       var radarColor = color || C.teal;
@@ -105,10 +111,10 @@
 
       function renderLabel(ax, i) {
         var config = [
-          { anchor: "middle", dx: 0, dominantBaseline: "auto", lines: ["Self-Efficacy"] },
-          { anchor: "start", dx: 6, dominantBaseline: "central", lines: ["Psychological", "Safety"] },
-          { anchor: "middle", dx: 0, dominantBaseline: "hanging", lines: ["Identity", "Alignment"] },
-          { anchor: "end", dx: -6, dominantBaseline: "central", lines: ["Resource", "Readiness"] }
+          { anchor: "middle", dx: 0, dominantBaseline: "auto", lines: ["Capability Belief"] },
+          { anchor: "start", dx: 6, dominantBaseline: "central", lines: ["Risk", "Tolerance"] },
+          { anchor: "middle", dx: 0, dominantBaseline: "hanging", lines: ["Identity", "Fit"] },
+          { anchor: "end", dx: -6, dominantBaseline: "central", lines: ["Capacity"] }
         ][i];
         var x = ax.labelPt.x + config.dx;
         var y = ax.labelPt.y;
@@ -137,7 +143,7 @@
         width: "100%",
         height: "auto",
         role: "img",
-        "aria-label": "Radar chart showing your scores across all four dimensions: Self-Efficacy " + scores[0].toFixed(1) + ", Psychological Safety " + scores[1].toFixed(1) + ", Identity Alignment " + scores[2].toFixed(1) + ", Resource Readiness " + scores[3].toFixed(1),
+        "aria-label": "Radar chart showing your scores across all four dimensions: Capability Belief " + scores[0].toFixed(1) + ", Risk Tolerance " + scores[1].toFixed(1) + ", Identity Fit " + scores[2].toFixed(1) + ", Capacity " + scores[3].toFixed(1),
         style: { width: "100%", height: "auto", display: "block", margin: "0 auto", overflow: "visible" }
       },
         // Grid circles
@@ -456,7 +462,7 @@ const CTA_DATA = {
 // ─── QUESTIONS ─────────────────────────────────────────────────────────────────
 const SECTIONS = [
     {
-        key: "se", label: "Self-Efficacy", abbr: "SE", color: C.teal,
+        key: "se", label: "Capability Belief", abbr: "CB", color: C.teal,
         theory: "Bandura, 1977 \u00B7 1997",
         desc: "How much you believe you can actually do the next step",
         questions: [
@@ -468,7 +474,7 @@ const SECTIONS = [
         ]
     },
     {
-        key: "ps", label: "Psychological Safety", abbr: "PS", color: C.blue,
+        key: "ps", label: "Risk Tolerance", abbr: "RT", color: C.blue,
         theory: "Rock SCARF, 2008 \u00B7 Kahneman, 2011",
         desc: "Whether your threat response is overriding rational calculation",
         questions: [
@@ -480,7 +486,7 @@ const SECTIONS = [
         ]
     },
     {
-        key: "ia", label: "Identity Alignment", abbr: "IA", color: C.indigo,
+        key: "ia", label: "Identity Fit", abbr: "IF", color: C.indigo,
         theory: "Ibarra, 2003 \u00B7 Markus & Nurius, 1986",
         desc: "How far the person you are becoming feels like you",
         questions: [
@@ -492,7 +498,7 @@ const SECTIONS = [
         ]
     },
     {
-        key: "rr", label: "Resource Readiness", abbr: "RR", color: C.purple,
+        key: "rr", label: "Capacity", abbr: "CA", color: C.purple,
         theory: "Hobfoll, 1989 \u00B7 2018",
         desc: "Whether real-world constraints \u2014 not psychology \u2014 are actually in the way",
         questions: [
@@ -544,10 +550,10 @@ function computeScores(responses) {
         oe, eb,
         status: { se: statusFor(se), ps: statusFor(ps), ia: statusFor(ia), rr: statusFor(rr) },
         radarData: [
-            { dim: "Self-Efficacy", score: se, fullMark: 10 },
-            { dim: "Psych Safety", score: ps, fullMark: 10 },
+            { dim: "Belief", score: se, fullMark: 10 },
+            { dim: "Risk", score: ps, fullMark: 10 },
             { dim: "Identity", score: ia, fullMark: 10 },
-            { dim: "Resources", score: rr, fullMark: 10 },
+            { dim: "Capacity", score: rr, fullMark: 10 },
         ],
     };
 }
@@ -617,7 +623,7 @@ function reducer(state, action) {
         case "SET_EMAIL": return { ...state, email: action.email };
         case "SET_FIRSTNAME": return { ...state, firstName: action.firstName };
         case "SKIP_EMAIL": return { ...state, emailSkipped: true, step: 7 };
-        case "SUBMIT_EMAIL": return { ...state, email: action.email, toast: "✓ Results saved — check your inbox" };
+        case "SUBMIT_EMAIL": return { ...state, email: action.email, toast: "\u2713 Thanks. I\u2019ll be in touch." };
         case "COMPUTE_SCORES": return { ...state, scores: computeScores(state.responses), step: 7 };
         case "OPEN_COACH": return { ...state, coachModalOpen: true, coachUnlocked: false, coachPinEntry: "" };
         case "CLOSE_COACH": return { ...state, coachModalOpen: false, coachUnlocked: false, coachPinEntry: "" };
@@ -786,7 +792,7 @@ function Toast({ message, onDone }) {
 }
 // ─── TOP NAV ───────────────────────────────────────────────────────────────────
 function TopNav({ step, isMobile }) {
-    const steps = ["Context", "Self-Efficacy", "Psych Safety", "Identity", "Resources"];
+    const steps = ["Context", "Belief", "Risk", "Identity", "Capacity"];
     const activeLabel = step >= 1 && step <= 5 ? steps[step - 1] : "";
     const pct = step === 0 ? 0 : step >= 7 ? 100 : Math.round((Math.min(step, 5) / 5) * 100);
     var isWarm = step === 0 || (step === 7);
@@ -1064,7 +1070,7 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
                 React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["adjust", "A small adjustment"], ["shift", "A moderate shift"], ["transition", "A significant transition"], ["reinvention", "A complete reinvention"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c4 === v ? " sel" : ""}`, onClick: () => dispatch({ type: "SET_CTX", patch: { c4: v } }) }, l)))),
                 ctxErrors.c4 && React.createElement("p", { style: { fontSize: 12, color: C.red, marginTop: 6 } }, "Please select one")))),
         React.createElement("div", { style: { display: "flex", justifyContent: "flex-end", marginTop: 24 } },
-            React.createElement("button", { className: "g-btn-p", disabled: !isValid, onClick: handleNext }, "Continue \u2192 Self-Efficacy"))));
+            React.createElement("button", { className: "g-btn-p", disabled: !isValid, onClick: handleNext }, "Continue \u2192 Capability Belief"))));
 }
 // ─── SCREENS 2–5: QUESTION SECTIONS ────────────────────────────────────────────
 function LikertButtons({ qid, value, dimColor, onChange, isMobile }) {
@@ -1191,7 +1197,7 @@ function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
         observer.observe(node);
         return () => observer.disconnect();
     }, [triggerRef]);
-    const labelMap = { se: "Self-Efficacy", ps: "Psychological Safety", ia: "Identity Alignment", rr: "Resource Readiness" };
+    const labelMap = { se: "Capability Belief", ps: "Risk Tolerance", ia: "Identity Fit", rr: "Capacity" };
     const scrollToBooking = () => {
         if (targetRef && targetRef.current) targetRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     };
@@ -1313,10 +1319,10 @@ function CoachModal({ state, dispatch }) {
 // ─── SCREEN 7: RESULTS ─────────────────────────────────────────────────────────
 function ScreenProcessing({ dispatch }) {
     const steps = [
-        { key: "se", label: "Self-Efficacy", color: C.teal },
-        { key: "ps", label: "Psychological Safety", color: C.blue },
-        { key: "ia", label: "Identity Alignment", color: C.indigo },
-        { key: "rr", label: "Resource Readiness", color: C.purple },
+        { key: "se", label: "Capability Belief", color: C.teal },
+        { key: "ps", label: "Risk Tolerance", color: C.blue },
+        { key: "ia", label: "Identity Fit", color: C.indigo },
+        { key: "rr", label: "Capacity", color: C.purple },
     ];
     const [completed, setCompleted] = useState([]);
     const [ready, setReady] = useState(false);
@@ -1379,10 +1385,10 @@ function InlineEmailCapture({ dispatch, scores, primary }) {
                 name: nm,
                 email: em,
                 _subject: "GAP Profile results: " + nm,
-                archetype: primary && ARCHETYPES[primary] ? ARCHETYPES[primary].label : "",
+                pattern: primary && ARCHETYPES[primary] ? ARCHETYPES[primary].label : "",
                 workbook: primary && CTA_DATA[primary] ? CTA_DATA[primary].workbookTitle : "",
                 gap_score: scores ? scores.cgi.toFixed(1) + " / 10" : "",
-                scores: scores ? "Self-Efficacy " + scores.se.toFixed(1) + " | Psychological Safety " + scores.ps.toFixed(1) + " | Identity Alignment " + scores.ia.toFixed(1) + " | Resource Readiness " + scores.rr.toFixed(1) : ""
+                scores: scores ? "Capability Belief " + scores.se.toFixed(1) + " | Risk Tolerance " + scores.ps.toFixed(1) + " | Identity Fit " + scores.ia.toFixed(1) + " | Capacity " + scores.rr.toFixed(1) : ""
             })
         }).catch(() => {}).finally(() => setSending(false));
         dispatch({ type: "SUBMIT_EMAIL", email: em });
@@ -1399,7 +1405,7 @@ function InlineEmailCapture({ dispatch, scores, primary }) {
         React.createElement("button", { className: "g-btn-p", disabled: !valid || sending,
             onClick: handleSend,
             style: { width: "100%", padding: "12px", fontSize: 14 } },
-            sending ? "Sending..." : "Send me a copy \u2192")));
+            sending ? "Sending..." : "Email me about my result \u2192")));
 }
 function NextSteps({ primary, archColor, scores, question }) {
     const cta = CTA_DATA[primary];
@@ -1565,18 +1571,18 @@ function ScreenResults({ state, dispatch }) {
     const showAttemptFlag = ctx.c3 === "6+";
     const archLabelColor = arch.color === C.teal ? TEAL_TEXT : arch.color;
     const dimRows = [
-        { key: "se", label: "Self-Efficacy", score: se, color: C.teal, textColor: TEAL_TEXT },
-        { key: "ps", label: "Psychological Safety", score: ps, color: C.blue, textColor: C.blue },
-        { key: "ia", label: "Identity Alignment", score: ia, color: C.indigo, textColor: C.indigo },
-        { key: "rr", label: "Resource Readiness", score: rr, color: C.purple, textColor: C.purple },
+        { key: "se", label: "Capability Belief", score: se, color: C.teal, textColor: TEAL_TEXT },
+        { key: "ps", label: "Risk Tolerance", score: ps, color: C.blue, textColor: C.blue },
+        { key: "ia", label: "Identity Fit", score: ia, color: C.indigo, textColor: C.indigo },
+        { key: "rr", label: "Capacity", score: rr, color: C.purple, textColor: C.purple },
     ];
     const copyProfile = () => {
         const text = [
             "GAP Profile™ Results",
-            `Archetype: ${arch.label}`,
-            `Composite Gap Index: ${cgi}/10`,
-            `Self-Efficacy: ${se}/10 | Psych Safety: ${ps}/10`,
-            `Identity Alignment: ${ia}/10 | Resource Readiness: ${rr}/10`,
+            `Pattern: ${arch.label}`,
+            `Gap Score: ${cgi}/10`,
+            `Capability Belief: ${se}/10 | Risk Tolerance: ${ps}/10`,
+            `Identity Fit: ${ia}/10 | Capacity: ${rr}/10`,
             `Action: ${ctx.c1}`,
             "Generated at gapprofile.co.uk",
         ].join("\n");
@@ -1660,7 +1666,7 @@ function ScreenResults({ state, dispatch }) {
                 React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 10 } },
                     React.createElement("div", { style: { width: 34, height: 34, borderRadius: 8, background: d.color,
                             display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 } },
-                        React.createElement("span", { style: { color: C.ink, fontWeight: 800, fontSize: 10 } }, d.key.toUpperCase())),
+                        React.createElement("span", { style: { color: C.ink, fontWeight: 800, fontSize: 10 } }, ({ se: "CB", ps: "RT", ia: "IF", rr: "CA" })[d.key])),
                     React.createElement("div", { style: { flex: 1, minWidth: 0 } },
                         React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 8 } },
                             React.createElement("span", { style: { fontSize: 14, fontWeight: 600, color: isPrimary ? CW.text : CW.muted } }, d.label),
@@ -1726,12 +1732,13 @@ function ScreenResults({ state, dispatch }) {
                 " Six or more attempts that haven't landed creates real risk of learned helplessness, the belief that the action is simply impossible for you. The coaching approach here needs to engineer a guaranteed small win before anything else.")))),
         React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, textAlign: "center", background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
             React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: CW.dim, letterSpacing: "0.09em",
-                    textTransform: "uppercase", marginBottom: 10 } }, "Save a copy of your results"),
+                    textTransform: "uppercase", marginBottom: 10 } }, "Keep a copy of your results"),
+            React.createElement("button", { className: "g-btn-s", onClick: function() { window.print(); },
+                style: { width: "100%", maxWidth: 400, marginBottom: 18 } }, "Save my results as a PDF"),
             React.createElement("p", { style: { fontSize: 14, color: C.muted, marginBottom: 18, lineHeight: 1.6 } },
-                "We\u2019ll email you your archetype + dimension scores. One email, no newsletter."),
+                "Or leave your email and I\u2019ll be in touch about your result. No newsletter."),
             email ? (React.createElement("p", { style: { fontSize: 14, color: TEAL_TEXT } },
-                "\u2713 Sent to ",
-                email)) : (React.createElement(InlineEmailCapture, { dispatch: dispatch, scores: scores, primary: primary }))),
+                "\u2713 Thanks. I\u2019ll be in touch.")) : (React.createElement(InlineEmailCapture, { dispatch: dispatch, scores: scores, primary: primary }))),
         React.createElement("div", { className: "g-fu g-d5", style: { textAlign: "center", paddingTop: 8 } },
             React.createElement("button", { onClick: handleShare, className: "g-btn-s", style: { width: "100%", maxWidth: 400 } }, "Share my GAP Profile result")),
         React.createElement("div", { className: "g-fu g-d5", style: { marginBottom: 24 } },
