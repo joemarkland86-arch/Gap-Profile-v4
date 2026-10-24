@@ -1,0 +1,10 @@
+# GitHub Pages build settings.
+# Internal working files stay in the repository but are not published on gapprofile.co.uk.
+exclude:
+  - docs
+  - agency-agents
+  - Offers
+  - diagnostic
+  - site
+  - workbooks
+  - README.md

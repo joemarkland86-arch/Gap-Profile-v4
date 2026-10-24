@@ -9,8 +9,14 @@
   <meta property="og:description" content="You've had the plan. Something keeps getting in the way. The GAP Profile shows you what's actually in the way." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gapprofile.co.uk" />
-  <meta property="og:image" content="https://joemarkland86-arch.github.io/Gapprofile/og-image.png" />
+  <meta property="og:image" content="https://gapprofile.co.uk/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://gapprofile.co.uk/og-image.png" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta name="twitter:title" content="GAP Profile&#8482; by Joe Markland" />
   <meta name="twitter:description" content="You already know what you should do. So why aren&#39;t you doing it?" />
   <link rel="canonical" href="https://gapprofile.co.uk" />
@@ -57,6 +63,7 @@
       <p>Most career tools map who you are: your personality, values or strengths. The GAP Profile looks at something else: the gap between knowing your next move and actually making it.</p>
       <p>It draws on established psychological research into some of the reasons capable people can struggle to act, alongside direct coaching practice. It doesn’t assume every barrier is in your head. What it surfaces is a current pattern in your responses, not a fixed type. And patterns can change.</p>
       <p><small>A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses, and they can change as your situation changes.</small></p>
+      <p><small><a href="privacy.html">Privacy</a></small></p>
     </main>
   </div>
 
@@ -246,7 +253,7 @@ const CW = {
     text: "#1A1F3D",
     body: "#3D3D3D",
     muted: "#6B6358",
-    dim: "#9B9084",
+    dim: "#6F665A",
 };
 const C = {
     ink: "#0D1B2A",
@@ -260,11 +267,16 @@ const C = {
     amber: "#F59E0B",
     text: "#E8EFF6",
     muted: "#8BA3BC",
-    dim: "#4A6580",
+    dim: "#7F97B0",
     green: "#10B981",
     red: "#EF4444",
 };
 const TEAL_TEXT = "#1A7A6F"; // accessible teal for text on cream/sand — replaces #2EC4B6 where contrast fails
+// Text-safe versions of the pattern colours for small text on cream (all >= 4.5:1)
+const INK = { "#2EC4B6": TEAL_TEXT, "#3B82F6": "#1D4ED8", "#6366F1": "#4338CA", "#8B5CF6": "#6D28D9" };
+function inkFor(c) { return INK[c] || c; }
+// Button colours: bright fill with dark text where that passes, otherwise the darker variant with white text
+function btnFor(c) { return (c === C.teal || c === C.blue) ? { bg: c, fg: "#0D1B2A" } : { bg: inkFor(c), fg: "#FFFFFF" }; }
 // ─── ARCHETYPES ────────────────────────────────────────────────────────────────
 const ARCHETYPES = {
     se: {
@@ -378,20 +390,24 @@ if (below5.length === 1) {
 return "P8";
 }
 
+function stripEnd(t) { return (t || "").trim().replace(/[.!?;:,\s]+$/, ""); }
+function clip(t, n) { if (t.length <= n) return t; var c = t.slice(0, n); var sp = c.lastIndexOf(" "); return (sp > n * 0.6 ? c.slice(0, sp) : c).replace(/[.,;:\s]+$/, "") + "\u2026"; }
 function PatternSection({ scores, primary, ctx }) {
 if (!scores || !ctx) return null;
 var arch = ARCHETYPES[primary];
 var archColor = arch.color;
-var labelColor = archColor === C.teal ? TEAL_TEXT : archColor;
+var labelColor = inkFor(archColor);
 var patternKey = selectPattern(scores);
 var patternText = PATTERNS[patternKey];
-var actionShort = ctx.c1.length > 70 ? ctx.c1.slice(0, 70).trim() + "\u2026" : ctx.c1;
+var actionClean = stripEnd(ctx.c1);
+var actionShort = clip(actionClean, 70);
+var stop = /\u2026$/.test(actionShort) ? "" : ".";
 var durationNatural = DURATION_NATURAL[ctx.c2];
 var contextLine;
 if (!durationNatural) {
-    contextLine = "You said you want to \u201C" + actionShort + ".\u201D You\u2019ve been thinking about this recently, and something\u2019s getting in the way.";
+    contextLine = "You said you want to \u201C" + actionShort + stop + "\u201D You\u2019ve been thinking about this recently, and something\u2019s getting in the way.";
 } else {
-    contextLine = "You said you want to \u201C" + actionShort + ".\u201D You\u2019ve been sitting with this for " + durationNatural + ", but the move still hasn\u2019t happened.";
+    contextLine = "You said you want to \u201C" + actionShort + stop + "\u201D You\u2019ve been sitting with this for " + durationNatural + ", but the move still hasn\u2019t happened.";
 }
 return React.createElement("div", {
     className: "g-fu g-d3",
@@ -405,12 +421,8 @@ return React.createElement("div", {
         fontSize: 14, color: CW.body, lineHeight: 1.7, marginBottom: 16
     } }, contextLine),
     React.createElement("p", { style: {
-        fontSize: 15, color: CW.text, lineHeight: 1.75, marginBottom: 20, fontWeight: 500
-    } }, patternText),
-    React.createElement("p", { style: {
-        fontSize: 14, color: CW.muted, lineHeight: 1.7,
-        borderTop: "1px solid " + CW.border, paddingTop: 16
-    } }, "This shows you where the friction is. What it doesn\u2019t show is why it\u2019s showing up for you, or what the right first move is. That\u2019s where the conversation starts.")
+        fontSize: 15, color: CW.text, lineHeight: 1.75, fontWeight: 500
+    } }, patternText)
 );
 }
 
@@ -447,7 +459,7 @@ const CTA_DATA = {
         headline: "Doubt about your capability is the loudest thing in your answers.",
         reframe: "That doubt can mean two different things. Sometimes a real skill or bit of experience is missing, and the move is to go and get it. Sometimes the evidence is already there and you keep finding reasons it doesn\u2019t count. Your answers can\u2019t tell those apart. You can.",
         cost: "Waiting to feel certain can leave you with very little new evidence to go on, either way.",
-        nextStep: "Before anything else, write down three things you\u2019ve done that are relevant to this step. Then write down anything that\u2019s genuinely missing. If the second list is short, the next move is to act. If it\u2019s long, close the biggest gap first.",
+        nextStep: "Write down three things you\u2019ve done that are relevant to this step. Then note anything you still need. Which gaps actually matter for the move you\u2019re considering? What would help: learning, support, more information, or trying a smaller step?",
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/ivd6J",
         workbookTitle: "The Capable Doubter Workbook",
@@ -600,7 +612,8 @@ function getPatternInsight(c2, c3) {
 }
 function buildInterpretation({ c1, c2, c3, primary, secondary }) {
     const arch = ARCHETYPES[primary];
-    const c1short = c1.length > 55 ? c1.slice(0, 55).trimEnd() + "…" : c1;
+    const c1clean = stripEnd(c1);
+    const c1short = clip(c1clean, 55);
     const c2n = C2_NATURAL[c2] || c2;
     const c3n = C3_NATURAL[c3] || c3;
     const pattern = getPatternInsight(c2, c3);
@@ -633,9 +646,7 @@ function reducer(state, action) {
         case "SET_CTX": return { ...state, ctx: { ...state.ctx, ...action.patch }, ctxErrors: {} };
         case "SET_RESPONSE": return { ...state, responses: { ...state.responses, [action.qid]: action.val } };
         case "SET_EMAIL": return { ...state, email: action.email };
-        case "SET_FIRSTNAME": return { ...state, firstName: action.firstName };
         case "SKIP_EMAIL": return { ...state, emailSkipped: true, step: 7 };
-        case "SUBMIT_EMAIL": return { ...state, email: action.email, toast: "\u2713 Thanks. I\u2019ll be in touch." };
         case "COMPUTE_SCORES": return { ...state, scores: computeScores(state.responses), step: 7 };
         case "CLEAR_TOAST": return { ...state, toast: null };
         case "SET_RESUME": return { ...state, resumeBannerVisible: action.val };
@@ -721,18 +732,19 @@ html,body{background:#0D1B2A;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:ro
 .g-lk-dot{width:20px;height:20px;border-radius:50%;border:1.5px solid #4A6580;transition:all 0.15s}
 .g-lk.sel .g-lk-dot{background:rgba(255,255,255,0.9);border-color:transparent}
 .g-lk-lbl{font-size:10px;color:#8BA3BC;text-align:center;line-height:1.2;white-space:pre-line}
-.g-lk.sel .g-lk-lbl{color:rgba(255,255,255,0.85)}
-.g-mob-lk{display:none}
+.g-lk.sel .g-lk-lbl{color:var(--dcf,#0D1B2A)}
+.g-mob-lk{display:none}.g-mob-cap{display:none}
 .g-desk-lk{display:flex;gap:6px}
 @media(max-width:640px){
   .g-page-pad{padding-left:16px;padding-right:16px;padding-bottom:max(16px,env(safe-area-inset-bottom))}
   .g-card{padding:16px;border-radius:12px}
-  .g-mob-lk{display:flex;align-items:center;justify-content:space-between;width:100%;gap:3px;overflow:hidden}
+  .g-mob-lk{display:flex;align-items:center;justify-content:space-between;width:100%;gap:3px;padding:6px 4px}
   .g-desk-lk{display:none}
+  .g-mob-cap{display:flex;justify-content:space-between;margin-top:8px}
   .g-mc{width:44px;height:44px;border-radius:50%;border:1.5px solid #2A4060;background:#132031;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#8BA3BC;transition:all 0.15s;flex-shrink:0}
-  .g-mc.sel{background:var(--dc);border-color:var(--dc);color:#0D1B2A;font-weight:700}
-  .g-mc:active{transform:scale(0.88);transition:transform 0.08s}.g-mc.sel{background:var(--dc);border-color:var(--dc);color:#0D1B2A;font-weight:700;box-shadow:0 0 0 3px var(--dc),0 0 0 5px rgba(0,0,0,0.3)}
-  .g-mex{font-size:9px;color:#4A6580;flex-shrink:0;text-align:center;line-height:1.2;min-width:30px;max-width:30px}
+  .g-mc.sel{background:var(--dc);border-color:var(--dc);color:var(--dcf,#0D1B2A);font-weight:700}
+  .g-mc:active{transform:scale(0.88);transition:transform 0.08s}.g-mc.sel{background:var(--dc);border-color:var(--dc);color:var(--dcf,#0D1B2A);font-weight:700;box-shadow:0 0 0 3px var(--dc),0 0 0 5px rgba(0,0,0,0.3)}
+  .g-mex{font-size:11px;color:#8BA3BC;line-height:1.2}
 }
 .g-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .g-modal{background:#132031;border:1px solid #2A4060;border-radius:20px;padding:32px;max-width:580px;width:100%;max-height:85vh;overflow-y:auto;animation:scaleIn 0.25s ease}
@@ -775,11 +787,11 @@ function useCGICountUp(target, duration = 1200) {
     return val;
 }
 // ─── STATUS BADGE ───────────────────────────────────────────────────────────────
-function StatusBadge({ status }) {
+function StatusBadge({ status, lowest }) {
     const map = {
-        resource: { bg: "rgba(16,185,129,0.15)", color: C.green, label: "STRONG GROUND" },
-        active: { bg: "rgba(245,158,11,0.15)", color: C.amber, label: "SOME FRICTION" },
-        critical: { bg: "rgba(239,68,68,0.15)", color: C.red, label: "FOCUS HERE" },
+        resource: { bg: "rgba(16,185,129,0.15)", color: "#065F46", label: "STRONG GROUND" },
+        active: { bg: "rgba(245,158,11,0.15)", color: "#8A5A00", label: "SOME FRICTION" },
+        critical: { bg: "rgba(239,68,68,0.15)", color: "#B91C1C", label: lowest ? "LOWEST SELF-RATING" : "LOWER SELF-RATING" },
     };
     const s = map[status] || map.active;
     return (React.createElement("span", { style: { display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px 3px 8px", borderRadius: 20,
@@ -815,8 +827,8 @@ function TopNav({ step, isMobile }) {
         step > 0 && step <= 5 && (React.createElement("div", { style: { flex: 1, maxWidth: 340, margin: "0 16px" } },
             React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 5 } },
                 activeLabel && React.createElement("span", { style: { fontSize: 11, color: C.dim, paddingRight: 6, borderRight: `1px solid ${C.border}`, marginRight: 6 } }, activeLabel),
-                React.createElement("span", { style: { fontSize: 11, color: C.teal, fontWeight: 700, letterSpacing: "0.03em" } },
-                    step === 1 ? "1 of 5" : `${step - 1} of 4`)),
+                React.createElement("span", { "data-progress": "", style: { fontSize: 11, color: C.teal, fontWeight: 700, letterSpacing: "0.03em" } },
+                    `${step} of 5`)),
             React.createElement("div", { style: { height: 4, background: C.border, borderRadius: 2 } },
                 React.createElement("div", { style: { height: "100%", background: C.teal, borderRadius: 2,
                         width: `${pct}%`, transition: "width 0.4s ease" } })))),
@@ -867,64 +879,11 @@ function AnchorBar({ action }) {
 // ─── SCREEN 0: LANDING ─────────────────────────────────────────────────────────
 // ─── TRANSITION BRIDGE ─────────────────────────────────────────────────────────
 function TransitionBridge({ onComplete }) {
-    const [phase, setPhase] = useState("warm");
-    const reducedMotion = useRef(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    const done = useCallback(onComplete, []);
     useEffect(() => {
-        if (reducedMotion.current) {
-            setPhase("text");
-            document.body.style.backgroundColor = C.ink;
-            const t = setTimeout(done, 1200);
-            return () => clearTimeout(t);
-        }
-        const t1 = setTimeout(() => setPhase("fading"), 100);
-        const t2 = setTimeout(() => setPhase("text"), 900);
-        const t3 = setTimeout(() => { document.body.style.backgroundColor = C.ink; }, 300);
-        const t4 = setTimeout(done, 3400);
-        return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
-    }, [done]);
-    const show = phase === "text";
-    const tr = (delay) => reducedMotion.current ? "none" : `opacity 0.7s ease-in ${delay}`;
-    return React.createElement("div", {
-        style: {
-            position: "fixed", inset: 0, zIndex: 9999,
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center",
-            backgroundColor: phase === "warm" ? CW.bg : C.ink,
-            transition: reducedMotion.current ? "none" : "background-color 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
-            fontFamily: "'DM Sans', sans-serif",
-            gap: 0,
-        }
-    },
-        React.createElement("div", {
-            style: {
-                width: 52, height: 52, borderRadius: "50%",
-                border: "3px solid #2A4060", borderTopColor: C.teal,
-                animation: show ? "spin 0.9s linear infinite" : "none",
-                marginBottom: 20,
-                opacity: show ? 1 : 0,
-                transition: tr("0s"),
-            }
-        }),
-        React.createElement("p", {
-            style: {
-                fontFamily: "Instrument Serif, Georgia, serif",
-                fontSize: 18, color: "#8BA3BC",
-                opacity: show ? 1 : 0,
-                transition: tr("0.1s"),
-                margin: 0,
-            }
-        }, "GAP Profile™"),
-        React.createElement("p", {
-            style: {
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, color: "#4A6580",
-                marginTop: 10,
-                opacity: show ? 1 : 0,
-                transition: tr("0.25s"),
-            }
-        }, "Take your time. Answer honestly.")
-    );
+        document.body.style.backgroundColor = C.ink;
+        onComplete();
+    }, []);
+    return null;
 }
 function ScreenLanding({ dispatch }) {
     return (React.createElement("div", { className: "g-hero-glow", style: {
@@ -969,7 +928,7 @@ function ScreenLanding({ dispatch }) {
                     background: CW.surface, border: "1px solid " + CW.border, borderRadius: 12, padding: "14px 18px",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 } },
-                    React.createElement("span", { style: { color: C.teal, fontSize: 16, lineHeight: "1.4", flexShrink: 0, marginTop: 2, fontWeight: 700 } }, "→"),
+                    React.createElement("span", { "aria-hidden": "true", style: { color: TEAL_TEXT, fontSize: 16, lineHeight: "1.4", flexShrink: 0, marginTop: 2, fontWeight: 700 } }, "→"),
                     React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.6, margin: 0 } },
                         React.createElement("strong", { style: { color: CW.text, fontWeight: 600 } }, pair[0]),
                         " " + pair[1]
@@ -1005,8 +964,9 @@ function ScreenLanding({ dispatch }) {
                 onClick: function() { dispatch({ type: "SET_TRANSITIONING", val: true }); }
             }, "Find out what\u2019s in my way \u2192"),
             React.createElement("p", { style: {
-                fontSize: 10, color: CW.dim, opacity: 0.7, maxWidth: 480, margin: "12px auto 0", lineHeight: 1.65
-            } }, "A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses, and they can change as your situation changes.")
+                fontSize: 11, color: CW.dim, maxWidth: 480, margin: "12px auto 0", lineHeight: 1.65
+            } }, "A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses, and they can change as your situation changes."),
+            React.createElement("p", { style: { fontSize: 12, marginTop: 10 } }, React.createElement("a", { href: "privacy.html", style: { color: CW.muted, textDecoration: "underline" } }, "Privacy"))
         )
     ));
 }
@@ -1037,12 +997,12 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
         React.createElement("div", { className: "g-fu", style: { marginBottom: 32 } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
                     color: C.teal, textTransform: "uppercase", marginBottom: 16 } }, "Context"),
-            React.createElement("h2", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 28,
+            React.createElement("h2", { id: "ctx-q", style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 28,
                     color: C.text, marginBottom: 8 } }, "What\u2019s the career move you feel stuck on?"),
-            React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 32 } }, "Think bigger than one task, smaller than a life plan. Name the actual step you know you should be taking but aren\u2019t.")),
+            React.createElement("p", { id: "ctx-hint", style: { fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 32 } }, "Think bigger than one task, smaller than a life plan. Name the actual step you know you should be taking but aren\u2019t.")),
         React.createElement("div", { className: "g-card g-fu g-d1", style: { display: "flex", flexDirection: "column", gap: 28 } },
             React.createElement("div", null,
-                React.createElement("textarea", { className: `g-input${ctxErrors.c1 ? " g-err" : ""}`, style: { minHeight: 90 }, value: localC1, placeholder: "In your own words\u2026", onChange: e => {
+                React.createElement("textarea", { id: "ctx-c1", "aria-labelledby": "ctx-q", "aria-describedby": "ctx-hint", className: `g-input${ctxErrors.c1 ? " g-err" : ""}`, style: { minHeight: 90 }, value: localC1, placeholder: "In your own words\u2026", onChange: e => {
                         setLocalC1(e.target.value);
                         dispatch({ type: "SET_CTX", patch: { c1: e.target.value } });
                     } }),
@@ -1061,34 +1021,33 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
                 pointerEvents: charCount >= 20 && wordCount >= 4 ? "auto" : "none",
             } },
             React.createElement("div", { className: charCount >= 20 && wordCount >= 4 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
-                React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600,
+                React.createElement("p", { id: "lbl-c2", style: { display: "block", fontSize: 13, fontWeight: 600,
                         color: C.muted, marginBottom: 12 } }, "I have been aware of this gap for approximately:"),
-                React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["<1mo", "Less than 1 month"], ["1-6mo", "1–6 months"], ["6-12mo", "6–12 months"], ["1yr+", "Over a year"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c2 === v ? " sel" : ""}`, onClick: () => dispatch({ type: "SET_CTX", patch: { c2: v } }) }, l)))),
+                React.createElement("div", { role: "group", "aria-labelledby": "lbl-c2", style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["<1mo", "Less than 1 month"], ["1-6mo", "1–6 months"], ["6-12mo", "6–12 months"], ["1yr+", "Over a year"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c2 === v ? " sel" : ""}`, "aria-pressed": ctx.c2 === v, onClick: () => dispatch({ type: "SET_CTX", patch: { c2: v } }) }, l)))),
                 ctxErrors.c2 && React.createElement("p", { style: { fontSize: 12, color: C.red, marginTop: 6 } }, "Please select one")),
             React.createElement("div", { className: charCount >= 20 && wordCount >= 4 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
-                React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600,
+                React.createElement("p", { id: "lbl-c3", style: { display: "block", fontSize: 13, fontWeight: 600,
                         color: C.muted, marginBottom: 12 } }, "I have attempted to close this gap how many times?"),
-                React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["never", "Never"], ["1-2", "Once or twice"], ["3-5", "Three to five times"], ["6+", "Six or more times"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c3 === v ? " sel" : ""}`, onClick: () => dispatch({ type: "SET_CTX", patch: { c3: v } }) }, l)))),
+                React.createElement("div", { role: "group", "aria-labelledby": "lbl-c3", style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["never", "Never"], ["1-2", "Once or twice"], ["3-5", "Three to five times"], ["6+", "Six or more times"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c3 === v ? " sel" : ""}`, "aria-pressed": ctx.c3 === v, onClick: () => dispatch({ type: "SET_CTX", patch: { c3: v } }) }, l)))),
                 ctxErrors.c3 && React.createElement("p", { style: { fontSize: 12, color: C.red, marginTop: 6 } }, "Please select one")),
             React.createElement("div", null,
-                React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600,
+                React.createElement("p", { id: "lbl-c4", style: { display: "block", fontSize: 13, fontWeight: 600,
                         color: C.muted, marginBottom: 12 } }, "The scale of this career step is:"),
-                React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["adjust", "A small adjustment"], ["shift", "A moderate shift"], ["transition", "A significant transition"], ["reinvention", "A complete reinvention"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c4 === v ? " sel" : ""}`, onClick: () => dispatch({ type: "SET_CTX", patch: { c4: v } }) }, l)))),
+                React.createElement("div", { role: "group", "aria-labelledby": "lbl-c4", style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["adjust", "A small adjustment"], ["shift", "A moderate shift"], ["transition", "A significant transition"], ["reinvention", "A complete reinvention"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c4 === v ? " sel" : ""}`, "aria-pressed": ctx.c4 === v, onClick: () => dispatch({ type: "SET_CTX", patch: { c4: v } }) }, l)))),
                 ctxErrors.c4 && React.createElement("p", { style: { fontSize: 12, color: C.red, marginTop: 6 } }, "Please select one")))),
         React.createElement("div", { style: { display: "flex", justifyContent: "flex-end", marginTop: 24 } },
             React.createElement("button", { className: "g-btn-p", disabled: !isValid, onClick: handleNext }, "Continue \u2192 Capability Belief"))));
 }
 // ─── SCREENS 2–5: QUESTION SECTIONS ────────────────────────────────────────────
-function LikertButtons({ qid, value, dimColor, onChange, isMobile }) {
+function LikertButtons({ qid, value, dimColor, onChange, isMobile, labelId }) {
     const ariaLabels = ["Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"];
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: "g-desk-lk", style: { "--dc": dimColor }, role: "group", "aria-label": "Rating scale" }, SCALE.map(s => (React.createElement("button", { key: s.v, className: `g-lk${value === s.v ? " sel" : ""}`, style: { "--dc": dimColor }, "aria-label": `${s.v} - ${s.label.replace("\n", " ")}`, "aria-pressed": value === s.v, onClick: () => onChange(qid, s.v) },
+        React.createElement("div", { className: "g-desk-lk", style: { "--dc": btnFor(dimColor).bg, "--dcf": btnFor(dimColor).fg }, role: "group", "aria-labelledby": labelId }, SCALE.map(s => (React.createElement("button", { key: s.v, className: `g-lk${value === s.v ? " sel" : ""}`, style: { "--dc": btnFor(dimColor).bg, "--dcf": btnFor(dimColor).fg }, "aria-label": `${s.v} - ${s.label.replace("\n", " ")}`, "aria-pressed": value === s.v, onClick: () => onChange(qid, s.v) },
             React.createElement("div", { className: "g-lk-dot" }),
             React.createElement("span", { className: "g-lk-lbl" }, s.label))))),
-        React.createElement("div", { className: "g-mob-lk", style: { "--dc": dimColor }, role: "group", "aria-label": "Rating scale" },
-            React.createElement("span", { className: "g-mex" }, "Disagree"),
-            [1, 2, 3, 4, 5].map(v => (React.createElement("div", { key: v, role: "button", tabIndex: 0, "aria-label": `${v} - ${ariaLabels[v-1]}`, "aria-pressed": value === v, className: `g-mc${value === v ? " sel" : ""}`, style: { "--dc": dimColor }, onClick: () => onChange(qid, v), onKeyDown: e => (e.key === "Enter" || e.key === " ") && onChange(qid, v) }, v))),
-            React.createElement("span", { className: "g-mex" }, "Agree"))));
+        React.createElement("div", { className: "g-mob-lk", style: { "--dc": btnFor(dimColor).bg, "--dcf": btnFor(dimColor).fg }, role: "group", "aria-labelledby": labelId },
+            [1, 2, 3, 4, 5].map(v => (React.createElement("div", { key: v, role: "button", tabIndex: 0, "aria-label": `${v} - ${ariaLabels[v-1]}`, "aria-pressed": value === v, className: `g-mc${value === v ? " sel" : ""}`, style: { "--dc": btnFor(dimColor).bg, "--dcf": btnFor(dimColor).fg }, onClick: () => onChange(qid, v), onKeyDown: e => (e.key === "Enter" || e.key === " ") && onChange(qid, v) }, v)))),
+            React.createElement("div", { className: "g-mob-cap", "aria-hidden": "true" }, React.createElement("span", { className: "g-mex" }, "Strongly disagree"), React.createElement("span", { className: "g-mex" }, "Strongly agree"))));
 }
 function ScreenSection({ section, stepIdx, responses, dispatch, isMobile }) {
     const answered = section.questions.filter(q => responses[q.id] != null).length;
@@ -1115,13 +1074,13 @@ function ScreenSection({ section, stepIdx, responses, dispatch, isMobile }) {
     return (React.createElement("div", { className: "g-screen-enter", style: { maxWidth: 700, margin: "0 auto", padding: "32px 24px 80px" } },
         React.createElement("div", { className: "g-fu g-card", style: { borderLeft: `4px solid ${section.color}`,
                 marginBottom: 24, display: "flex", alignItems: "center", gap: 16 } },
-            React.createElement("div", { style: { width: 44, height: 44, borderRadius: 10, background: section.color,
+            React.createElement("div", { "aria-hidden": "true", style: { width: 44, height: 44, borderRadius: 10, background: btnFor(section.color).bg,
                     display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 } },
-                React.createElement("span", { style: { color: C.ink, fontWeight: 800, fontSize: 13 } }, section.abbr)),
+                React.createElement("span", { style: { color: btnFor(section.color).fg, fontWeight: 800, fontSize: 13 } }, section.abbr)),
             React.createElement("div", { style: { flex: 1 } },
                 React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 } },
                     React.createElement("p", { style: { fontSize: 11, color: C.dim, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" } }, section.theory),
-                    React.createElement("p", { style: { fontSize: 11, color: allAnswered ? section.color : C.dim, fontWeight: 700, letterSpacing: "0.06em" } }, `${answered} / ${section.questions.length}`)),
+                    React.createElement("p", { style: { fontSize: 11, color: allAnswered ? C.text : C.dim, fontWeight: 700, letterSpacing: "0.06em" } }, `${answered} / ${section.questions.length}`)),
                 React.createElement("h2", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 22,
                         color: C.text, marginBottom: 2 } }, section.label),
                 React.createElement("p", { style: { fontSize: 13, color: C.muted } }, section.desc))),
@@ -1130,16 +1089,16 @@ function ScreenSection({ section, stepIdx, responses, dispatch, isMobile }) {
             return (React.createElement("div", { key: q.id, id: `q-${q.id}`, className: `g-card g-fu g-d${qi + 1}`, style: { borderColor: isAnswered ? section.color + "50" : C.border, background: isAnswered ? C.surf2 : C.surface, transition: "all 0.25s" } },
                 React.createElement("div", { style: { display: "flex", gap: 12, marginBottom: 18 } },
                     React.createElement("div", { style: { width: 28, height: 28, borderRadius: 6,
-                            background: isAnswered ? section.color : C.surf2,
+                            background: isAnswered ? btnFor(section.color).bg : C.surf2,
                             border: isAnswered ? "none" : `1px solid ${section.color}60`,
                             display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                             transition: "all 0.25s ease" } },
-                        React.createElement("span", { style: { color: isAnswered ? C.ink : C.muted, fontWeight: 700, fontSize: 12,
+                        React.createElement("span", { style: { color: isAnswered ? btnFor(section.color).fg : C.muted, fontWeight: 700, fontSize: 12,
                             transition: "all 0.25s" } }, isAnswered ? "\u2713" : "")),
-                    React.createElement("p", { style: { fontSize: 14, color: C.text, lineHeight: 1.65, flex: 1 } },
+                    React.createElement("p", { id: `qt-${q.id}`, style: { fontSize: 14, color: C.text, lineHeight: 1.65, flex: 1 } },
                         q.text,
                         )),
-                React.createElement(LikertButtons, { qid: q.id, value: responses[q.id], dimColor: section.color, onChange: (id, v) => {
+                React.createElement(LikertButtons, { qid: q.id, labelId: `qt-${q.id}`, value: responses[q.id], dimColor: section.color, onChange: (id, v) => {
                     dispatch({ type: "SET_RESPONSE", qid: id, val: v });
                     // Auto-scroll to next unanswered question
                     setTimeout(() => {
@@ -1203,11 +1162,16 @@ function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
         observer.observe(node);
         return () => observer.disconnect();
     }, [triggerRef]);
-    const labelMap = { se: "Capability Belief", ps: "Risk Tolerance", ia: "Identity Fit", rr: "Capacity" };
-    const scrollToBooking = () => {
-        if (targetRef && targetRef.current) targetRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    const cta = CTA_DATA[primary];
+    if (!cta || !cta.workbookAvailable) return null;
+    const btn = btnFor(primaryColor);
+    const scrollToWorkbook = () => {
+        const el = document.getElementById("workbook-offer");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+        else if (targetRef && targetRef.current) targetRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     };
-    return React.createElement("div", { style: {
+    // Rendered into <body> so the results page entrance animation (a transform) cannot stop it staying fixed
+    return ReactDOM.createPortal(React.createElement("div", { style: {
             position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 110,
             display: "flex", justifyContent: "center",
             padding: "0 12px calc(16px + var(--safe-bottom))",
@@ -1217,17 +1181,17 @@ function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
             boxShadow: "0 -4px 16px rgba(26, 31, 61, 0.12)",
             borderTop: `2px solid ${primaryColor}4D`,
         } },
-        React.createElement("button", { onClick: scrollToBooking, "aria-label": "Book a coaching session about your primary gap", style: {
+        React.createElement("button", { onClick: scrollToWorkbook, style: {
                 width: "100%", maxWidth: 480, border: "none", borderRadius: 12,
-                padding: "14px 20px", background: primaryColor, color: "#FFFFFF",
+                padding: "14px 20px", background: btn.bg, color: btn.fg,
                 fontSize: 15, fontWeight: 700, cursor: "pointer",
-            } }, `Book a session about ${labelMap[primary] || "your primary gap"} →`));
+            } }, `Get ${cta.workbookTitle} \u00B7 \u00A39.99 \u2192`)), document.body);
 }
 // ─── ACCORDION ─────────────────────────────────────────────────────────────────
 function Accordion({ title, children }) {
     const [open, setOpen] = useState(false);
     return (React.createElement("div", { style: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14 } },
-        React.createElement("button", { onClick: () => setOpen(!open), style: { width: "100%", padding: "20px 24px", background: "none", border: "none",
+        React.createElement("button", { onClick: () => setOpen(!open), "aria-expanded": open, style: { width: "100%", padding: "20px 24px", background: "none", border: "none",
                 display: "flex", justifyContent: "space-between", alignItems: "center",
                 cursor: "pointer", textAlign: "left" } },
             React.createElement("span", { style: { fontSize: 15, fontWeight: 600, color: C.text } }, title),
@@ -1238,176 +1202,51 @@ function Accordion({ title, children }) {
 }
 // ─── SCREEN 7: RESULTS ─────────────────────────────────────────────────────────
 function ScreenProcessing({ dispatch }) {
-    const steps = [
-        { key: "se", label: "Capability Belief", color: C.teal },
-        { key: "ps", label: "Risk Tolerance", color: C.blue },
-        { key: "ia", label: "Identity Fit", color: C.indigo },
-        { key: "rr", label: "Capacity", color: C.purple },
-    ];
-    const [completed, setCompleted] = useState([]);
-    const [ready, setReady] = useState(false);
-    useEffect(() => {
-        const timers = steps.map((s, i) => setTimeout(() => {
-            setCompleted(prev => [...prev, s.key]);
-        }, 400 + i * 550));
-        const readyTimer = setTimeout(() => setReady(true), 400 + steps.length * 550 + 200);
-        const doneTimer = setTimeout(() => dispatch({ type: "PROCESSING_DONE" }), 400 + steps.length * 550 + 1200);
-        return () => { timers.forEach(clearTimeout); clearTimeout(readyTimer); clearTimeout(doneTimer); };
-    }, []);
-    return (React.createElement("div", { style: { minHeight: "calc(100vh - 52px)", display: "flex", alignItems: "center",
-            justifyContent: "center", padding: "40px 24px" } },
-        React.createElement("div", { className: "g-fu", style: { textAlign: "center", maxWidth: 380 } },
-            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.12em",
-                    color: C.teal, textTransform: "uppercase", marginBottom: 20 } }, "Analysing your responses"),
-            React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 } },
-                steps.map(s => {
-                    const done = completed.includes(s.key);
-                    return React.createElement("div", { key: s.key, style: {
-                        display: "flex", alignItems: "center", gap: 14,
-                        padding: "12px 20px", borderRadius: 10,
-                        background: done ? `${s.color}15` : C.surf2,
-                        border: `1px solid ${done ? s.color + "40" : C.border}`,
-                        transition: "all 0.4s ease",
-                        opacity: done ? 1 : 0.4,
-                    }},
-                        React.createElement("div", { style: {
-                            width: 24, height: 24, borderRadius: "50%",
-                            background: done ? s.color : C.border,
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            transition: "all 0.3s ease", flexShrink: 0,
-                        }},
-                            done ? React.createElement("span", { style: { color: C.ink, fontSize: 12, fontWeight: 800 } }, "\u2713")
-                                 : React.createElement("div", { style: { width: 8, height: 8, borderRadius: "50%", background: C.dim } })),
-                        React.createElement("span", { style: { fontSize: 14, color: done ? C.text : C.muted,
-                            fontWeight: done ? 600 : 400, transition: "all 0.3s ease" } }, s.label));
-                })),
-            React.createElement("p", { style: {
-                fontFamily: "Instrument Serif, Georgia, serif",
-                fontSize: 20, color: C.text,
-                opacity: ready ? 1 : 0, transform: ready ? "translateY(0)" : "translateY(8px)",
-                transition: "all 0.4s ease",
-            } }, "Your profile is ready."),
-            React.createElement("p", { style: { fontSize: 11, color: C.dim, marginTop: 12, letterSpacing: "0.06em",
-                opacity: ready ? 0.7 : 0, transition: "opacity 0.4s ease 0.2s" } }, "GAP Profile\u2122"))));
+    useEffect(() => { dispatch({ type: "PROCESSING_DONE" }); }, []);
+    return null;
 }
-function InlineEmailCapture({ dispatch, scores, primary }) {
-    const [em, setEm] = useState("");
-    const [nm, setNm] = useState("");
-    const [sending, setSending] = useState(false);
-    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
-    const handleSend = () => {
-        if (!valid) return;
-        setSending(true);
-        fetch("https://formspree.io/f/mljjerde", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            body: JSON.stringify({
-                name: nm,
-                email: em,
-                _subject: "GAP Profile results: " + nm,
-                pattern: primary && ARCHETYPES[primary] ? ARCHETYPES[primary].label : "",
-                workbook: primary && CTA_DATA[primary] ? CTA_DATA[primary].workbookTitle : "",
-                gap_score: scores ? scores.cgi.toFixed(1) + " / 10" : "",
-                scores: scores ? "Capability Belief " + scores.se.toFixed(1) + " | Risk Tolerance " + scores.ps.toFixed(1) + " | Identity Fit " + scores.ia.toFixed(1) + " | Capacity " + scores.rr.toFixed(1) : ""
-            })
-        }).catch(() => {}).finally(() => setSending(false));
-        dispatch({ type: "SUBMIT_EMAIL", email: em });
-        dispatch({ type: "SET_FIRSTNAME", firstName: nm });
-    };
-    return (React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 10, maxWidth: 400, margin: "0 auto" } },
-        React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap" } },
-            React.createElement("input", { className: "g-input", type: "text", placeholder: "First name", value: nm,
-                onChange: e => setNm(e.target.value),
-                style: { flex: "1 1 120px", minHeight: "auto", resize: "none", fontSize: 14, padding: "10px 14px" } }),
-            React.createElement("input", { className: "g-input", type: "email", placeholder: "Email address", value: em,
-                onChange: e => setEm(e.target.value),
-                style: { flex: "2 1 200px", minHeight: "auto", resize: "none", fontSize: 14, padding: "10px 14px" } })),
-        React.createElement("button", { className: "g-btn-p", disabled: !valid || sending,
-            onClick: handleSend,
-            style: { width: "100%", padding: "12px", fontSize: 14 } },
-            sending ? "Sending..." : "Email me about my result \u2192")));
+function AboutJoe() {
+    return React.createElement("div", { style: { borderTop: "1px solid " + CW.border, marginTop: 24, paddingTop: 20 } },
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: CW.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 } }, "About Joe"),
+        React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.7 } },
+            "I\u2019m Joe Markland, a career coach. I hold a Personal Performance Coaching Diploma from The Coaching Academy, awarded with Distinction, and a Level 6 qualification in Careers Guidance and Development. My background is in university careers and early-career professional development."));
 }
-function NextSteps({ primary, archColor, scores, question }) {
-    const cta = CTA_DATA[primary];
-    if (!cta) return null;
-    const archLabelColor = archColor === C.teal ? TEAL_TEXT : archColor;
-
-    const cardBase = {
-        borderRadius: 14,
-        padding: "24px 24px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 12,
-        flex: "1 1 200px",
-        minWidth: 0,
-    };
-
-    const workbookCard = React.createElement("div", {
-        style: {
-            ...cardBase,
-            background: cta.workbookAvailable ? "#FFFFFF" : "#F8F4ED",
-            border: cta.workbookAvailable ? `1px solid ${archColor}50` : "1px solid #E0D5C5",
-            opacity: cta.workbookAvailable ? 1 : 0.6,
-            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-        }
-    },
-        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: cta.workbookAvailable ? archLabelColor : CW.dim, letterSpacing: "0.1em", textTransform: "uppercase" } },
-            cta.workbookAvailable ? "Workbook · \u00A39.99" : "Workbook · Coming soon"),
-        React.createElement("p", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 17, color: CW.text, lineHeight: 1.3 } }, cta.workbookTitle),
-        React.createElement("p", { style: { fontSize: 13, color: CW.body, lineHeight: 1.6 } }, cta.workbookDesc),
-        cta.workbookAvailable
-            ? React.createElement("a", {
-                href: cta.workbookUrl,
-                target: "_blank",
-                rel: "noopener noreferrer",
-                style: {
-                    display: "block", textAlign: "center", padding: "11px 16px",
-                    background: archColor, color: "#0D1B2A", fontWeight: 700,
-                    fontSize: 14, borderRadius: 9, textDecoration: "none",
-                    marginTop: 4,
-                }
-              }, "Get the workbook \u2192")
-            : React.createElement("p", { style: { fontSize: 13, color: CW.dim, fontStyle: "italic", marginTop: 4 } }, "In development \u2014 check back soon.")
-    );
-
-    const debriefCard = React.createElement("div", {
-        style: {
-            ...cardBase,
-            background: "#FFFFFF",
-            border: `2px solid ${archColor}`,
-            position: "relative",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        }
-    },
-        React.createElement("div", {
-            style: {
-                position: "absolute", top: -11, left: 20,
-                background: archColor, color: "#0D1B2A",
-                fontSize: 10, fontWeight: 800, letterSpacing: "0.12em",
-                textTransform: "uppercase", padding: "3px 10px", borderRadius: 20,
-            }
-        }, "Recommended"),
-        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archColor, letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 8 } }, "GAP Profile Session \u00B7 \u00A3125"),
-        React.createElement("p", { style: { fontSize: 13, color: CW.body, lineHeight: 1.6 } },
+function SessionOption() {
+    return React.createElement("div", { style: { marginTop: 16, border: "1px solid " + CW.border, borderRadius: 14, padding: "20px 22px", display: "flex", flexDirection: "column", gap: 10 } },
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: CW.muted, letterSpacing: "0.1em", textTransform: "uppercase" } }, "GAP Profile Session \u00B7 \u00A3125"),
+        React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.6 } },
             "A 60-minute coaching conversation about what matters to you and what you\u2019d like to work towards. Your GAP Profile results can be used as a starting point."),
         React.createElement("a", {
             href: DEBRIEF_URL,
             target: "_blank",
             rel: "noopener noreferrer",
-            style: {
-                display: "block", textAlign: "center", padding: "12px 16px",
-                background: archColor, color: "#0D1B2A", fontWeight: 700,
-                fontSize: 14, borderRadius: 9, textDecoration: "none",
-                marginTop: 4,
-            }
-        }, "Book a session \u2192")
-    );
+            style: { alignSelf: "flex-start", padding: "10px 16px", border: "1.5px solid " + CW.text, color: CW.text, fontWeight: 700, fontSize: 14, borderRadius: 9, textDecoration: "none" }
+        }, "Book a session \u2192"));
+}
+function NextSteps({ primary, archColor, scores, question }) {
+    const cta = CTA_DATA[primary];
+    if (!cta) return null;
+    const archLabelColor = inkFor(archColor);
+    const btn = btnFor(archColor);
+    const workbookCard = cta.workbookAvailable ? React.createElement("div", {
+        id: "workbook-offer",
+        style: { background: "#FFFFFF", border: `2px solid ${archColor}`, borderRadius: 14, padding: "26px 24px", display: "flex", flexDirection: "column", gap: 12, boxShadow: "0 4px 16px rgba(26,31,61,0.08)" }
+    },
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archLabelColor, letterSpacing: "0.1em", textTransform: "uppercase" } }, "Workbook \u00B7 \u00A39.99"),
+        React.createElement("p", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 24, color: CW.text, lineHeight: 1.2 } }, cta.workbookTitle),
+        React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.65 } }, cta.workbookDesc),
+        React.createElement("a", {
+            href: cta.workbookUrl,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            style: { display: "block", textAlign: "center", padding: "14px 16px", background: btn.bg, color: btn.fg, fontWeight: 700, fontSize: 15, borderRadius: 10, textDecoration: "none", marginTop: 4 }
+        }, "Get the workbook \u2192")) : null;
 
     return React.createElement("div", {
         className: "g-fu g-d4",
         style: { marginBottom: 24, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 18, padding: "36px 28px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }
     },
-        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archColor, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 14 } }, "What happens next"),
+        React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: inkFor(archColor), letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 14 } }, "What happens next"),
         React.createElement("h2", {
             style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: "clamp(22px,4vw,30px)", color: CW.text, lineHeight: 1.2, marginBottom: 20 }
         }, cta.headline),
@@ -1416,7 +1255,7 @@ function NextSteps({ primary, archColor, scores, question }) {
         React.createElement("div", {
             style: { borderLeft: `3px solid ${archColor}`, paddingLeft: 18, margin: "20px 0 28px" }
         },
-            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archColor, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 } }, "The next step"),
+            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: inkFor(archColor), textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 } }, "The next step"),
             React.createElement("p", { style: { fontSize: 15, color: CW.text, lineHeight: 1.7, whiteSpace: "pre-line" } }, cta.nextStep)
         ),
         question && React.createElement("div", { style: {
@@ -1437,12 +1276,9 @@ function NextSteps({ primary, archColor, scores, question }) {
                 color: CW.text, fontStyle: "italic", lineHeight: 1.7,
             }}, question)
         ),
-        React.createElement("div", {
-            style: { display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }
-        },
-            cta.workbookAvailable ? workbookCard : null,
-            debriefCard
-        )
+        workbookCard,
+        React.createElement(SessionOption, null),
+        React.createElement(AboutJoe, null)
     );
 }
 function NoPatternNextSteps({ lowDims, noneLow }) {
@@ -1456,7 +1292,8 @@ function NoPatternNextSteps({ lowDims, noneLow }) {
         return React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, textAlign: "center" } },
             React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.7 } },
                 "If something is still stopping you that these questions didn’t pick up, a session is a good place to find it. ",
-                sessionLink));
+                sessionLink),
+            React.createElement("div", { style: { textAlign: "left", maxWidth: 560, margin: "0 auto" } }, React.createElement(AboutJoe, null)));
     }
     return React.createElement("div", {
         className: "g-fu g-d4",
@@ -1469,22 +1306,23 @@ function NoPatternNextSteps({ lowDims, noneLow }) {
                 const cta = CTA_DATA[k];
                 const color = ARCHETYPES[k].color;
                 return React.createElement("div", { key: k, style: { flex: "1 1 200px", minWidth: 0, display: "flex", flexDirection: "column", gap: 12, borderRadius: 14, padding: 24, background: "#FFFFFF", border: `1px solid ${color}50`, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
-                    React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: color === C.teal ? TEAL_TEXT : color, letterSpacing: "0.1em", textTransform: "uppercase" } }, "Workbook · £9.99"),
+                    React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: inkFor(color), letterSpacing: "0.1em", textTransform: "uppercase" } }, "Workbook · £9.99"),
                     React.createElement("p", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 17, color: CW.text, lineHeight: 1.3 } }, cta.workbookTitle),
                     React.createElement("p", { style: { fontSize: 13, color: CW.body, lineHeight: 1.6, flex: 1 } }, WORKBOOK_CHOOSER[k]),
                     React.createElement("a", {
                         href: cta.workbookUrl,
                         target: "_blank",
                         rel: "noopener noreferrer",
-                        style: { display: "block", textAlign: "center", padding: "11px 16px", background: color, color: "#0D1B2A", fontWeight: 700, fontSize: 14, borderRadius: 9, textDecoration: "none" }
+                        style: { display: "block", textAlign: "center", padding: "11px 16px", background: btnFor(color).bg, color: btnFor(color).fg, fontWeight: 700, fontSize: 14, borderRadius: 9, textDecoration: "none" }
                     }, "Get the workbook →"));
             })),
         React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.7, textAlign: "center" } },
             "Or if it feels tangled, a 60-minute session is where we work out which one to move on first. ",
-            sessionLink));
+            sessionLink),
+        React.createElement(AboutJoe, null));
 }
 function ScreenResults({ state, dispatch }) {
-    const { scores, ctx, firstName, email } = state;
+    const { scores, ctx, firstName } = state;
     const [archetypeVisible, setArchetypeVisible] = useState(false);
     const [barsVisible, setBarsVisible] = useState(false);
     const dimensionSectionRef = useRef(null);
@@ -1517,12 +1355,12 @@ function ScreenResults({ state, dispatch }) {
     const interp = buildInterpretation({ c1: ctx.c1, c2: ctx.c2, c3: ctx.c3, primary, secondary });
     const showLongFlag = ctx.c2 === "1yr+";
     const showAttemptFlag = ctx.c3 === "6+";
-    const archLabelColor = arch.color === C.teal ? TEAL_TEXT : arch.color;
+    const archLabelColor = inkFor(arch.color);
     const dimRows = [
         { key: "se", label: "Capability Belief", score: se, color: C.teal, textColor: TEAL_TEXT },
-        { key: "ps", label: "Risk Tolerance", score: ps, color: C.blue, textColor: C.blue },
-        { key: "ia", label: "Identity Fit", score: ia, color: C.indigo, textColor: C.indigo },
-        { key: "rr", label: "Capacity", score: rr, color: C.purple, textColor: C.purple },
+        { key: "ps", label: "Risk Tolerance", score: ps, color: C.blue, textColor: inkFor(C.blue) },
+        { key: "ia", label: "Identity Fit", score: ia, color: C.indigo, textColor: inkFor(C.indigo) },
+        { key: "rr", label: "Capacity", score: rr, color: C.purple, textColor: inkFor(C.purple) },
     ];
     const copyProfile = () => {
         const text = [
@@ -1612,14 +1450,14 @@ function ScreenResults({ state, dispatch }) {
                     border: isPrimary ? `1px solid ${d.color}30` : "1px solid transparent",
                     transition: "all 0.3s", transitionDelay: `${i * 0.15}s` } },
                 React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 10 } },
-                    React.createElement("div", { style: { width: 34, height: 34, borderRadius: 8, background: d.color,
+                    React.createElement("div", { "aria-hidden": "true", style: { width: 34, height: 34, borderRadius: 8, background: btnFor(d.color).bg,
                             display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 } },
-                        React.createElement("span", { style: { color: C.ink, fontWeight: 800, fontSize: 10 } }, ({ se: "CB", ps: "RT", ia: "IF", rr: "CA" })[d.key])),
+                        React.createElement("span", { style: { color: btnFor(d.color).fg, fontWeight: 800, fontSize: 10 } }, ({ se: "CB", ps: "RT", ia: "IF", rr: "CA" })[d.key])),
                     React.createElement("div", { style: { flex: 1, minWidth: 0 } },
                         React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 8 } },
                             React.createElement("span", { style: { fontSize: 14, fontWeight: 600, color: isPrimary ? CW.text : CW.muted } }, d.label),
                             isPrimary && React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: d.textColor, letterSpacing: "0.08em", textTransform: "uppercase" } }, "\u25cf lowest score")),
-                        React.createElement(StatusBadge, { status: status[d.key] })),
+                        React.createElement(StatusBadge, { status: status[d.key], lowest: isPrimary })),
                     React.createElement("span", { style: { fontSize: 22, fontWeight: 800, color: isPrimary ? d.textColor : CW.muted, fontFamily: "Instrument Serif, Georgia, serif", flexShrink: 0 } }, d.score.toFixed(1))),
                 React.createElement("div", { style: { height: 6, background: CW.border, borderRadius: 3 } },
                     React.createElement("div", { className: "g-bar-fill", style: { width: barsVisible ? `${d.score * 10}%` : "0%",
@@ -1638,28 +1476,26 @@ function ScreenResults({ state, dispatch }) {
                     textTransform: "uppercase", marginBottom: 10 } }, "What this means for you"),
             React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20,
                     color: CW.text, marginBottom: 14 } },
-                "Why \"",
-                ctx.c1.length > 50 ? ctx.c1.slice(0, 50) + "…" : ctx.c1,
-                "\": not done yet"),
+                "What your answers suggest"),
             React.createElement("p", { style: { fontSize: 15, color: CW.body, lineHeight: 1.75, marginBottom: 10 } }, interp.s1),
             React.createElement("p", { style: { fontSize: 15, color: CW.text, lineHeight: 1.75, marginBottom: 10 } }, interp.s2),
             React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.65, fontStyle: "italic",
                     borderTop: "1px solid " + CW.border, paddingTop: 12 } }, interp.s3)),
         (ctx.c4 === "transition" || ctx.c4 === "reinvention") && (scores.se >= 5.0 && scores.se <= 6.5 || scores.ps >= 5.0 && scores.ps <= 6.5 || scores.ia >= 5.0 && scores.ia <= 6.5 || scores.rr >= 5.0 && scores.rr <= 6.5) && React.createElement("div", { className: "g-fu g-card", style: { background: "rgba(46,196,182,0.04)", border: "1px solid rgba(46,196,182,0.15)", marginBottom: 24 } },
-            React.createElement("p", { style: { fontSize: 13, color: C.muted, lineHeight: 1.65 } },
-                React.createElement("strong", { style: { color: C.teal } }, "Note: "),
+            React.createElement("p", { style: { fontSize: 13, color: CW.muted, lineHeight: 1.65 } },
+                React.createElement("strong", { style: { color: CW.text } }, "Note: "),
                 "You indicated this is a ",
                 ctx.c4 === "reinvention" ? "complete reinvention" : "significant transition",
                 ". The scores above should be read in that context. Thresholds that would be fine for a small adjustment carry more weight at this scale of change.")),
         scores.eb !== undefined && scores.eb < 3 && React.createElement("div", { className: "g-fu g-d3 g-eb-flag", style: { marginBottom: 24 } },
-            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", color: "#B97400",
+            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", color: "#8A5A00",
                     textTransform: "uppercase", marginBottom: 8 } }, "Something worth naming first"),
             React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.65 } },
                 "Some of your answers suggest access, opportunity or other circumstances may be making this harder. These questions focus on what\u2019s going on for you personally, so they can\u2019t fully capture that. Read the suggestions below with that in mind.")),
         oe < 5 && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: 10, padding: "16px 20px" } },
-            React.createElement("p", { style: { fontSize: 14, color: C.muted, fontStyle: "italic", lineHeight: 1.7 } },
+            React.createElement("p", { style: { fontSize: 14, color: CW.muted, fontStyle: "italic", lineHeight: 1.7 } },
                 "One thing in your answers worth noting: part of what\u2019s holding you back may be uncertainty about whether this action will actually get you the result you want, not just whether you can do it.")),
-        secArch && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: "rgba(19,32,49,0.8)", border: "1px solid rgba(245,158,11,0.25)", borderRadius: 14, padding: "24px 28px" } },
+        secArch && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: C.surface, border: "1px solid rgba(245,158,11,0.25)", borderRadius: 14, padding: "24px 28px" } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 } }, "A secondary pattern"),
             React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20, color: C.text, marginBottom: 10 } }, secArch.label),
             React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.65, marginBottom: 10 } },
@@ -1672,29 +1508,25 @@ function ScreenResults({ state, dispatch }) {
                 : React.createElement(NextSteps, { primary: primary, archColor: arch.color, scores: scores, question: PATTERN_QUESTIONS[primary] || PATTERN_QUESTIONS.rr })),
         (showLongFlag || showAttemptFlag) && (React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, background: "rgba(245,158,11,0.07)",
                 border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 14, padding: "20px 24px" } },
-            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: "0.08em",
+            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: "#8A5A00", letterSpacing: "0.08em",
                     textTransform: "uppercase", marginBottom: 10 } }, "A few questions worth asking yourself"),
-            showLongFlag && (React.createElement("p", { style: { fontSize: 14, color: C.text, lineHeight: 1.65, marginBottom: 8 } },
+            showLongFlag && (React.createElement("p", { style: { fontSize: 14, color: CW.text, lineHeight: 1.65, marginBottom: 8 } },
                 React.createElement("strong", null, "Awareness duration:"),
                 " You\u2019ve been aware of this for over a year. What\u2019s kept it unresolved? Think about practical constraints, other priorities, and whether the move still matters to you.")),
-            showAttemptFlag && (React.createElement("p", { style: { fontSize: 14, color: C.text, lineHeight: 1.65 } },
+            showAttemptFlag && (React.createElement("p", { style: { fontSize: 14, color: CW.text, lineHeight: 1.65 } },
                 React.createElement("strong", null, "Multiple attempts:"),
                 " You\u2019ve had six or more goes at this. What happened, what helped, and what would need to change before you try again?")))),
         React.createElement("div", { className: "g-fu g-d4", style: { marginBottom: 24, textAlign: "center", background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
             React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: CW.dim, letterSpacing: "0.09em",
                     textTransform: "uppercase", marginBottom: 10 } }, "Keep a copy of your results"),
             React.createElement("button", { className: "g-btn-s", onClick: function() { window.print(); },
-                style: { width: "100%", maxWidth: 400, marginBottom: 18 } }, "Save my results as a PDF"),
-            React.createElement("p", { style: { fontSize: 14, color: C.muted, marginBottom: 18, lineHeight: 1.6 } },
-                "Or leave your email and I\u2019ll be in touch about your result. No newsletter."),
-            email ? (React.createElement("p", { style: { fontSize: 14, color: TEAL_TEXT } },
-                "\u2713 Thanks. I\u2019ll be in touch.")) : (React.createElement(InlineEmailCapture, { dispatch: dispatch, scores: scores, primary: noPattern ? null : primary }))),
+                style: { width: "100%", maxWidth: 400, color: CW.text, borderColor: CW.muted } }, "Save my results as a PDF")),
         React.createElement("div", { className: "g-fu g-d5", style: { textAlign: "center", paddingTop: 8 } },
-            React.createElement("button", { onClick: handleShare, className: "g-btn-s", style: { width: "100%", maxWidth: 400 } }, "Share my GAP Profile result")),
+            React.createElement("button", { onClick: handleShare, className: "g-btn-s", style: { width: "100%", maxWidth: 400, color: CW.text, borderColor: CW.muted } }, "Share my GAP Profile result")),
         React.createElement("div", { className: "g-fu g-d5", style: { marginBottom: 24 } },
             React.createElement(Accordion, { title: "About the GAP Profile\u2122 methodology" },
                 React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 16 } },
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career tools tell you about personality or values, but don't explain why people who already know what they should do still aren't doing it. The GAP Profile explores four areas that may affect a career step, drawing on ideas from published research. Use your results as a starting point for reflection, not a verdict."),
+                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career tools tell you about personality or values, but don't explain why people who already know what they should do still aren't doing it. The GAP Profile explores four areas that may affect a career step, drawing on ideas from published research. Use your results as a starting point for reflection."),
                     Object.values(ARCHETYPES).map(a => (React.createElement("div", { key: a.label, style: { display: "flex", gap: 12, alignItems: "flex-start" } },
                         React.createElement("div", { style: { width: 8, height: 8, borderRadius: 2, background: a.color,
                                 flexShrink: 0, marginTop: 5 } }),
@@ -1705,11 +1537,12 @@ function ScreenResults({ state, dispatch }) {
                                 ": ",
                                 a.mechanism))))),
                     React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7, borderTop: `1px solid ${C.border}`, paddingTop: 14 } }, "Joe Markland is a career coach specialising in the knowing-doing gap — the pattern where capable people know what they should do but aren't doing it. The GAP Profile is his assessment tool, built from direct work with graduates and early-career professionals at exactly this point.")))),
-        React.createElement("p", { style: { fontSize: 10, color: CW.dim, opacity: 0.6, textAlign: "center",
+        React.createElement("p", { style: { fontSize: 11, color: CW.dim, textAlign: "center",
                 maxWidth: 440, margin: "32px auto 4px", lineHeight: 1.65 } },
             "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and will shift as your situation changes. Best used as a starting point for reflection."),
+        React.createElement("div", { style: { textAlign: "center", marginBottom: 8 } }, React.createElement("p", { style: { fontSize: 12, marginTop: 10 } }, React.createElement("a", { href: "privacy.html", style: { color: CW.muted, textDecoration: "underline" } }, "Privacy"))),
         React.createElement("div", { style: { textAlign: "center" } },
-            React.createElement("button", { onClick: () => { clearSession(); dispatch({ type: "RETAKE" }); }, style: { background: "none", border: "none", fontSize: 13, color: C.dim, cursor: "pointer", textDecoration: "none", letterSpacing: "0.02em" } }, "\u2190 Retake from the start")),
+            React.createElement("button", { onClick: () => { clearSession(); dispatch({ type: "RETAKE" }); }, style: { background: "none", border: "none", fontSize: 13, color: CW.muted, cursor: "pointer", textDecoration: "none", letterSpacing: "0.02em" } }, "\u2190 Retake from the start")),
         !noPattern && React.createElement(StickyBookingCTA, { primary: primary, primaryColor: arch.color, triggerRef: dimensionSectionRef, targetRef: bookingSectionRef })));
 }
 // ─── ROOT ──────────────────────────────────────────────────────────────────────
