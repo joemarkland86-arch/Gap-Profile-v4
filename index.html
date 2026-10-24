@@ -631,6 +631,7 @@ const INITIAL = {
     ctx: { c1: "", c2: "", c3: "", c4: "" },
     responses: {},
     email: "", firstName: "", emailSkipped: false,
+    attemptId: "",
     scores: null,
     processingComplete: false,
     resumeBannerVisible: false,
@@ -640,7 +641,8 @@ const INITIAL = {
 function reducer(state, action) {
     switch (action.type) {
         case "SET_STEP": return { ...state, step: action.step };
-        case "SET_TRANSITIONING": return { ...state, transitioning: action.val };
+        case "SET_TRANSITIONING": return { ...state, transitioning: action.val, attemptId: action.val && !state.attemptId ? newAttemptId() : state.attemptId };
+        case "SET_ATTEMPT": return { ...state, attemptId: action.attemptId };
         case "PROCESSING_DONE": return { ...state, processingComplete: true };
         case "SET_TOAST": return { ...state, toast: action.message };
         case "SET_CTX": return { ...state, ctx: { ...state.ctx, ...action.patch }, ctxErrors: {} };
@@ -658,10 +660,33 @@ function reducer(state, action) {
 }
 // ─── PERSISTENCE ───────────────────────────────────────────────────────────────
 const STORAGE_KEY = "gap-profile-v1";
+// ─── COMPLETION TRACKING ──────────────────────────────────────────────────────
+// Counts completed assessments in a Google Sheet. Sends only a random attempt ID;
+// the Apps Script records the time. Leave empty to switch tracking off.
+const TRACKING_URL = "";
+function newAttemptId() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (_) { }
+    return "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+}
+function recordCompletion(attemptId) {
+    if (!TRACKING_URL || !attemptId) return;
+    const key = "gap-completion-sent-" + attemptId;
+    try {
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, "1");
+    }
+    catch (_) { }
+    try {
+        fetch(TRACKING_URL, { method: "POST", mode: "no-cors", keepalive: true,
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ attemptId: attemptId }) }).catch(() => { });
+    }
+    catch (_) { }
+}
 function saveSession(state) {
     try {
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
-            step: state.step, ctx: state.ctx, responses: state.responses,
+            step: state.step, ctx: state.ctx, responses: state.responses, attemptId: state.attemptId,
             email: state.email, firstName: state.firstName, ts: Date.now(),
         }));
     }
@@ -879,11 +904,64 @@ function AnchorBar({ action }) {
 // ─── SCREEN 0: LANDING ─────────────────────────────────────────────────────────
 // ─── TRANSITION BRIDGE ─────────────────────────────────────────────────────────
 function TransitionBridge({ onComplete }) {
+    const [phase, setPhase] = useState("warm");
+    const reducedMotion = useRef(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const done = useCallback(onComplete, []);
     useEffect(() => {
-        document.body.style.backgroundColor = C.ink;
-        onComplete();
-    }, []);
-    return null;
+        if (reducedMotion.current) {
+            setPhase("text");
+            document.body.style.backgroundColor = C.ink;
+            const t = setTimeout(done, 1200);
+            return () => clearTimeout(t);
+        }
+        const t1 = setTimeout(() => setPhase("fading"), 100);
+        const t2 = setTimeout(() => setPhase("text"), 900);
+        const t3 = setTimeout(() => { document.body.style.backgroundColor = C.ink; }, 300);
+        const t4 = setTimeout(done, 3400);
+        return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    }, [done]);
+    const show = phase === "text";
+    const tr = (delay) => reducedMotion.current ? "none" : `opacity 0.7s ease-in ${delay}`;
+    return React.createElement("div", {
+        style: {
+            position: "fixed", inset: 0, zIndex: 9999,
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center",
+            backgroundColor: phase === "warm" ? CW.bg : C.ink,
+            transition: reducedMotion.current ? "none" : "background-color 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            fontFamily: "'DM Sans', sans-serif",
+            gap: 0,
+        }
+    },
+        React.createElement("div", {
+            style: {
+                width: 52, height: 52, borderRadius: "50%",
+                border: "3px solid #2A4060", borderTopColor: C.teal,
+                animation: show ? "spin 0.9s linear infinite" : "none",
+                marginBottom: 20,
+                opacity: show ? 1 : 0,
+                transition: tr("0s"),
+            }
+        }),
+        React.createElement("p", {
+            style: {
+                fontFamily: "Instrument Serif, Georgia, serif",
+                fontSize: 18, color: "#8BA3BC",
+                opacity: show ? 1 : 0,
+                transition: tr("0.1s"),
+                margin: 0,
+            }
+        }, "GAP Profile™"),
+        React.createElement("p", {
+            style: {
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12, color: "#8BA3BC",
+                marginTop: 10,
+                opacity: show ? 1 : 0,
+                transition: tr("0.25s"),
+            }
+        }, "Take your time. Answer honestly.")
+    );
 }
 function ScreenLanding({ dispatch }) {
     return (React.createElement("div", { className: "g-hero-glow", style: {
@@ -1339,6 +1417,9 @@ function ScreenResults({ state, dispatch }) {
         }
     };
     useEffect(() => {
+        let id = state.attemptId;
+        if (!id) { id = newAttemptId(); dispatch({ type: "SET_ATTEMPT", attemptId: id }); }
+        recordCompletion(id);
         const t1 = setTimeout(() => setArchetypeVisible(true), 400);
         const t2 = setTimeout(() => setBarsVisible(true), 600);
         return () => { clearTimeout(t1); clearTimeout(t2); };
@@ -1455,15 +1536,13 @@ function ScreenResults({ state, dispatch }) {
                         React.createElement("span", { style: { color: btnFor(d.color).fg, fontWeight: 800, fontSize: 10 } }, ({ se: "CB", ps: "RT", ia: "IF", rr: "CA" })[d.key])),
                     React.createElement("div", { style: { flex: 1, minWidth: 0 } },
                         React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 8 } },
-                            React.createElement("span", { style: { fontSize: 14, fontWeight: 600, color: isPrimary ? CW.text : CW.muted } }, d.label),
-                            isPrimary && React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: d.textColor, letterSpacing: "0.08em", textTransform: "uppercase" } }, "\u25cf lowest score")),
+                            React.createElement("span", { style: { fontSize: 14, fontWeight: 600, color: isPrimary ? CW.text : CW.muted } }, d.label)),
                         React.createElement(StatusBadge, { status: status[d.key], lowest: isPrimary })),
                     React.createElement("span", { style: { fontSize: 22, fontWeight: 800, color: isPrimary ? d.textColor : CW.muted, fontFamily: "Instrument Serif, Georgia, serif", flexShrink: 0 } }, d.score.toFixed(1))),
                 React.createElement("div", { style: { height: 6, background: CW.border, borderRadius: 3 } },
                     React.createElement("div", { className: "g-bar-fill", style: { width: barsVisible ? `${d.score * 10}%` : "0%",
                             background: d.color, transitionDelay: `${i * 0.15}s`,
-                            boxShadow: isPrimary ? `0 0 10px ${d.color}50` : "none" } })),
-                isPrimary && (React.createElement("p", { style: { fontSize: 11, color: d.textColor, marginTop: 6, fontWeight: 600 } }, "\u25B2 Your lowest score right now"))));
+                            boxShadow: isPrimary ? `0 0 10px ${d.color}50` : "none" } }))));
         })),
         !noPattern && React.createElement(PatternSection, {
             scores: scores,
