@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +9,7 @@
   <meta property="og:title" content="Stuck in Your Career? Free 5-Minute Assessment | GAP Profile&#8482;" />
   <meta property="og:description" content="Know your next career move but keep putting it off? Explore what&#39;s holding you back and choose a manageable next step. Free, five minutes, no account." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://gapprofile.co.uk" />
+  <meta property="og:url" content="https://gapprofile.co.uk/" />
   <meta property="og:image" content="https://gapprofile.co.uk/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -20,7 +20,8 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta name="twitter:title" content="Stuck in Your Career? Free 5-Minute Assessment | GAP Profile&#8482;" />
   <meta name="twitter:description" content="Know your next career move but keep putting it off? Explore what&#39;s holding you back and choose a manageable next step. Free, five minutes, no account." />
-  <link rel="canonical" href="https://gapprofile.co.uk" />
+  <link rel="canonical" href="https://gapprofile.co.uk/" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"GAP Profile","url":"https://gapprofile.co.uk/","inLanguage":"en-GB","author":{"@type":"Person","name":"Joe Markland","jobTitle":"Career coach","url":"https://joemarkland.co.uk"}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <style>
@@ -39,6 +40,7 @@
       .g-fu,.g-sr,.g-si{opacity:1!important;transform:none!important;}
     }
   </style>
+  <noscript><style>#loading{display:none}</style></noscript>
 </head>
 <body>
   <div id="loading">
@@ -49,22 +51,26 @@
   <div id="root">
     <!-- Static copy for search engines. React replaces this on load. Keep it matching the ScreenLanding copy. -->
     <main style="max-width:720px;margin:0 auto;padding:32px 24px;color:#F5F0E8;font-family:Georgia,serif;line-height:1.7">
+      <noscript><p><strong>The assessment needs JavaScript switched on in your browser.</strong></p></noscript>
+      <p id="load-fail" hidden><strong>The assessment didn’t load. Check your connection and refresh the page.</strong></p>
       <h1>You already know what you should be doing.</h1>
       <p><em>So what’s actually stopping you?</em></p>
       <p>You’ve thought about it. Probably a lot. So much that the thinking itself has started to feel like progress. But nothing’s moved.</p>
       <p><a href="https://gapprofile.co.uk/" style="color:#2EC4B6">Take the GAP Profile</a>. Free. No account. About five minutes.</p>
       <ul>
-        <li><strong>It reflects, rather than labels.</strong> It’s not a personality test. It helps you see what’s actually getting in the way.</li>
+        <li><strong>It reflects, rather than labels.</strong> It’s not a personality test. It helps you look at what might be getting in the way.</li>
         <li><strong>It’s specific to your situation.</strong> You name the career move you’re stuck on, and the questions are about that specific step.</li>
-        <li><strong>It takes about five minutes.</strong> Free. No account. No newsletter.</li>
+        <li><strong>Your answers stay with you.</strong> They’re worked out in your browser and never sent to me. No account. No newsletter.</li>
       </ul>
-      <p>The careers advice you’ve been given probably isn’t wrong. It’s just not reaching the bit that’s stuck. There’s a gap between knowing what to do and actually doing it — and it’s almost never laziness. It’s something more specific, and usually easier to work on once you can actually see it.</p>
-      <p>The GAP Profile helps you see what that is. You name the career move you’re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers.</p>
+      <p>The careers advice you’ve been given probably isn’t wrong. It’s just not reaching the bit that’s stuck. There’s a gap between knowing what to do and actually doing it, and it’s almost never laziness. It’s something more specific, and usually easier to work on once you can actually see it.</p>
+      <p>The GAP Profile helps you look for what that is. You name the career move you’re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers.</p>
       <h2>Informed by research. Designed for action.</h2>
       <p>Most career tools map who you are: your personality, values or strengths. The GAP Profile looks at something else: the gap between knowing your next move and actually making it.</p>
       <p>It draws on established psychological research into some of the reasons capable people can struggle to act, alongside direct coaching practice. It doesn’t assume every barrier is in your head. What it surfaces is a current pattern in your responses, not a fixed type. And patterns can change.</p>
       <p><small>A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses, and they can change as your situation changes.</small></p>
-      <p><small><a href="privacy.html">Privacy</a></small></p>
+      <h2>About Joe</h2>
+      <p>I’m Joe Markland, a career coach. I hold a Personal Performance Coaching Diploma from The Coaching Academy, awarded with Distinction, and a Level 6 qualification in Careers Guidance and Development. My background is in university careers and early-career professional development.</p>
+      <p><small><a href="privacy.html" style="color:#2EC4B6">Privacy</a> · <a href="blog/" style="color:#2EC4B6">Blog</a></small></p>
     </main>
   </div>
 
@@ -72,7 +78,14 @@
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 
   <script>
+    if (!window.React || !window.ReactDOM) {
+      var ldFail = document.getElementById('loading'); if (ldFail) ldFail.parentNode.removeChild(ldFail);
+      var failMsg = document.getElementById('load-fail'); if (failMsg) failMsg.hidden = false;
+    }
+  </script>
+  <script>
     (function() {
+      if (!window.React || !window.ReactDOM) return;
       const { useState, useEffect, useReducer, useRef, useCallback } = React;
 
 
@@ -149,7 +162,6 @@
       return React.createElement("svg", {
         viewBox: "-60 -30 440 380",
         width: "100%",
-        height: "auto",
         role: "img",
         "aria-label": "Radar chart showing your scores across all four dimensions: Capability Belief " + scores[0].toFixed(1) + ", Risk Tolerance " + scores[1].toFixed(1) + ", Identity Fit " + scores[2].toFixed(1) + ", Capacity " + scores[3].toFixed(1),
         style: { width: "100%", height: "auto", display: "block", margin: "0 auto", overflow: "visible" }
@@ -619,10 +631,8 @@ function buildInterpretation({ c1, c2, c3, primary, secondary }) {
     const c2n = C2_NATURAL[c2] || c2;
     const c3n = C3_NATURAL[c3] || c3;
     const pattern = getPatternInsight(c2, c3);
-    const secArch = secondary ? ARCHETYPES[secondary] : null;
     return {
         s1: `When you think about "${c1short}", your answers point most towards ${arch.label}.`,
-        s2: arch.insight + (secArch ? ` Your answers also suggest a second pattern, ${secArch.label}: ${secArch.secondaryLine}.` : ""),
         s3: pattern,
     };
 }
@@ -752,7 +762,7 @@ html,body{background:#0D1B2A;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:ro
 .g-pill{padding:10px 20px;border:1.5px solid #2A4060;border-radius:24px;background:#132031;font-family:'DM Sans',sans-serif;font-size:14px;color:#8BA3BC;cursor:pointer;transition:all 0.18s;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.15)}
 .g-pill:hover{border-color:#4A6580;color:#E8EFF6}
 .g-pill.sel{border-color:#2EC4B6;background:rgba(46,196,182,0.1);color:#2EC4B6;font-weight:600}
-.g-lk{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border:1.5px solid #2A4060;border-radius:10px;background:#132031;cursor:pointer;transition:border-color 0.15s,background 0.15s,transform 0.1s;min-width:0;font-family:Inter,sans-serif}
+.g-lk{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border:1.5px solid #2A4060;border-radius:10px;background:#132031;cursor:pointer;transition:border-color 0.15s,background 0.15s,transform 0.1s;min-width:0;font-family:'DM Sans',sans-serif}
 .g-lk:hover{border-color:#4A6580}
 .g-lk:active{transform:scale(0.95)}
 .g-lk.sel{border-color:var(--dc);background:var(--dc);box-shadow:0 0 0 2px var(--dc)}
@@ -999,9 +1009,9 @@ function ScreenLanding({ dispatch }) {
             flexDirection: "column", gap: 10
         } },
             ...[
-                ["It reflects, rather than labels.", "It’s not a personality test. It helps you see what’s actually getting in the way."],
+                ["It reflects, rather than labels.", "It’s not a personality test. It helps you look at what might be getting in the way."],
                 ["It’s specific to your situation.", "You name the career move you’re stuck on, and the questions are about that specific step."],
-                ["It takes about five minutes.", "Free. No account. No newsletter."],
+                ["Your answers stay with you.", "They’re worked out in your browser and never sent to me. No account. No newsletter."],
             ].map(function(pair, i) {
                 return React.createElement("div", { key: i, style: {
                     display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left",
@@ -1021,10 +1031,10 @@ function ScreenLanding({ dispatch }) {
         } },
             React.createElement("p", { style: {
                 fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
-            } }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it \u2014 and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
+            } }, "The careers advice you\u2019ve been given probably isn\u2019t wrong. It\u2019s just not reaching the bit that\u2019s stuck. There\u2019s a gap between knowing what to do and actually doing it, and it\u2019s almost never laziness. It\u2019s something more specific, and usually easier to work on once you can actually see it."),
             React.createElement("p", { style: {
                 fontSize: 15, color: CW.text, lineHeight: 1.8, fontWeight: 500
-            } }, "The GAP Profile helps you see what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers.")
+            } }, "The GAP Profile helps you look for what that is. You name the career move you\u2019re stuck on, answer 23 questions about that specific step, and it reflects back the pattern in your own answers.")
         ),
         React.createElement("div", { className: "g-fu g-d4", style: {
             maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
@@ -1038,6 +1048,7 @@ function ScreenLanding({ dispatch }) {
             React.createElement("p", { style: {
                 fontSize: 15, color: CW.body, lineHeight: 1.8
             } }, "It draws on established psychological research into some of the reasons capable people can struggle to act, alongside direct coaching practice. It doesn\u2019t assume every barrier is in your head. What it surfaces is a current pattern in your responses, not a fixed type. And patterns can change.")
+            ,React.createElement(AboutJoe, null)
         ),
         React.createElement("div", { className: "g-fu g-d4" },
             React.createElement("button", { className: "g-btn-p", style: { fontSize: 16, padding: "16px 44px", marginBottom: 14 },
@@ -1046,7 +1057,7 @@ function ScreenLanding({ dispatch }) {
             React.createElement("p", { style: {
                 fontSize: 11, color: CW.dim, maxWidth: 480, margin: "12px auto 0", lineHeight: 1.65
             } }, "A self-reflection tool, not a clinical assessment. Your results reflect patterns in your own responses, and they can change as your situation changes."),
-            React.createElement("p", { style: { fontSize: 12, marginTop: 10 } }, React.createElement("a", { href: "privacy.html", style: { color: CW.muted, textDecoration: "underline" } }, "Privacy"))
+            React.createElement("p", { style: { fontSize: 12, marginTop: 10 } }, React.createElement("a", { href: "privacy.html", style: { color: CW.muted, textDecoration: "underline" } }, "Privacy"), " \u00B7 ", React.createElement("a", { href: "blog/", style: { color: CW.muted, textDecoration: "underline" } }, "Blog"))
         )
     ));
 }
@@ -1058,7 +1069,7 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
     const handleNext = () => {
         const errors = {};
         if (charCount < 20 || wordCount < 4)
-            errors.c1 = "Try a short phrase that names the actual step — e.g. “move into a product role at a smaller company.”";
+            errors.c1 = "Try a short phrase that names the actual step, for example “move into a product role at a smaller company.”";
         if (!ctx.c2)
             errors.c2 = true;
         if (!ctx.c3)
@@ -1093,7 +1104,7 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
                     React.createElement("span", { style: { fontSize: 12, color: charCount >= 8 ? C.teal : C.dim } },
                         charCount,
                         " characters",
-                        (charCount < 20 || wordCount < 4) ? " — add a little more detail" : ""))),
+                        (charCount < 20 || wordCount < 4) ? " \u00B7 add a little more detail" : ""))),
             React.createElement("div", { style: {
                 opacity: charCount >= 20 && wordCount >= 4 ? 1 : 0.3,
                 transform: charCount >= 20 && wordCount >= 4 ? "translateY(0)" : "translateY(8px)",
@@ -1102,12 +1113,12 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
             } },
             React.createElement("div", { className: charCount >= 20 && wordCount >= 4 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
                 React.createElement("p", { id: "lbl-c2", style: { display: "block", fontSize: 13, fontWeight: 600,
-                        color: C.muted, marginBottom: 12 } }, "I have been aware of this gap for approximately:"),
+                        color: C.muted, marginBottom: 12 } }, "How long have you been aware of this?"),
                 React.createElement("div", { role: "group", "aria-labelledby": "lbl-c2", style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["<1mo", "Less than 1 month"], ["1-6mo", "1–6 months"], ["6-12mo", "6–12 months"], ["1yr+", "Over a year"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c2 === v ? " sel" : ""}`, "aria-pressed": ctx.c2 === v, onClick: () => dispatch({ type: "SET_CTX", patch: { c2: v } }) }, l)))),
                 ctxErrors.c2 && React.createElement("p", { style: { fontSize: 12, color: C.red, marginTop: 6 } }, "Please select one")),
             React.createElement("div", { className: charCount >= 20 && wordCount >= 4 ? "g-ctx-extra visible" : "g-ctx-extra hidden" },
                 React.createElement("p", { id: "lbl-c3", style: { display: "block", fontSize: 13, fontWeight: 600,
-                        color: C.muted, marginBottom: 12 } }, "I have attempted to close this gap how many times?"),
+                        color: C.muted, marginBottom: 12 } }, "How many times have you tried to act on it?"),
                 React.createElement("div", { role: "group", "aria-labelledby": "lbl-c3", style: { display: "flex", flexWrap: "wrap", gap: 8 } }, [["never", "Never"], ["1-2", "Once or twice"], ["3-5", "Three to five times"], ["6+", "Six or more times"]].map(([v, l]) => (React.createElement("button", { key: v, className: `g-pill${ctx.c3 === v ? " sel" : ""}`, "aria-pressed": ctx.c3 === v, onClick: () => dispatch({ type: "SET_CTX", patch: { c3: v } }) }, l)))),
                 ctxErrors.c3 && React.createElement("p", { style: { fontSize: 12, color: C.red, marginTop: 6 } }, "Please select one")),
             React.createElement("div", null,
@@ -1229,19 +1240,20 @@ function CGIRing({ cgi, color }) {
                 React.createElement("span", { style: { fontSize: 10, color: CW.muted, marginTop: 3 } }, "/ 10"))),
         React.createElement("div", { style: { textAlign: "center" } },
             React.createElement("p", { style: { fontSize: 12, fontWeight: 700, color: CW.muted, letterSpacing: "0.08em", textTransform: "uppercase" } }, "GAP SCORE"),
-            React.createElement("p", { style: { fontSize: 11, color: CW.dim } }, "Your overall readiness. Higher means more ready."))));
+            React.createElement("p", { style: { fontSize: 11, color: CW.dim } }, "The average of your four areas. A summary to read alongside the bars."))));
 }
-function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
+function StickyBookingCTA({ primary, primaryColor, targetRef }) {
     const [visible, setVisible] = useState(false);
     useEffect(() => {
-        const node = triggerRef && triggerRef.current;
-        if (!node) return;
+        // A way back to the workbook card once it has been scrolled past. Never shown before the card has been reached.
+        const offer = document.getElementById("workbook-offer");
+        if (!offer) return;
         const observer = new IntersectionObserver(([entry]) => {
-            setVisible(!entry.isIntersecting);
-        }, { threshold: 0.15 });
-        observer.observe(node);
+            setVisible(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+        }, { threshold: 0 });
+        observer.observe(offer);
         return () => observer.disconnect();
-    }, [triggerRef]);
+    }, []);
     const cta = CTA_DATA[primary];
     if (!cta || !cta.workbookAvailable) return null;
     const btn = btnFor(primaryColor);
@@ -1264,7 +1276,7 @@ function StickyBookingCTA({ primary, primaryColor, triggerRef, targetRef }) {
         React.createElement("button", { onClick: scrollToWorkbook, style: {
                 width: "100%", maxWidth: 480, border: "none", borderRadius: 12,
                 padding: "14px 20px", background: btn.bg, color: btn.fg,
-                fontSize: 15, fontWeight: 700, cursor: "pointer",
+                fontFamily: "inherit", fontSize: 15, fontWeight: 700, cursor: "pointer",
             } }, `Get ${cta.workbookTitle} \u00B7 \u00A39.99 \u2192`)), document.body);
 }
 // ─── ACCORDION ─────────────────────────────────────────────────────────────────
@@ -1405,7 +1417,6 @@ function ScreenResults({ state, dispatch }) {
     const { scores, ctx, firstName } = state;
     const [archetypeVisible, setArchetypeVisible] = useState(false);
     const [barsVisible, setBarsVisible] = useState(false);
-    const dimensionSectionRef = useRef(null);
     const bookingSectionRef = useRef(null);
     const handleShare = () => {
         const archName = selectPattern(scores) === "P8" ? "No single pattern" : ARCHETYPES[scores.primary].label;
@@ -1458,7 +1469,7 @@ function ScreenResults({ state, dispatch }) {
         navigator.clipboard.writeText(text).then(() => {
             dispatch({ type: "SET_TOAST", message: "Profile summary copied to clipboard" });
         }).catch(() => {
-            dispatch({ type: "SET_TOAST", message: "Copy failed — please select and copy manually" });
+            dispatch({ type: "SET_TOAST", message: "Copy failed. Please select and copy manually" });
         });
     };
     return (React.createElement("div", { className: "g-screen-enter", style: { maxWidth: 720, margin: "0 auto", padding: "40px 24px calc(96px + var(--safe-bottom))", color: CW.body } },
@@ -1512,7 +1523,7 @@ function ScreenResults({ state, dispatch }) {
             React.createElement("p", { style: {
                 fontFamily: "’DM Sans’, sans-serif",
                 fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9"
-            } }, "The score is useful, but it’s the four bars that tell you most. Lower scores aren’t a verdict — they’re a clue about where the friction probably is right now.")
+            } }, "The score is useful, but it’s the four bars that tell you most. A lower score is a clue about where the friction might be right now. Treat it as somewhere to start looking.")
         ),
         !noPattern && React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
                 marginBottom: 20, letterSpacing: "0.04em" } },
@@ -1525,7 +1536,7 @@ function ScreenResults({ state, dispatch }) {
                 React.createElement("p", { style: { textAlign: "center", fontSize: 12, color: CW.dim, marginTop: 4 } }, "The further from centre, the stronger that dimension")),
             React.createElement("div", { style: { display: "flex", justifyContent: "center", width: "100%" } },
                 React.createElement(CGIRing, { cgi: cgi, color: arch.color }))),
-        React.createElement("div", { ref: dimensionSectionRef, className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
+        React.createElement("div", { className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
                 gap: 14, marginBottom: 32, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } }, dimRows.map((d, i) => {
             const isPrimary = !noPattern && d.key === primary && scores[d.key] < 5;
             return (React.createElement("div", { key: d.key, className: isPrimary ? "g-pg" : "", style: { borderRadius: 10, padding: "12px 16px",
@@ -1546,6 +1557,11 @@ function ScreenResults({ state, dispatch }) {
                             background: d.color, transitionDelay: `${i * 0.15}s`,
                             boxShadow: isPrimary ? `0 0 10px ${d.color}50` : "none" } }))));
         })),
+        scores.eb !== undefined && scores.eb < 3 && React.createElement("div", { className: "g-fu g-d3 g-eb-flag", style: { marginBottom: 24 } },
+            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", color: "#8A5A00",
+                    textTransform: "uppercase", marginBottom: 8 } }, "Something worth naming first"),
+            React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.65 } },
+                "Some of your answers suggest access, opportunity or other circumstances may be making this harder. These questions focus on what\u2019s going on for you personally, so they can\u2019t fully capture that. Read the suggestions below with that in mind.")),
         !noPattern && React.createElement(PatternSection, {
             scores: scores,
             primary: primary,
@@ -1559,30 +1575,23 @@ function ScreenResults({ state, dispatch }) {
                     color: CW.text, marginBottom: 14 } },
                 "What your answers suggest"),
             React.createElement("p", { style: { fontSize: 15, color: CW.body, lineHeight: 1.75, marginBottom: 10 } }, interp.s1),
-            React.createElement("p", { style: { fontSize: 15, color: CW.text, lineHeight: 1.75, marginBottom: 10 } }, interp.s2),
             React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.65, fontStyle: "italic",
                     borderTop: "1px solid " + CW.border, paddingTop: 12 } }, interp.s3)),
-        (ctx.c4 === "transition" || ctx.c4 === "reinvention") && (scores.se >= 5.0 && scores.se <= 6.5 || scores.ps >= 5.0 && scores.ps <= 6.5 || scores.ia >= 5.0 && scores.ia <= 6.5 || scores.rr >= 5.0 && scores.rr <= 6.5) && React.createElement("div", { className: "g-fu g-card", style: { background: "rgba(46,196,182,0.04)", border: "1px solid rgba(46,196,182,0.15)", marginBottom: 24 } },
+        (ctx.c4 === "transition" || ctx.c4 === "reinvention") && (scores.se >= 5.0 && scores.se <= 6.5 || scores.ps >= 5.0 && scores.ps <= 6.5 || scores.ia >= 5.0 && scores.ia <= 6.5 || scores.rr >= 5.0 && scores.rr <= 6.5) && React.createElement("div", { className: "g-fu", style: { background: "rgba(46,196,182,0.04)", border: "1px solid rgba(46,196,182,0.15)", borderRadius: 10, padding: "16px 20px", marginBottom: 24 } },
             React.createElement("p", { style: { fontSize: 13, color: CW.muted, lineHeight: 1.65 } },
                 React.createElement("strong", { style: { color: CW.text } }, "Note: "),
                 "You indicated this is a ",
                 ctx.c4 === "reinvention" ? "complete reinvention" : "significant transition",
-                ". The scores above should be read in that context. Thresholds that would be fine for a small adjustment carry more weight at this scale of change.")),
-        scores.eb !== undefined && scores.eb < 3 && React.createElement("div", { className: "g-fu g-d3 g-eb-flag", style: { marginBottom: 24 } },
-            React.createElement("p", { style: { fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", color: "#8A5A00",
-                    textTransform: "uppercase", marginBottom: 8 } }, "Something worth naming first"),
-            React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.65 } },
-                "Some of your answers suggest access, opportunity or other circumstances may be making this harder. These questions focus on what\u2019s going on for you personally, so they can\u2019t fully capture that. Read the suggestions below with that in mind.")),
+                ". Bigger moves tend to ask more of you, so a middling score may matter more here than it would for a small adjustment.")),
         oe < 5 && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: 10, padding: "16px 20px" } },
             React.createElement("p", { style: { fontSize: 14, color: CW.muted, fontStyle: "italic", lineHeight: 1.7 } },
                 "One thing in your answers worth noting: part of what\u2019s holding you back may be uncertainty about whether this action will actually get you the result you want, not just whether you can do it.")),
-        secArch && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: C.surface, border: "1px solid rgba(245,158,11,0.25)", borderRadius: 14, padding: "24px 28px" } },
-            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 } }, "A secondary pattern"),
-            React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20, color: C.text, marginBottom: 10 } }, secArch.label),
-            React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.65, marginBottom: 10 } },
-                secArch.insight.length > 90 ? secArch.insight.slice(0, 90) + "\u2026" : secArch.insight),
-            React.createElement("p", { style: { fontSize: 13, color: C.muted, fontStyle: "italic", lineHeight: 1.7 } },
-                "The interaction between your primary and secondary patterns is often where the most important coaching work happens.")),
+        secArch && React.createElement("div", { className: "g-fu g-d3", style: { marginBottom: 24, background: CW.surface, border: "1px solid " + CW.border, borderLeft: `4px solid ${secArch.color}`, borderRadius: 16, padding: "24px 28px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
+            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: inkFor(secArch.color), letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 } }, "A second pattern"),
+            React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20, color: CW.text, marginBottom: 10 } }, secArch.label),
+            React.createElement("p", { style: { fontSize: 15, color: CW.body, lineHeight: 1.7, marginBottom: 10 } }, secArch.insight),
+            React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.65 } },
+                "This area also came out on the low side in your answers. Keep it in view alongside the first.")),
         React.createElement("div", { ref: bookingSectionRef },
             noPattern
                 ? React.createElement(NoPatternNextSteps, { lowDims: lowDims, noneLow: noneLow })
@@ -1617,14 +1626,14 @@ function ScreenResults({ state, dispatch }) {
                                 a.theory,
                                 ": ",
                                 a.mechanism))))),
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7, borderTop: `1px solid ${C.border}`, paddingTop: 14 } }, "Joe Markland is a career coach specialising in the knowing-doing gap — the pattern where capable people know what they should do but aren't doing it. The GAP Profile is his assessment tool, built from direct work with graduates and early-career professionals at exactly this point.")))),
+                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7, borderTop: `1px solid ${C.border}`, paddingTop: 14 } }, "Joe Markland is a career coach specialising in the knowing-doing gap: the pattern where capable people know what they should do but aren't doing it. The GAP Profile is his assessment tool, built from direct work with graduates and early-career professionals at exactly this point.")))),
         React.createElement("p", { style: { fontSize: 11, color: CW.dim, textAlign: "center",
                 maxWidth: 440, margin: "32px auto 4px", lineHeight: 1.65 } },
-            "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and will shift as your situation changes. Best used as a starting point for reflection."),
+            "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and can shift as your situation changes. Best used as a starting point for reflection."),
         React.createElement("div", { style: { textAlign: "center", marginBottom: 8 } }, React.createElement("p", { style: { fontSize: 12, marginTop: 10 } }, React.createElement("a", { href: "privacy.html", style: { color: CW.muted, textDecoration: "underline" } }, "Privacy"))),
         React.createElement("div", { style: { textAlign: "center" } },
             React.createElement("button", { onClick: () => { clearSession(); dispatch({ type: "RETAKE" }); }, style: { background: "none", border: "none", fontSize: 13, color: CW.muted, cursor: "pointer", textDecoration: "none", letterSpacing: "0.02em" } }, "\u2190 Retake from the start")),
-        !noPattern && React.createElement(StickyBookingCTA, { primary: primary, primaryColor: arch.color, triggerRef: dimensionSectionRef, targetRef: bookingSectionRef })));
+        !noPattern && React.createElement(StickyBookingCTA, { primary: primary, primaryColor: arch.color, targetRef: bookingSectionRef })));
 }
 // ─── ROOT ──────────────────────────────────────────────────────────────────────
 function GAPProfile() {
