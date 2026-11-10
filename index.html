@@ -406,7 +406,7 @@ return "P8";
 
 function stripEnd(t) { return (t || "").trim().replace(/[.!?;:,\s]+$/, ""); }
 function clip(t, n) { if (t.length <= n) return t; var c = t.slice(0, n); var sp = c.lastIndexOf(" "); return (sp > n * 0.6 ? c.slice(0, sp) : c).replace(/[.,;:\s]+$/, "") + "\u2026"; }
-function PatternSection({ scores, primary, ctx }) {
+function PatternSection({ scores, primary, ctx, closing }) {
 if (!scores || !ctx) return null;
 var arch = ARCHETYPES[primary];
 var archColor = arch.color;
@@ -436,7 +436,11 @@ return React.createElement("div", {
     } }, contextLine),
     React.createElement("p", { style: {
         fontSize: 15, color: CW.text, lineHeight: 1.75, fontWeight: 500
-    } }, patternText)
+    } }, patternText),
+    closing && React.createElement("p", { style: {
+        fontSize: 14, color: CW.muted, lineHeight: 1.65, fontStyle: "italic",
+        borderTop: "1px solid " + CW.border, paddingTop: 12, marginTop: 14
+    } }, closing)
 );
 }
 
@@ -633,14 +637,10 @@ function getPatternInsight(c2, c3) {
     return "Looking at what you have and haven\u2019t tried so far, what would make a next step more workable?";
 }
 function buildInterpretation({ c1, c2, c3, primary, secondary }) {
-    const arch = ARCHETYPES[primary];
-    const c1clean = stripEnd(c1);
-    const c1short = clip(c1clean, 55);
     const c2n = C2_NATURAL[c2] || c2;
     const c3n = C3_NATURAL[c3] || c3;
     const pattern = getPatternInsight(c2, c3);
     return {
-        s1: `When you think about "${c1short}", your answers point most towards ${arch.label}.`,
         s3: pattern,
     };
 }
@@ -937,7 +937,7 @@ function TransitionBridge({ onComplete }) {
         const t1 = setTimeout(() => setPhase("fading"), 100);
         const t2 = setTimeout(() => setPhase("text"), 900);
         const t3 = setTimeout(() => { document.body.style.backgroundColor = C.ink; }, 300);
-        const t4 = setTimeout(done, 3400);
+        const t4 = setTimeout(done, 2400);
         return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
     }, [done]);
     const show = phase === "text";
@@ -1290,12 +1290,12 @@ function StickyBookingCTA({ primary, primaryColor, targetRef }) {
 // ─── ACCORDION ─────────────────────────────────────────────────────────────────
 function Accordion({ title, children }) {
     const [open, setOpen] = useState(false);
-    return (React.createElement("div", { style: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14 } },
+    return (React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 14 } },
         React.createElement("button", { onClick: () => setOpen(!open), "aria-expanded": open, style: { width: "100%", padding: "20px 24px", background: "none", border: "none",
                 display: "flex", justifyContent: "space-between", alignItems: "center",
                 cursor: "pointer", textAlign: "left" } },
-            React.createElement("span", { style: { fontSize: 15, fontWeight: 600, color: C.text } }, title),
-            React.createElement("span", { style: { fontSize: 18, color: C.muted, transform: open ? "rotate(180deg)" : "none",
+            React.createElement("span", { style: { fontSize: 15, fontWeight: 600, color: CW.text } }, title),
+            React.createElement("span", { style: { fontSize: 18, color: CW.muted, transform: open ? "rotate(180deg)" : "none",
                     transition: "transform 0.3s" } }, "\u2304")),
         React.createElement("div", { className: "g-acc", style: { maxHeight: open ? 2000 : 0, opacity: open ? 1 : 0 } },
             React.createElement("div", { style: { padding: "0 24px 24px" } }, children))));
@@ -1422,7 +1422,7 @@ function NoPatternNextSteps({ lowDims, noneLow }) {
         React.createElement(AboutJoe, null));
 }
 function ScreenResults({ state, dispatch }) {
-    const { scores, ctx, firstName } = state;
+    const { scores, ctx } = state;
     const [archetypeVisible, setArchetypeVisible] = useState(false);
     const [barsVisible, setBarsVisible] = useState(false);
     const bookingSectionRef = useRef(null);
@@ -1495,10 +1495,9 @@ function ScreenResults({ state, dispatch }) {
                     margin: "0 auto 24px",
                     opacity: archetypeVisible ? 1 : 0, transition: "opacity 0.6s ease 0.2s" } }),
             React.createElement("p", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: "clamp(17px,2.5vw,22px)",
-                    color: CW.body, fontStyle: "italic", maxWidth: 520, margin: "0 auto 14px", lineHeight: 1.5,
+                    color: CW.body, fontStyle: "italic", maxWidth: 520, margin: "0 auto 32px", lineHeight: 1.5,
                     opacity: archetypeVisible ? 1 : 0, transition: "opacity 0.6s ease 0.25s" } },
                 arch.insight),
-            React.createElement("p", { style: { fontSize: 14, color: CW.muted, marginBottom: 32, opacity: archetypeVisible ? 1 : 0, transition: "opacity 0.5s ease 0.3s" } }, firstName ? `Here's what we found, ${firstName}.` : "Here's what your results show."),
             React.createElement("div", { style: { background: CW.surface, border: `1px solid ${arch.color}40`,
                     borderLeft: `4px solid ${arch.color}`, borderRadius: 12,
                     padding: "18px 24px", textAlign: "left", maxWidth: 560, margin: "0 auto",
@@ -1524,15 +1523,15 @@ function ScreenResults({ state, dispatch }) {
                 fontFamily: "Instrument Serif, Georgia, serif",
                 fontSize: "clamp(20px, 3vw, 22px)",
                 color: "#1A1F3D", marginBottom: 12
-            } }, "A quick note on what you’re about to see"),
+            } }, "How to read this"),
             React.createElement("p", { style: {
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9", marginBottom: 10
-            } }, "You’ll get a Gap Score out of 10, and a breakdown across four areas."),
+            } }, "Each of the four areas is scored out of 10 from your own answers about this move. Higher means that area looks less in the way. Anything under 5 is flagged as low."),
             React.createElement("p", { style: {
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9"
-            } }, "The score is useful, but it’s the four bars that tell you most. A lower score is a clue about where the friction might be right now. Treat it as somewhere to start looking.")
+            } }, "A lower score is a clue about where the friction might be right now. Treat it as somewhere to start looking.")
         ),
         (!noPattern || !noneLow) && React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
                 marginBottom: 20, letterSpacing: "0.04em" } },
@@ -1542,7 +1541,7 @@ function ScreenResults({ state, dispatch }) {
             React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
                 React.createElement("div", { style: { width: "100%", maxWidth: (typeof window !== "undefined" && window.innerWidth < 600) ? 340 : 380, padding: 8, margin: "0 auto" } },
                     React.createElement(SVGRadar, { data: radarData, color: arch.color })),
-                React.createElement("p", { style: { textAlign: "center", fontSize: 12, color: CW.dim, marginTop: 4 } }, "The further from centre, the stronger that dimension")),
+                React.createElement("p", { style: { textAlign: "center", fontSize: 12, color: CW.dim, marginTop: 4 } }, "The further from the centre, the higher you rated that area")),
             React.createElement("div", { style: { display: "flex", justifyContent: "center", width: "100%" } },
                 React.createElement(CGIRing, { cgi: cgi, color: arch.color }))),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
@@ -1574,18 +1573,9 @@ function ScreenResults({ state, dispatch }) {
         !noPattern && React.createElement(PatternSection, {
             scores: scores,
             primary: primary,
-            ctx: ctx
+            ctx: ctx,
+            closing: interp.s3
         }),
-        !noPattern && React.createElement("div", { className: "g-fu g-d3", style: { borderLeft: `4px solid ${arch.color}`,
-                marginBottom: 24, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
-            React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: archLabelColor, letterSpacing: "0.08em",
-                    textTransform: "uppercase", marginBottom: 10 } }, "What this means for you"),
-            React.createElement("h3", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20,
-                    color: CW.text, marginBottom: 14 } },
-                "What your answers suggest"),
-            React.createElement("p", { style: { fontSize: 15, color: CW.body, lineHeight: 1.75, marginBottom: 10 } }, interp.s1),
-            React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.65, fontStyle: "italic",
-                    borderTop: "1px solid " + CW.border, paddingTop: 12 } }, interp.s3)),
         (ctx.c4 === "transition" || ctx.c4 === "reinvention") && (scores.se >= 5.0 && scores.se <= 6.5 || scores.ps >= 5.0 && scores.ps <= 6.5 || scores.ia >= 5.0 && scores.ia <= 6.5 || scores.rr >= 5.0 && scores.rr <= 6.5) && React.createElement("div", { className: "g-fu", style: { background: "rgba(46,196,182,0.04)", border: "1px solid rgba(46,196,182,0.15)", borderRadius: 10, padding: "16px 20px", marginBottom: 24 } },
             React.createElement("p", { style: { fontSize: 13, color: CW.muted, lineHeight: 1.65 } },
                 React.createElement("strong", { style: { color: CW.text } }, "Note: "),
@@ -1625,17 +1615,17 @@ function ScreenResults({ state, dispatch }) {
         React.createElement("div", { className: "g-fu g-d5", style: { marginBottom: 24 } },
             React.createElement(Accordion, { title: "About the GAP Profile\u2122 methodology" },
                 React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 16 } },
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career tools tell you about personality or values, but don't explain why people who already know what they should do still aren't doing it. The GAP Profile explores four areas that may affect a career step, drawing on ideas from published research. Use your results as a starting point for reflection."),
+                    React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.7 } }, "The GAP Profile\u2122 was developed to address a specific problem: most career tools tell you about personality or values, but don't explain why people who already know what they should do still aren't doing it. The GAP Profile explores four areas that may affect a career step, drawing on ideas from published research. Use your results as a starting point for reflection."),
                     Object.values(ARCHETYPES).map(a => (React.createElement("div", { key: a.label, style: { display: "flex", gap: 12, alignItems: "flex-start" } },
                         React.createElement("div", { style: { width: 8, height: 8, borderRadius: 2, background: a.color,
                                 flexShrink: 0, marginTop: 5 } }),
                         React.createElement("div", null,
-                            React.createElement("p", { style: { fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 2 } }, a.label),
-                            React.createElement("p", { style: { fontSize: 12, color: C.muted } },
+                            React.createElement("p", { style: { fontSize: 13, fontWeight: 700, color: CW.text, marginBottom: 2 } }, a.label),
+                            React.createElement("p", { style: { fontSize: 12, color: CW.body } },
                                 a.theory,
                                 ": ",
                                 a.mechanism))))),
-                    React.createElement("p", { style: { fontSize: 14, color: C.muted, lineHeight: 1.7, borderTop: `1px solid ${C.border}`, paddingTop: 14 } }, "Joe Markland is a career coach specialising in the knowing-doing gap: the pattern where capable people know what they should do but aren't doing it. The GAP Profile is his assessment tool, built from direct work with graduates and early-career professionals at exactly this point.")))),
+                    React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.7, borderTop: `1px solid ${CW.border}`, paddingTop: 14 } }, "Joe Markland is a career coach specialising in the knowing-doing gap: the pattern where capable people know what they should do but aren't doing it. The GAP Profile is his assessment tool, built from direct work with graduates and early-career professionals at exactly this point.")))),
         React.createElement("p", { style: { fontSize: 11, color: CW.dim, textAlign: "center",
                 maxWidth: 440, margin: "32px auto 4px", lineHeight: 1.65 } },
             "A self-report reflection tool, not a clinical assessment. Scores reflect your current patterns, not fixed traits, and can shift as your situation changes. Best used as a starting point for reflection."),
