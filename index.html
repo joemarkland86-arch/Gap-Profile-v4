@@ -447,11 +447,19 @@ const NO_PATTERN_COPY = {
         title: "Your answers don’t point to one clear barrier.",
         body: "You scored reasonably well across all four areas. That might mean you’re closer to ready than it feels, or that something outside these questions is in the way. Pick the smallest version of this move you could do in the next seven days, and notice what, if anything, stops you.",
     },
-    mixed: {
-        title: "A few things are in play at once.",
-        body: "No single area stands out, which makes the next move harder to see. Pick the one area below that feels most true for you and start there. You know your situation better than any set of questions does.",
-    },
 };
+const DIM_LABEL = { se: "Capability Belief", ps: "Risk Tolerance", ia: "Identity Fit", rr: "Capacity" };
+// Wording for results where areas are low but no single pattern is named. lowDims is sorted lowest first.
+function lowAreasCopy(lowDims, scores) {
+    const n = lowDims.map(k => DIM_LABEL[k]);
+    if (lowDims.length >= 4)
+        return { names: "All four areas", title: "All four areas came out low.", body: "That can make the next move hard to see. Start with whichever sounds most like you." };
+    if (lowDims.length === 3)
+        return { names: n[0] + ", " + n[1] + " and " + n[2], title: "Three areas stand out: " + n[0] + ", " + n[1] + " and " + n[2] + ".", body: "Start with whichever sounds most like you." };
+    const level = scores[lowDims[0]] === scores[lowDims[1]];
+    return { names: n[0] + " and " + n[1], title: "Two areas stand out: " + n[0] + " and " + n[1] + ".",
+        body: "They came out " + (level ? "level" : "close together") + " in your answers. Read both below and start with whichever sounds more like you." };
+}
 const WORKBOOK_CHOOSER = {
     se: "For when doubt about your capability is the thing holding you back.",
     ps: "For when what could go wrong is weighing on you. Helps you make the risk specific enough to judge.",
@@ -1419,7 +1427,8 @@ function ScreenResults({ state, dispatch }) {
     const [barsVisible, setBarsVisible] = useState(false);
     const bookingSectionRef = useRef(null);
     const handleShare = () => {
-        const archName = selectPattern(scores) === "P8" ? "No single pattern" : ARCHETYPES[scores.primary].label;
+        const shareLow = ["se", "ps", "ia", "rr"].filter(k => scores[k] < 5).sort((a, b) => scores[a] - scores[b]);
+        const archName = selectPattern(scores) !== "P8" ? ARCHETYPES[scores.primary].label : shareLow.length ? lowAreasCopy(shareLow, scores).names : "No single pattern";
         const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free assessment for exploring what might be getting in the way of a career move you keep putting off.\n\nhttps://gapprofile.co.uk`;
         if (navigator.share) {
             navigator.share({ title: `My GAP Profile: ${archName}`, text: shareText }).catch(() => {});
@@ -1441,10 +1450,10 @@ function ScreenResults({ state, dispatch }) {
         return null;
     const { se, ps, ia, rr, oe, cgi, primary, secondary, allCritical, status, radarData } = scores;
     const noPattern = selectPattern(scores) === "P8";
-    const lowDims = ["se", "ps", "ia", "rr"].filter(k => scores[k] < 5);
+    const lowDims = ["se", "ps", "ia", "rr"].filter(k => scores[k] < 5).sort((a, b) => scores[a] - scores[b]);
     const noneLow = lowDims.length === 0;
-    const npCopy = noneLow ? NO_PATTERN_COPY.clear : NO_PATTERN_COPY.mixed;
-    const arch = noPattern ? { label: "No single pattern", color: CW.text, insight: npCopy.body } : ARCHETYPES[primary];
+    const npCopy = noneLow ? NO_PATTERN_COPY.clear : lowAreasCopy(lowDims, scores);
+    const arch = noPattern ? { label: noneLow ? "No single pattern" : npCopy.names, color: CW.text, insight: npCopy.body } : ARCHETYPES[primary];
     const secArch = secondary && !noPattern ? ARCHETYPES[secondary] : null;
     const interp = buildInterpretation({ c1: ctx.c1, c2: ctx.c2, c3: ctx.c3, primary, secondary });
     const showLongFlag = ctx.c2 === "1yr+";
@@ -1517,17 +1526,17 @@ function ScreenResults({ state, dispatch }) {
                 color: "#1A1F3D", marginBottom: 12
             } }, "A quick note on what you’re about to see"),
             React.createElement("p", { style: {
-                fontFamily: "’DM Sans’, sans-serif",
+                fontFamily: "'DM Sans', sans-serif",
                 fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9", marginBottom: 10
             } }, "You’ll get a Gap Score out of 10, and a breakdown across four areas."),
             React.createElement("p", { style: {
-                fontFamily: "’DM Sans’, sans-serif",
+                fontFamily: "'DM Sans', sans-serif",
                 fontSize: 15, lineHeight: 1.55, color: "#1A1F3DD9"
             } }, "The score is useful, but it’s the four bars that tell you most. A lower score is a clue about where the friction might be right now. Treat it as somewhere to start looking.")
         ),
-        !noPattern && React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
+        (!noPattern || !noneLow) && React.createElement("p", { style: { fontSize: 12, color: CW.muted, textAlign: "center",
                 marginBottom: 20, letterSpacing: "0.04em" } },
-                "Your lowest score is highlighted below"),
+                noPattern ? "Your lowest scores are highlighted below" : "Your lowest score is highlighted below"),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "grid",
                 gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24, marginBottom: 32, alignItems: "center" } },
             React.createElement("div", { style: { background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } },
@@ -1538,7 +1547,7 @@ function ScreenResults({ state, dispatch }) {
                 React.createElement(CGIRing, { cgi: cgi, color: arch.color }))),
         React.createElement("div", { className: "g-fu g-d2", style: { display: "flex", flexDirection: "column",
                 gap: 14, marginBottom: 32, background: CW.surface, border: "1px solid " + CW.border, borderRadius: 16, padding: 28, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" } }, dimRows.map((d, i) => {
-            const isPrimary = !noPattern && d.key === primary && scores[d.key] < 5;
+            const isPrimary = noPattern ? lowDims.indexOf(d.key) !== -1 : (d.key === primary && scores[d.key] < 5);
             return (React.createElement("div", { key: d.key, className: isPrimary ? "g-pg" : "", style: { borderRadius: 10, padding: "12px 16px",
                     background: isPrimary ? (d.color + "08") : "transparent",
                     border: isPrimary ? `1px solid ${d.color}30` : "1px solid transparent",
@@ -1550,7 +1559,7 @@ function ScreenResults({ state, dispatch }) {
                     React.createElement("div", { style: { flex: 1, minWidth: 0 } },
                         React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 8 } },
                             React.createElement("span", { style: { fontSize: 14, fontWeight: 600, color: isPrimary ? CW.text : CW.muted } }, d.label)),
-                        React.createElement(StatusBadge, { status: status[d.key], lowest: isPrimary })),
+                        React.createElement(StatusBadge, { status: status[d.key], lowest: isPrimary && (!noPattern || scores[d.key] === scores[lowDims[0]]) })),
                     React.createElement("span", { style: { fontSize: 22, fontWeight: 800, color: isPrimary ? d.textColor : CW.muted, fontFamily: "Instrument Serif, Georgia, serif", flexShrink: 0 } }, d.score.toFixed(1))),
                 React.createElement("div", { style: { height: 6, background: CW.border, borderRadius: 3 } },
                     React.createElement("div", { className: "g-bar-fill", style: { width: barsVisible ? `${d.score * 10}%` : "0%",
