@@ -377,6 +377,7 @@ if (below5.length >= 2) {
     var highestOfTwo = scores[twoLowest[1]];
     var above = dims.filter(function(d) { return twoLowest.indexOf(d) === -1; });
     var lowestAbove = Math.min.apply(null, above.map(function(d) { return scores[d]; }));
+    if (scores[twoLowest[0]] === scores[twoLowest[1]]) return "P8";
     if ((lowestAbove - highestOfTwo) >= 0.7) {
         if (twoLowest.indexOf("se") !== -1 && twoLowest.indexOf("ps") !== -1) return "P5";
         if (twoLowest.indexOf("ia") !== -1 && twoLowest.indexOf("rr") !== -1) return "P7";
@@ -1408,7 +1409,7 @@ function ScreenResults({ state, dispatch }) {
     const bookingSectionRef = useRef(null);
     const handleShare = () => {
         const archName = selectPattern(scores) === "P8" ? "No single pattern" : ARCHETYPES[scores.primary].label;
-        const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free assessment that shows what's actually stopping you from making the career move you already know you should make.\n\nhttps://gapprofile.co.uk`;
+        const shareText = `GAP Profile result: ${archName} (${scores.cgi}/10)\n\nA free assessment for exploring what might be getting in the way of a career move you keep putting off.\n\nhttps://gapprofile.co.uk`;
         if (navigator.share) {
             navigator.share({ title: `My GAP Profile: ${archName}`, text: shareText }).catch(() => {});
         } else {
