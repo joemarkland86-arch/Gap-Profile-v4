@@ -479,7 +479,7 @@ const CTA_DATA = {
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/Amq9b",
         workbookTitle: "The Safety Seeker Workbook",
-        workbookDesc: "A structured process for looking hard at the risk, weighing up the costs and benefits of staying put, and planning a next step you can manage.",
+        workbookDesc: "Name the concern, examine the risk and safeguards, then plan a manageable action that tests what you expect to happen. Includes a concern map, action ladder and if-then plan.",
     },
     se: {
         headline: "Doubt about your capability is the loudest thing in your answers.",
@@ -489,7 +489,7 @@ const CTA_DATA = {
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/ivd6J",
         workbookTitle: "The Capable Doubter Workbook",
-        workbookDesc: "A structured process for looking fairly at your evidence, spotting anything you still need to develop, and planning a practical next step.",
+        workbookDesc: "Compare your experience with the way you explain it away, record what you contributed and plan a small test of your next step. Includes the Two CVs, Mastery Log and Action Experiment.",
     },
     ia: {
         headline: "Does this step fit who you are?",
@@ -499,7 +499,7 @@ const CTA_DATA = {
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/mMu9d",
         workbookTitle: "The Unclaimed Self Workbook",
-        workbookDesc: "A structured process for exploring how well this direction fits you and planning a small step to test it.",
+        workbookDesc: "Turn a possible direction into small experiments. Record what the work is actually like, what fits and what remains uncertain before deciding what to explore next.",
     },
     rr: {
         headline: "Your capacity is stretched right now.",
@@ -509,7 +509,7 @@ const CTA_DATA = {
         workbookAvailable: true,
         workbookUrl: "https://payhip.com/b/eIOkf",
         workbookTitle: "The Overdrawn Self Workbook",
-        workbookDesc: "A structured process for finding your real bottleneck, scaling action to actual capacity, and removing friction before it kills momentum.",
+        workbookDesc: "Identify what is squeezing career action out of your week, choose a step that fits your capacity and plan around the obstacle. Start with the Resource Audit, Minimum Viable Action and From Insight to Action.",
     },
 };
 // ─── QUESTIONS ─────────────────────────────────────────────────────────────────
@@ -1315,7 +1315,7 @@ function SessionOption() {
     return React.createElement("div", { style: { marginTop: 16, border: "1px solid " + CW.border, borderRadius: 14, padding: "20px 22px", display: "flex", flexDirection: "column", gap: 10 } },
         React.createElement("p", { style: { fontSize: 11, fontWeight: 700, color: CW.muted, letterSpacing: "0.1em", textTransform: "uppercase" } }, "GAP Profile Session \u00B7 \u00A3125"),
         React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.6 } },
-            "A 60-minute coaching conversation about what matters to you and what you\u2019d like to work towards. Your GAP Profile results can be used as a starting point."),
+            "Bring a career decision, a conversation you are putting off or a move you want to explore. In 60 minutes on Zoom, we can examine your assumptions and circumstances and work through what you want to do next. You can book with or without a GAP Profile result."),
         React.createElement("a", {
             href: DEBRIEF_URL,
             target: "_blank",
@@ -1340,7 +1340,8 @@ function NextSteps({ primary, archColor, scores, question }) {
             target: "_blank",
             rel: "noopener noreferrer",
             style: { display: "block", textAlign: "center", padding: "14px 16px", background: btn.bg, color: btn.fg, fontWeight: 700, fontSize: 15, borderRadius: 10, textDecoration: "none", marginTop: 4 }
-        }, "Get the workbook \u2192")) : null;
+        }, "View the workbook \u2192"),
+        React.createElement("p", { style: { fontSize: 13, color: CW.body, lineHeight: 1.6 } }, "Downloadable PDF. Print it or use a PDF reader that supports forms. Start with the suggested route; you do not need to complete every page.")) : null;
 
     return React.createElement("div", {
         className: "g-fu g-d4",
