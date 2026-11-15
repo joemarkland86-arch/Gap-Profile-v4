@@ -26,10 +26,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html,body,#root{min-height:100vh;background:#0D1B2A;}
-    #loading{position:fixed;inset:0;background:#0D1B2A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.4s ease;}
+    html,body,#root{min-height:100vh;background:#1A1F3D;}
+    #loading{position:fixed;inset:0;background:#1A1F3D;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.4s ease;}
     #loading.fade{opacity:0;pointer-events:none;}
-    .ld-ring{width:52px;height:52px;border:3px solid #2A4060;border-top-color:#2EC4B6;border-radius:50%;animation:ldspin 0.8s linear infinite;margin-bottom:20px;}
+    .ld-ring{width:52px;height:52px;border:3px solid #3A4270;border-top-color:#8BC7B6;border-radius:50%;animation:ldspin 0.8s linear infinite;margin-bottom:20px;}
     @keyframes ldspin{to{transform:rotate(360deg);}}
     .ld-txt{font-family:Georgia,serif;font-size:18px;color:#8BA3BC;}
     .ld-sub{font-family:sans-serif;font-size:12px;color:#4A6580;margin-top:8px;}
@@ -269,15 +269,17 @@ const CW = {
     dim: "#6F665A",
 };
 const C = {
-    ink: "#0D1B2A",
-    surface: "#132031",
-    surf2: "#1A2D42",
-    border: "#2A4060",
+    ink: "#1A1F3D",
+    surface: "#222848",
+    surf2: "#283050",
+    border: "#3A4270",
     teal: "#2EC4B6",
     blue: "#3B82F6",
     indigo: "#6366F1",
     purple: "#8B5CF6",
     amber: "#F59E0B",
+    cta: "#E9A319",
+    mint: "#8BC7B6",
     text: "#E8EFF6",
     muted: "#8BA3BC",
     dim: "#7F97B0",
@@ -419,9 +421,9 @@ var stop = /\u2026$/.test(actionShort) ? "" : ".";
 var durationNatural = DURATION_NATURAL[ctx.c2];
 var contextLine;
 if (!durationNatural) {
-    contextLine = "You said you want to \u201C" + actionShort + stop + "\u201D You\u2019ve been thinking about this recently, and something\u2019s getting in the way.";
+    contextLine = "You wrote: \u201C" + actionShort + "\u201D" + stop + " You\u2019ve been thinking about this recently, and something\u2019s getting in the way.";
 } else {
-    contextLine = "You said you want to \u201C" + actionShort + stop + "\u201D You\u2019ve been sitting with this for " + durationNatural + ", but the move still hasn\u2019t happened.";
+    contextLine = "You wrote: \u201C" + actionShort + "\u201D" + stop + " You\u2019ve been sitting with this for " + durationNatural + ", but the move still hasn\u2019t happened.";
 }
 return React.createElement("div", {
     className: "g-fu g-d3",
@@ -738,12 +740,12 @@ function clearSession() {
 const GLOBAL_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:#0D1B2A;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:root{--safe-bottom:env(safe-area-inset-bottom,0px)}
+html,body{background:#1A1F3D;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:root{--safe-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-reduced-motion:reduce){*.g-fu,*.g-sr,*.g-si{animation:none!important;opacity:1!important;transform:none!important}.g-bar-fill{transition:none!important}.g-pg{animation:none!important}}@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
 @keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
-@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(46,196,182,0)}50%{box-shadow:0 0 16px 4px rgba(46,196,182,0.25)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(233,163,25,0)}50%{box-shadow:0 0 16px 4px rgba(233,163,25,0.3)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .g-fu{animation:fadeUp 0.35s ease-out both}
 .g-sr{animation:slideRight 0.35s ease-out both}
@@ -751,26 +753,26 @@ html,body{background:#0D1B2A;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:ro
 .g-shake{animation:shake 0.35s ease}
 .g-d1{animation-delay:0.06s}.g-d2{animation-delay:0.12s}.g-d3{animation-delay:0.18s}.g-d4{animation-delay:0.24s}.g-d5{animation-delay:0.30s}@keyframes slideIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}.g-screen-enter{animation:slideIn 0.3s cubic-bezier(0.25,0.46,0.45,0.94) both}
 .g-pg{animation:pulseGlow 2.2s ease-in-out infinite}
-.g-spinner{width:48px;height:48px;border-radius:50%;border:3px solid rgba(46,196,182,0.15);border-top:3px solid #2EC4B6;animation:spin 1.2s linear infinite;margin:0 auto 28px}
-.g-btn-s{background:transparent;color:#8BA3BC;border:1px solid #2A4060;border-radius:8px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:border-color 0.15s,color 0.15s}
-.g-btn-s:hover{border-color:#2EC4B6;color:#2EC4B6}
+.g-spinner{width:48px;height:48px;border-radius:50%;border:3px solid rgba(139,199,182,0.15);border-top:3px solid #8BC7B6;animation:spin 1.2s linear infinite;margin:0 auto 28px}
+.g-btn-s{background:transparent;color:#8BA3BC;border:1px solid #3A4270;border-radius:0;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:border-color 0.15s,color 0.15s}
+.g-btn-s:hover{border-color:#8BC7B6;color:#8BC7B6}
 .g-eb-flag{background:#FBF3E0;border:1px solid #E9C97A;border-radius:10px;padding:16px 20px;margin-bottom:24px}
 .g-hero-glow{background:#F5F0E8}
-.g-btn-p{background:#2EC4B6;color:#0D1B2A;border:none;border-radius:10px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.18s,transform 0.12s,box-shadow 0.18s;letter-spacing:-0.01em;box-shadow:0 2px 12px rgba(46,196,182,0.18)}
-.g-btn-p:hover{background:#34D6C8;transform:translateY(-2px);box-shadow:0 6px 28px rgba(46,196,182,0.35)}
-.g-btn-p:active{transform:translateY(0);box-shadow:0 1px 6px rgba(46,196,182,0.15)}
+.g-btn-p{background:#E9A319;color:#1A1F3D;border:none;border-radius:0;padding:14px 28px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.18s;letter-spacing:-0.01em}
+.g-btn-p:hover{background:#F0B23A}
+.g-btn-p:active{background:#D08A10}
 .g-btn-p:disabled{opacity:0.32;cursor:not-allowed;transform:none;box-shadow:none}
-.g-btn-g{background:transparent;color:#8BA3BC;border:1px solid #2A4060;border-radius:8px;padding:12px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:border-color 0.15s,color 0.15s}
+.g-btn-g{background:transparent;color:#8BA3BC;border:1px solid #3A4270;border-radius:8px;padding:12px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:border-color 0.15s,color 0.15s}
 .g-btn-g:hover{border-color:#8BA3BC;color:#E8EFF6}
-.g-card{background:#132031;border:1px solid #2A4060;border-radius:16px;padding:28px;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
-.g-input{width:100%;background:#0D1B2A;border:1.5px solid #2A4060;border-radius:8px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#E8EFF6;outline:none;transition:border-color 0.15s;resize:vertical}
-.g-input:focus{border-color:#2EC4B6;box-shadow:0 0 0 3px rgba(46,196,182,0.12)}
+.g-card{background:#222848;border:1px solid #3A4270;border-radius:16px;padding:28px;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.g-input{width:100%;background:#1A1F3D;border:1.5px solid #3A4270;border-radius:8px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#E8EFF6;outline:none;transition:border-color 0.15s;resize:vertical}
+.g-input:focus{border-color:#8BC7B6;box-shadow:0 0 0 3px rgba(139,199,182,0.15)}
 .g-input::placeholder{color:#4A6580}
 .g-input.g-err{border-color:#EF4444}
-.g-pill{padding:10px 20px;border:1.5px solid #2A4060;border-radius:24px;background:#132031;font-family:'DM Sans',sans-serif;font-size:14px;color:#8BA3BC;cursor:pointer;transition:all 0.18s;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.15)}
+.g-pill{padding:10px 20px;border:1.5px solid #3A4270;border-radius:24px;background:#222848;font-family:'DM Sans',sans-serif;font-size:14px;color:#8BA3BC;cursor:pointer;transition:all 0.18s;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.15)}
 .g-pill:hover{border-color:#4A6580;color:#E8EFF6}
-.g-pill.sel{border-color:#2EC4B6;background:rgba(46,196,182,0.1);color:#2EC4B6;font-weight:600}
-.g-lk{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border:1.5px solid #2A4060;border-radius:10px;background:#132031;cursor:pointer;transition:border-color 0.15s,background 0.15s,transform 0.1s;min-width:0;font-family:'DM Sans',sans-serif}
+.g-pill.sel{border-color:#8BC7B6;background:rgba(139,199,182,0.12);color:#8BC7B6;font-weight:600}
+.g-lk{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border:1.5px solid #3A4270;border-radius:10px;background:#222848;cursor:pointer;transition:border-color 0.15s,background 0.15s,transform 0.1s;min-width:0;font-family:'DM Sans',sans-serif}
 .g-lk:hover{border-color:#4A6580}
 .g-lk:active{transform:scale(0.95)}
 .g-lk.sel{border-color:var(--dc);background:var(--dc);box-shadow:0 0 0 2px var(--dc)}
@@ -786,14 +788,14 @@ html,body{background:#0D1B2A;color:#E8EFF6;font-family:'DM Sans',sans-serif;}:ro
   .g-mob-lk{display:flex;align-items:center;justify-content:space-between;width:100%;gap:3px;padding:6px 4px}
   .g-desk-lk{display:none}
   .g-mob-cap{display:flex;justify-content:space-between;margin-top:8px}
-  .g-mc{width:44px;height:44px;border-radius:50%;border:1.5px solid #2A4060;background:#132031;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#8BA3BC;transition:all 0.15s;flex-shrink:0}
+  .g-mc{width:44px;height:44px;border-radius:50%;border:1.5px solid #3A4270;background:#222848;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#8BA3BC;transition:all 0.15s;flex-shrink:0}
   .g-mc.sel{background:var(--dc);border-color:var(--dc);color:var(--dcf,#0D1B2A);font-weight:700}
   .g-mc:active{transform:scale(0.88);transition:transform 0.08s}.g-mc.sel{background:var(--dc);border-color:var(--dc);color:var(--dcf,#0D1B2A);font-weight:700;box-shadow:0 0 0 3px var(--dc),0 0 0 5px rgba(0,0,0,0.3)}
   .g-mex{font-size:11px;color:#8BA3BC;line-height:1.2}
 }
 .g-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
-.g-modal{background:#132031;border:1px solid #2A4060;border-radius:20px;padding:32px;max-width:580px;width:100%;max-height:85vh;overflow-y:auto;animation:scaleIn 0.25s ease}
-.g-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A2D42;border:1px solid #2A4060;border-radius:8px;padding:12px 22px;font-family:'DM Sans',sans-serif;font-size:14px;color:#E8EFF6;z-index:900;animation:fadeUp 0.25s ease;pointer-events:none;white-space:nowrap}
+.g-modal{background:#222848;border:1px solid #3A4270;border-radius:20px;padding:32px;max-width:580px;width:100%;max-height:85vh;overflow-y:auto;animation:scaleIn 0.25s ease}
+.g-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#283050;border:1px solid #3A4270;border-radius:8px;padding:12px 22px;font-family:'DM Sans',sans-serif;font-size:14px;color:#E8EFF6;z-index:900;animation:fadeUp 0.25s ease;pointer-events:none;white-space:nowrap}
 .g-ctx-extra{transition:opacity 0.4s ease,transform 0.4s ease}.g-ctx-extra.hidden{opacity:0.3;transform:translateY(8px);pointer-events:none}.g-ctx-extra.visible{opacity:1;transform:none;pointer-events:auto}.g-bar-fill{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.25,0.46,0.45,0.94);box-shadow:0 0 8px rgba(46,196,182,0.4)}
 .g-acc{overflow:hidden;transition:max-height 0.35s ease,opacity 0.35s ease}
 @media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
@@ -854,30 +856,29 @@ function Toast({ message, onDone }) {
     return React.createElement("div", { className: "g-toast" }, message);
 }
 // ─── TOP NAV ───────────────────────────────────────────────────────────────────
-function TopNav({ step, isMobile }) {
+function TopNav({ step }) {
     const steps = ["Context", "Belief", "Risk", "Identity", "Capacity"];
     const activeLabel = step >= 1 && step <= 5 ? steps[step - 1] : "";
     const pct = step === 0 ? 0 : step >= 7 ? 100 : Math.round((Math.min(step, 5) / 5) * 100);
     var isWarm = step === 0 || (step === 7);
     return (React.createElement("div", { style: { position: "sticky", top: 0, zIndex: 100,
-            background: isWarm ? "rgba(245,240,232,0.96)" : "rgba(13,27,42,0.96)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            background: isWarm ? "rgba(245,240,232,0.96)" : "rgba(26,31,61,0.96)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
             borderBottom: isWarm ? "1px solid #E0D5C5" : `1px solid ${C.border}`, padding: "0 24px", height: 56,
             display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 } },
         React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, flexShrink: 0 } },
-            React.createElement("div", { style: { width: 30, height: 30, borderRadius: 8, background: C.teal,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 16, color: C.ink, fontWeight: 700 } }, "\u25C8"),
-            React.createElement("span", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 16,
-                    color: isWarm ? CW.text : C.text, display: isMobile ? "none" : "block" } }, "GAP Profile\u2122")),
+            React.createElement("div", { style: { display: "flex", flexDirection: "column", lineHeight: 1.05 } },
+                React.createElement("span", { style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 20,
+                        color: isWarm ? "#2C2A25" : C.text } }, "GAP Profile\u2122"),
+                React.createElement("span", { style: { fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase",
+                        color: isWarm ? CW.dim : C.muted, marginTop: 3 } }, "by Joe Markland"))),
         step > 0 && step <= 5 && (React.createElement("div", { style: { flex: 1, maxWidth: 340, margin: "0 16px" } },
             React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 5 } },
                 activeLabel && React.createElement("span", { style: { fontSize: 11, color: C.dim, paddingRight: 6, borderRight: `1px solid ${C.border}`, marginRight: 6 } }, activeLabel),
-                React.createElement("span", { "data-progress": "", style: { fontSize: 11, color: C.teal, fontWeight: 700, letterSpacing: "0.03em" } },
+                React.createElement("span", { "data-progress": "", style: { fontSize: 11, color: C.mint, fontWeight: 700, letterSpacing: "0.03em" } },
                     `${step} of 5`)),
             React.createElement("div", { style: { height: 4, background: C.border, borderRadius: 2 } },
-                React.createElement("div", { style: { height: "100%", background: C.teal, borderRadius: 2,
-                        width: `${pct}%`, transition: "width 0.4s ease" } })))),
-        React.createElement("span", { style: { fontSize: 12, color: isWarm ? CW.dim : C.dim, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "clamp(100px,30vw,200px)" } }, "Joe Markland")));
+                React.createElement("div", { style: { height: "100%", background: C.mint, borderRadius: 2,
+                        width: `${pct}%`, transition: "width 0.4s ease" } }))))));
 }
 // ─── ANCHOR BAR ────────────────────────────────────────────────────────────────
 function AnchorBar({ action }) {
@@ -956,7 +957,7 @@ function TransitionBridge({ onComplete }) {
         React.createElement("div", {
             style: {
                 width: 52, height: 52, borderRadius: "50%",
-                border: "3px solid #2A4060", borderTopColor: C.teal,
+                border: "3px solid #3A4270", borderTopColor: C.mint,
                 animation: show ? "spin 0.9s linear infinite" : "none",
                 marginBottom: 20,
                 opacity: show ? 1 : 0,
@@ -989,13 +990,13 @@ function ScreenLanding({ dispatch }) {
     } },
         React.createElement("h1", { className: "g-fu g-d1", style: {
             fontFamily: "Instrument Serif, Georgia, serif",
-            fontSize: "clamp(36px,6vw,58px)", color: CW.text, lineHeight: 1.1,
-            marginBottom: 16
+            fontSize: "clamp(36px,6vw,58px)", color: "#2C2A25", lineHeight: 1.1, fontWeight: 400,
+            marginBottom: 4
         } }, "You already know what you should be doing."),
         React.createElement("p", { className: "g-fu g-d2", style: {
             fontFamily: "Instrument Serif, Georgia, serif",
-            fontSize: "clamp(20px,3vw,28px)", color: CW.muted, fontStyle: "italic",
-            marginBottom: 24
+            fontSize: "clamp(36px,6vw,58px)", color: TEAL_TEXT, fontStyle: "italic", lineHeight: 1.1,
+            marginBottom: 28
         } }, "So what\u2019s actually stopping you?"),
         React.createElement("div", { className: "g-fu g-d2", style: {
             maxWidth: 560, margin: "0 auto 28px", textAlign: "left"
@@ -1014,7 +1015,7 @@ function ScreenLanding({ dispatch }) {
         } }, "Free. No account. About five minutes."),
         React.createElement("div", { className: "g-fu g-d3", style: {
             maxWidth: 560, margin: "0 auto 36px", display: "flex",
-            flexDirection: "column", gap: 10
+            flexDirection: "column", gap: 0, borderBottom: "1px solid " + CW.border
         } },
             ...[
                 ["It reflects, rather than labels.", "It’s not a personality test. It helps you look at what might be getting in the way."],
@@ -1023,8 +1024,7 @@ function ScreenLanding({ dispatch }) {
             ].map(function(pair, i) {
                 return React.createElement("div", { key: i, style: {
                     display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left",
-                    background: CW.surface, border: "1px solid " + CW.border, borderRadius: 12, padding: "14px 18px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                    borderTop: "1px solid " + CW.border, padding: "16px 2px",
                 } },
                     React.createElement("span", { "aria-hidden": "true", style: { color: TEAL_TEXT, fontSize: 16, lineHeight: "1.4", flexShrink: 0, marginTop: 2, fontWeight: 700 } }, "→"),
                     React.createElement("p", { style: { fontSize: 14, color: CW.muted, lineHeight: 1.6, margin: 0 } },
@@ -1048,7 +1048,8 @@ function ScreenLanding({ dispatch }) {
             maxWidth: 560, margin: "0 auto 36px", textAlign: "left"
         } },
             React.createElement("p", { style: {
-                fontSize: 16, color: CW.text, lineHeight: 1.8, marginBottom: 12, fontWeight: 700
+                fontFamily: "Instrument Serif, Georgia, serif", fontSize: 26, color: "#2C2A25", lineHeight: 1.2, marginBottom: 14, fontWeight: 400,
+                borderTop: "1px solid " + CW.border, paddingTop: 28
             } }, "Informed by research. Designed for action."),
             React.createElement("p", { style: {
                 fontSize: 15, color: CW.body, lineHeight: 1.8, marginBottom: 16
@@ -1095,7 +1096,7 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
     return (React.createElement("div", { style: { maxWidth: 680, margin: "0 auto", padding: "40px 24px 80px" } },
         React.createElement("div", { className: "g-fu", style: { marginBottom: 32 } },
             React.createElement("p", { style: { fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
-                    color: C.teal, textTransform: "uppercase", marginBottom: 16 } }, "Context"),
+                    color: C.mint, textTransform: "uppercase", marginBottom: 16 } }, "Context"),
             React.createElement("h2", { id: "ctx-q", style: { fontFamily: "Instrument Serif, Georgia, serif", fontSize: 28,
                     color: C.text, marginBottom: 8 } }, "What\u2019s the career move you feel stuck on?"),
             React.createElement("p", { id: "ctx-hint", style: { fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 32 } }, "Think bigger than one task, smaller than a life plan. Name the actual step you know you should be taking but aren\u2019t.")),
@@ -1109,7 +1110,7 @@ function ScreenContext({ ctx, ctxErrors, dispatch }) {
                     ctxErrors.c1
                         ? React.createElement("span", { style: { fontSize: 12, color: C.red } }, ctxErrors.c1)
                         : React.createElement("span", null),
-                    React.createElement("span", { style: { fontSize: 12, color: charCount >= 8 ? C.teal : C.dim } },
+                    React.createElement("span", { style: { fontSize: 12, color: charCount >= 8 ? C.mint : C.dim } },
                         charCount,
                         " characters",
                         (charCount < 20 || wordCount < 4) ? " \u00B7 add a little more detail" : ""))),
@@ -1218,7 +1219,7 @@ function ScreenSection({ section, stepIdx, responses, dispatch, isMobile }) {
         React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 24 } },
             React.createElement("button", { className: "g-btn-g", onClick: () => dispatch({ type: "SET_STEP", step: stepIdx + 1 }) }, "\u2190 Back"),
             React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 16, marginTop: 8 } },
-                React.createElement("span", { style: { fontSize: 13, color: allAnswered ? C.teal : C.muted,
+                React.createElement("span", { style: { fontSize: 13, color: allAnswered ? C.mint : C.muted,
                         fontWeight: allAnswered ? 600 : 400, transition: "all 0.3s" } },
                     allAnswered 
                         ? "\u2713 All answered" 
@@ -1264,7 +1265,6 @@ function StickyBookingCTA({ primary, primaryColor, targetRef }) {
     }, []);
     const cta = CTA_DATA[primary];
     if (!cta || !cta.workbookAvailable) return null;
-    const btn = btnFor(primaryColor);
     const scrollToWorkbook = () => {
         const el = document.getElementById("workbook-offer");
         if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1282,8 +1282,8 @@ function StickyBookingCTA({ primary, primaryColor, targetRef }) {
             borderTop: `2px solid ${primaryColor}4D`,
         } },
         React.createElement("button", { onClick: scrollToWorkbook, style: {
-                width: "100%", maxWidth: 480, border: "none", borderRadius: 12,
-                padding: "14px 20px", background: btn.bg, color: btn.fg,
+                width: "100%", maxWidth: 480, border: "none", borderRadius: 0,
+                padding: "14px 20px", background: C.cta, color: CW.text,
                 fontFamily: "inherit", fontSize: 15, fontWeight: 700, cursor: "pointer",
             } }, `Get ${cta.workbookTitle} \u00B7 \u00A39.99 \u2192`)), document.body);
 }
@@ -1320,14 +1320,13 @@ function SessionOption() {
             href: DEBRIEF_URL,
             target: "_blank",
             rel: "noopener noreferrer",
-            style: { alignSelf: "flex-start", padding: "10px 16px", border: "1.5px solid " + CW.text, color: CW.text, fontWeight: 700, fontSize: 14, borderRadius: 9, textDecoration: "none" }
+            style: { alignSelf: "flex-start", padding: "10px 16px", border: "1.5px solid " + CW.text, color: CW.text, fontWeight: 700, fontSize: 14, borderRadius: 0, textDecoration: "none" }
         }, "Book a session \u2192"));
 }
 function NextSteps({ primary, archColor, scores, question }) {
     const cta = CTA_DATA[primary];
     if (!cta) return null;
     const archLabelColor = inkFor(archColor);
-    const btn = btnFor(archColor);
     const workbookCard = cta.workbookAvailable ? React.createElement("div", {
         id: "workbook-offer",
         style: { background: "#FFFFFF", border: `2px solid ${archColor}`, borderRadius: 14, padding: "26px 24px", display: "flex", flexDirection: "column", gap: 12, boxShadow: "0 4px 16px rgba(26,31,61,0.08)" }
@@ -1339,7 +1338,7 @@ function NextSteps({ primary, archColor, scores, question }) {
             href: cta.workbookUrl,
             target: "_blank",
             rel: "noopener noreferrer",
-            style: { display: "block", textAlign: "center", padding: "14px 16px", background: btn.bg, color: btn.fg, fontWeight: 700, fontSize: 15, borderRadius: 10, textDecoration: "none", marginTop: 4 }
+            style: { display: "block", textAlign: "center", padding: "14px 16px", background: C.cta, color: CW.text, fontWeight: 700, fontSize: 15, borderRadius: 0, textDecoration: "none", marginTop: 4 }
         }, "View the workbook \u2192"),
         React.createElement("p", { style: { fontSize: 13, color: CW.body, lineHeight: 1.6 } }, "Downloadable PDF. Print it or use a PDF reader that supports forms. Start with the suggested route; you do not need to complete every page.")) : null;
 
@@ -1414,7 +1413,7 @@ function NoPatternNextSteps({ lowDims, noneLow }) {
                         href: cta.workbookUrl,
                         target: "_blank",
                         rel: "noopener noreferrer",
-                        style: { display: "block", textAlign: "center", padding: "11px 16px", background: btnFor(color).bg, color: btnFor(color).fg, fontWeight: 700, fontSize: 14, borderRadius: 9, textDecoration: "none" }
+                        style: { display: "block", textAlign: "center", padding: "11px 16px", background: C.cta, color: CW.text, fontWeight: 700, fontSize: 14, borderRadius: 0, textDecoration: "none" }
                     }, "Get the workbook →"));
             })),
         React.createElement("p", { style: { fontSize: 14, color: CW.body, lineHeight: 1.7, textAlign: "center" } },
@@ -1684,7 +1683,7 @@ function GAPProfile() {
     const sectionIdx = state.step >= 2 && state.step <= 5 ? state.step - 2 : -1;
     var rootWarm = state.step === 0 || (state.step === 7 && state.processingComplete);
     return (React.createElement("div", { style: { minHeight: "100vh", background: rootWarm ? CW.bg : C.ink, fontFamily: "'DM Sans', sans-serif", transition: "background 0.3s ease" } },
-        React.createElement(TopNav, { step: state.step, isMobile: isMobile }),
+        React.createElement(TopNav, { step: state.step }),
         state.resumeBannerVisible && (React.createElement("div", { style: { background: C.surf2, borderBottom: `1px solid ${C.border}`,
                 padding: "12px 24px", display: "flex", alignItems: "center",
                 justifyContent: "center", gap: 16 } },
